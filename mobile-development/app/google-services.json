@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "721196747339",
+    "project_id": "clastic-68b01",
+    "storage_bucket": "clastic-68b01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721196747339:android:1c5b74ff7dbc0c5e0e5bce",
+        "android_client_info": {
+          "package_name": "com.example.clastic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721196747339-55u3msh9hdgb90lg2td6o4cr4008d23d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH8uCnhIvUQFX-TPc6mK1Sf13G5OJsdO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721196747339-55u3msh9hdgb90lg2td6o4cr4008d23d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
