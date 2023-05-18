@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,21 +27,43 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
 class MainActivity : ComponentActivity() {
-    val db = Firebase.firestore
-    val storage = Firebase.storage.reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ClasticTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android", db)
-                }
+                InitiateHomeScreen()
             }
         }
+    }
+}
+
+@Composable
+fun InitiateHomeScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ){
+        var splashVisible by remember { mutableStateOf(true) }
+        if (splashVisible) {
+            ClasticSplashScreen(onSplashFinished = { splashVisible = false })
+        } else {
+            MainContent()
+        }
+    }
+}
+
+@Composable
+fun MainContent() {
+    val db = Firebase.firestore
+    val storage = Firebase.storage.reference
+
+    // A surface container using the 'background' color from the theme
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        Greeting("Android", db)
     }
 }
 
