@@ -1,11 +1,14 @@
 package com.example.clastic.data.network
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class Dao {
     private val db = Firebase.firestore
+    private val storage = Firebase.storage.reference
 
     fun addDocuments(collectionName: String, item: Any) {
         db.collection(collectionName).add(item).addOnSuccessListener {
@@ -47,5 +50,17 @@ class Dao {
             }
 
         return listDocument
+    }
+
+    fun getImageUrlByName(imageName: String): String? {
+        var downloadUrl: String? = null
+        val imageRef = storage.child("images/${imageName}")
+        imageRef.downloadUrl.addOnSuccessListener {
+            downloadUrl = it.toString()
+            Log.d("firebase: getImageUrl", "Image url has found: ${downloadUrl}")
+        }.addOnFailureListener {
+            Log.d("firebase: getImageUrl", "Image has not found: ${it.message.toString()}")
+        }
+        return downloadUrl
     }
 }

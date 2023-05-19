@@ -1,5 +1,7 @@
 package com.example.clastic
 
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +60,14 @@ fun InitiateHomeScreen() {
 fun MainContent() {
     val db = Firebase.firestore
     val storage = Firebase.storage.reference
+
+    val file = Uri.fromFile(File("drawable/article1"))
+    val imageRef = storage.child("images/${file.lastPathSegment}")
+    imageRef.putFile(file).addOnSuccessListener{
+        Log.d("firebase: upload image", "Image has been upload")
+    }.addOnFailureListener{
+        Log.d("firebase: upload image", "Upload Failed")
+    }
 
     // A surface container using the 'background' color from the theme
     Surface(
