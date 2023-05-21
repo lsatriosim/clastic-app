@@ -25,7 +25,7 @@ fun ClasticSplashScreen(onSplashFinished: () -> Unit) {
                     android.os.Handler(Looper.getMainLooper()).postDelayed({
                         mediaPlayer.stop()
                         onSplashFinished()
-                    }, 1000)
+                    }, 2000)
                 }
                 OnPreparedListener{
 
