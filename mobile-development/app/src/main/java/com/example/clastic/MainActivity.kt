@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -48,7 +49,7 @@ fun InitiateHomeScreen() {
         if (splashVisible) {
             ClasticSplashScreen(onSplashFinished = { splashVisible = false })
         } else {
-            MainContent()
+            ListArticleScreen(Modifier.fillMaxWidth())
         }
     }
 }
