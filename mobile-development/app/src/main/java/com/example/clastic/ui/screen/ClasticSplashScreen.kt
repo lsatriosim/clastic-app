@@ -1,4 +1,4 @@
-package com.example.clastic
+package com.example.clastic.ui.screen
 
 import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.clastic.R
 
 @Composable
 fun ClasticSplashScreen(onSplashFinished: () -> Unit) {

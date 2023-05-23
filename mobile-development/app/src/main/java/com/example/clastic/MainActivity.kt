@@ -20,6 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.clastic.ui.screen.ClasticSplashScreen
+import com.example.clastic.ui.screen.authentication.login.LoginScreen
+import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -31,7 +34,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ClasticTheme {
-                InitiateHomeScreen()
+//                LoginScreen(
+//                    navigateToRegister = {}
+//                )
+                RegisterScreen(
+                    navigateToLogin = {}
+                )
+                //InitiateHomeScreen()
             }
         }
     }
