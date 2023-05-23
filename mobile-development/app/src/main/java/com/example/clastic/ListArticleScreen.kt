@@ -2,6 +2,8 @@ package com.example.clastic
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -17,41 +19,76 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter.State.Empty.painter
+import com.example.clastic.data.entity.Article
 
 @Composable
-fun ListArticleScreen(modifier: Modifier = Modifier
-    .fillMaxWidth()
-    .height(175.dp)) {
-    Box(modifier = modifier){
+fun ListArticleScreen(
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)
+        .height(175.dp)
+        .clip(RoundedCornerShape(10.dp)),
+    article: Article,
+    onClick : (String) -> Unit
+) {
+    Box(modifier = modifier.clickable { onClick(article.contentUrl) }) {
         Card(
-            modifier = modifier
-                .clip(RoundedCornerShape(10.dp)),
+            modifier = modifier,
             elevation = 10.dp
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.article1),
+            AsyncImage(
+                model = article.posterUrl,
                 contentDescription = "article",
                 modifier = modifier.blur(1.dp),
                 alignment = Alignment.Center,
                 contentScale = ContentScale.Crop,
             )
+            Box(modifier = modifier.padding(15.dp), contentAlignment = Alignment.TopStart) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(color = Color.White)
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(modifier = Modifier, horizontalArrangement = Arrangement.Center) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_recycle_blue),
+                            contentDescription = "recycle icon",
+                            modifier = Modifier,
+                            tint = Color("#0097B2".toColorInt())
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        Text(
+                            text = article.tag,
+                            modifier = Modifier,
+                            fontWeight = FontWeight.Bold,
+                            color = Color("#0097B2".toColorInt())
+                        )
+                    }
+                }
+            }
             Box(modifier = Modifier, contentAlignment = Alignment.BottomStart) {
-                ArticleData(Modifier)
+                ArticleData(Modifier, article)
             }
         }
     }
 }
 
 @Composable
-fun ArticleData(modifier: Modifier = Modifier) {
+fun ArticleData(modifier: Modifier = Modifier, article:Article) {
     Column(modifier = Modifier.padding(16.dp)) {
         TitleWithShadow(
-            text = "Scientist Convert Clastic Waste into Vanilla Flavoring",
+            text = article.title,
             modifier = Modifier
         )
         Row(
@@ -64,7 +101,7 @@ fun ArticleData(modifier: Modifier = Modifier) {
                 modifier = Modifier.shadow(elevation = 3.dp),
             )
             TextWithShadow(
-                text = "13 May 2023",
+                text = article.createdAt,
                 modifier = Modifier.padding(end = 10.dp),
             )
             Icon(
@@ -74,7 +111,7 @@ fun ArticleData(modifier: Modifier = Modifier) {
                 modifier = Modifier.shadow(elevation = 3.dp),
             )
             TextWithShadow(
-                text = "Author Name",
+                text = article.author,
                 modifier = Modifier.padding(end = 10.dp),
             )
         }
@@ -86,7 +123,7 @@ fun TextWithShadow(
     text: String,
     modifier: Modifier
 ) {
-    Box(modifier = Modifier){
+    Box(modifier = Modifier) {
         Text(
             text = text,
             color = Color.DarkGray,
@@ -110,11 +147,11 @@ fun TitleWithShadow(
     text: String,
     modifier: Modifier
 ) {
-    Box(modifier = Modifier){
+    Box(modifier = Modifier) {
         Text(
             text = text,
             color = Color.DarkGray,
-            fontSize = 24.sp,
+            fontSize = 16.sp,
             maxLines = 2,
             fontWeight = FontWeight.Bold,
             modifier = modifier
@@ -127,7 +164,7 @@ fun TitleWithShadow(
         Text(
             text = text,
             color = Color.White,
-            fontSize = 24.sp,
+            fontSize = 16.sp,
             maxLines = 2,
             modifier = Modifier,
             overflow = TextOverflow.Ellipsis,
@@ -140,11 +177,27 @@ fun TitleWithShadow(
 @Preview(showBackground = false)
 @Composable
 fun ListArticlePreview() {
-    ListArticleScreen()
+    ListArticleScreen(
+        modifier = Modifier, article = Article(
+            title = "Scientits Convert Clastic Waste into Vanilla Flavoring",
+            posterUrl = "",
+            author = "Author Name",
+            tag = "PET",
+            createdAt = "13 May 2023",
+            contentUrl = ""
+        ),
+        onClick = {}
+    )
 }
 
 @Preview(showBackground = false)
 @Composable
 fun TitlePreview() {
-    ArticleData()
+    ArticleData(modifier = Modifier, article = Article(
+        title = "Scientits Convert Clastic Waste into Vanilla Flavoring",
+        posterUrl = "",
+        author = "Author Name",
+        tag = "PET",
+        createdAt = "13 May 2023",
+        contentUrl = ""))
 }
