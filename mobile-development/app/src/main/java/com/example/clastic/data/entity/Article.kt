@@ -7,4 +7,6 @@ data class Article(
     val tag: String,
     val createdAt: String,
     val contentUrl: String,
-)
+){
+    constructor(): this("","","","","","")
+}

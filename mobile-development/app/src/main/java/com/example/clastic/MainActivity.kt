@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.network.Dao
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -66,26 +67,17 @@ fun InitiateHomeScreen(
                 startDestination = Screen.articleList.route
             ) {
                 composable(Screen.articleList.route) {
-                    ListArticleScreen(
-                        article = Article(
-                            title = "Scientits Convert Clastic Waste into Vanilla Flavoring",
-                            posterUrl = "https://dlh.kulonprogokab.go.id/files/news/normal/11775d082ee4a5c88968ebcab7795390.jpeg",
-                            author = "Author Name",
-                            tag = "PET",
-                            createdAt = "13 May 2023",
-                            contentUrl = "https://waste4change.com/blog/membuang-sampah-di-sungai-indonesia/"
-                        ),
-                        onClick = { articleUrl ->
-                            val encodeUrl = URLEncoder.encode(articleUrl,StandardCharsets.UTF_8.toString())
-                            navHostController.navigate(Screen.articleDetail.createRoute(encodeUrl))
-                        }
-                    )
+                    ListArticleScreen(onClick = { articleUrl ->
+                        val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
+                        navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
+                    })
                 }
                 composable(
                     route = Screen.articleDetail.route,
                     arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
-                ) {navBackStackEntry ->
-                    val articleUrl = URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"))
+                ) { navBackStackEntry ->
+                    val articleUrl =
+                        URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"))
                     Log.d("arguments", articleUrl.toString())
                     ArticleScreen(contentUrl = articleUrl)
                 }
