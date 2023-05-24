@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.clastic.ui.screen.ClasticSplashScreen
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
+import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -37,9 +38,10 @@ class MainActivity : ComponentActivity() {
 //                LoginScreen(
 //                    navigateToRegister = {}
 //                )
-                RegisterScreen(
-                    navigateToLogin = {}
-                )
+//                RegisterScreen(
+//                    navigateToLogin = {}
+//                )
+                ProductKnowledgeComponent(onClick = {})
                 //InitiateHomeScreen()
             }
         }
@@ -57,7 +59,7 @@ fun InitiateHomeScreen() {
         if (splashVisible) {
             ClasticSplashScreen(onSplashFinished = { splashVisible = false })
         } else {
-            MainContent()
+           MainContent()
         }
     }
 }
