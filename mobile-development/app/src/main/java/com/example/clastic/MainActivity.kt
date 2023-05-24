@@ -29,6 +29,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.clastic.data.entity.Article
 import com.example.clastic.data.network.Dao
+import com.example.clastic.ui.screen.ClasticSplashScreen
+import com.example.clastic.ui.screen.authentication.login.LoginScreen
+import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -43,7 +46,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ClasticTheme {
-                InitiateHomeScreen()
+//                LoginScreen(
+//                    navigateToRegister = {}
+//                )
+                RegisterScreen(
+                    navigateToLogin = {}
+                )
+                //InitiateHomeScreen()
             }
         }
     }
