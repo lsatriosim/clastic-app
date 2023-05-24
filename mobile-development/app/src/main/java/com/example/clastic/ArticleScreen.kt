@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun ArticleScreen(modifier: Modifier = Modifier) {
+fun ArticleScreen(modifier: Modifier = Modifier, contentUrl: String?) {
     Box(modifier = Modifier.fillMaxSize()){
         AndroidView(
             factory = {
@@ -20,11 +20,11 @@ fun ArticleScreen(modifier: Modifier = Modifier) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                     webViewClient = WebViewClient()
-                    loadUrl("https://indonesiabaik.id/infografis/indonesia-darurat-sampah-plastik")
+                    loadUrl(contentUrl!!)
                 }
             },
             update = {
-                it.loadUrl("https://indonesiabaik.id/infografis/indonesia-darurat-sampah-plastik")
+                it.loadUrl(contentUrl!!)
             }
         )
     }

@@ -1,11 +1,14 @@
 package com.example.clastic.data.network
 
 import android.util.Log
+import com.example.clastic.data.entity.Article
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class Dao {
     private val db = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
 
     fun addDocuments(collectionName: String, item: Any) {
         db.collection(collectionName).add(item).addOnSuccessListener {
@@ -48,4 +51,39 @@ class Dao {
 
         return listDocument
     }
+
+    fun getPhotoUrl(imageName: String, callback: (String) -> Unit) {
+        val imageRef = storageRef.child(imageName)
+
+        imageRef.downloadUrl
+            .addOnSuccessListener { uri ->
+                val downloadUrl = uri.toString()
+                Log.d("getPhotoUrl", "Image URL Accepted: $downloadUrl")
+                callback(downloadUrl)
+            }
+            .addOnFailureListener { exception ->
+                Log.d("getPhotoUrl", "Failed to get image URL: ${exception.message.toString()}")
+                callback("")
+            }
+    }
+
+    fun getArticleList(callback: (List<Article>?, Exception?) -> Unit){
+        val articleList = mutableListOf<Article>()
+
+        db.collection("article").get()
+            .addOnSuccessListener { documents ->
+                Log.d("fetchArticleList", "Document Found")
+                for(document in documents){
+                    articleList.add(document.toObject(Article::class.java))
+                }
+                for (article in articleList){
+                    Log.d("fetchDrakorList", article.toString())
+                }
+                callback(articleList, null)
+            }.addOnFailureListener { exception ->
+                Log.d("fetchArticleList", "Document not found: ${exception.message.toString()}")
+                callback(null, exception)
+            }
+    }
+
 }

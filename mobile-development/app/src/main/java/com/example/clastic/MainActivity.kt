@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -20,6 +21,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.clastic.data.entity.Article
+import com.example.clastic.data.network.Dao
 import com.example.clastic.ui.screen.ClasticSplashScreen
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
@@ -28,6 +37,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,17 +59,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun InitiateHomeScreen() {
+fun InitiateHomeScreen(
+    navHostController: NavHostController = rememberNavController()
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-    ){
+    ) {
         var splashVisible by remember { mutableStateOf(true) }
         if (splashVisible) {
             ClasticSplashScreen(onSplashFinished = { splashVisible = false })
         } else {
-            MainContent()
+            NavHost(
+                navController = navHostController,
+                startDestination = Screen.articleList.route
+            ) {
+                composable(Screen.articleList.route) {
+                    ListArticleScreen(onClick = { articleUrl ->
+                        val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
+                        navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
+                    })
+                }
+                composable(
+                    route = Screen.articleDetail.route,
+                    arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+                ) { navBackStackEntry ->
+                    val articleUrl =
+                        URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"))
+                    Log.d("arguments", articleUrl.toString())
+                    ArticleScreen(contentUrl = articleUrl)
+                }
+            }
         }
     }
 }
@@ -87,7 +120,7 @@ fun Greeting(name: String, db: FirebaseFirestore) {
         db.collection("users").add(user)
             .addOnSuccessListener { documentReference ->
                 Log.d("testFirebase", "Document has been made with id : ${documentReference.id}")
-            }.addOnFailureListener{e ->
+            }.addOnFailureListener { e ->
                 Log.w("testFirebase", "Error adding document", e)
             }
     }) {
