@@ -1,9 +1,11 @@
-package com.example.clastic
+package com.example.clastic.ui.screen
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.clastic.di.Injection
 import com.example.clastic.data.Repository
+import com.example.clastic.ui.screen.listArticle.ListArticleViewModel
 
 class ViewModelFactory(private val repository: Repository) :
     ViewModelProvider.NewInstanceFactory() {

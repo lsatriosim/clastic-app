@@ -1,4 +1,4 @@
-package com.example.clastic
+package com.example.clastic.ui.screen
 
 import android.os.Bundle
 import android.util.Log
@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -27,12 +26,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.clastic.data.entity.Article
-import com.example.clastic.data.network.Dao
-import com.example.clastic.ui.screen.ClasticSplashScreen
-import com.example.clastic.ui.screen.authentication.login.LoginScreen
-import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
+import com.example.clastic.ui.screen.listArticle.ArticleScreen
+import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore

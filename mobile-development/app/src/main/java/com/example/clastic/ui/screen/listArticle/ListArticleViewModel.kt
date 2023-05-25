@@ -1,4 +1,4 @@
-package com.example.clastic
+package com.example.clastic.ui.screen.listArticle
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

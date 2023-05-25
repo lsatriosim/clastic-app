@@ -1,4 +1,4 @@
-package com.example.clastic
+package com.example.clastic.di
 
 import android.content.Context
 import com.example.clastic.data.Repository
