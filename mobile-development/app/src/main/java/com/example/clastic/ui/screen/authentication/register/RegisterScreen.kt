@@ -18,8 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +40,7 @@ import com.example.clastic.ui.screen.authentication.components.NameTextField
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
 import com.example.clastic.ui.theme.ClasticTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     navigateToLogin: () -> Unit,
@@ -45,6 +49,7 @@ fun RegisterScreen(
     var emailInput by remember { mutableStateOf("") }
     var passInput by remember { mutableStateOf("") }
     var nameInput by remember { mutableStateOf("") }
+    val keyboard = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier
@@ -106,7 +111,9 @@ fun RegisterScreen(
             )
             AuthenticationButton(
                 stringId = R.string.register,
-                onClick = { TODO() },
+                onClick = {
+                    keyboard?.hide()
+                },
                 modifier = modifier
                     .padding(bottom = 24.dp)
             )
@@ -133,7 +140,7 @@ fun RegisterScreen(
 fun RegisterScreenPreview() {
     ClasticTheme {
         RegisterScreen(
-            navigateToLogin = {}
+            navigateToLogin = {},
         )
     }
 }

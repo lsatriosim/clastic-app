@@ -1,5 +1,6 @@
 package com.example.clastic.ui.screen.authentication.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,13 +14,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,17 +35,34 @@ import com.example.clastic.R
 import com.example.clastic.ui.screen.authentication.components.AuthenticationButton
 import com.example.clastic.ui.screen.authentication.components.AuthenticationMethodDivider
 import com.example.clastic.ui.screen.authentication.components.EmailTextField
+import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.components.GoogleSignInButton
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
 import com.example.clastic.ui.theme.ClasticTheme
+import com.google.android.gms.auth.api.identity.Identity
 
 @Composable
 fun LoginScreen(
+    state: LoginState,
     navigateToRegister: () -> Unit,
-    modifier: Modifier = Modifier
+    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    googleAuthUiClient: GoogleAuthUiClient,
+    viewModel: LoginViewModel
 ) {
-    var emailInput by remember { mutableStateOf("") }
-    var passInput by remember { mutableStateOf("") }
+    var emailInput by rememberSaveable { mutableStateOf("") }
+    var passInput by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
+    LaunchedEffect(key1 = state.loginError) {
+        state.loginError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -65,7 +85,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             GoogleSignInButton(
-                onClick = { TODO() },
+                onClick = onLoginClick,
                 stringId = R.string.sign_in_with_google,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
@@ -95,7 +115,10 @@ fun LoginScreen(
             )
             AuthenticationButton(
                 stringId = R.string.login,
-                onClick = { TODO() },
+                onClick = {
+                    val loginResult = googleAuthUiClient.loginEmailPass(emailInput, passInput)
+                    viewModel.onLoginResult(loginResult)
+                },
                 modifier = modifier
                     .padding(bottom = 24.dp)
             )
@@ -122,7 +145,12 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     ClasticTheme {
         LoginScreen(
-            navigateToRegister = {}
+            state = LoginState(),
+            onLoginClick = {},
+            navigateToRegister = {},
+            googleAuthUiClient = GoogleAuthUiClient(LocalContext.current, Identity.getSignInClient(
+                LocalContext.current)),
+            viewModel = LoginViewModel()
         )
     }
 }
