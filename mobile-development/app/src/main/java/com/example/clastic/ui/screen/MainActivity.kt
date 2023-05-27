@@ -26,9 +26,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.clastic.data.entity.PlasticKnowledge
+import com.example.clastic.data.entity.Product
+import com.example.clastic.data.entity.ProductData
+import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -49,8 +54,8 @@ class MainActivity : ComponentActivity() {
 //                RegisterScreen(
 //                    navigateToLogin = {}
 //                )
-                ProductKnowledgeComponent(onClick = {})
-                //InitiateHomeScreen()
+
+                InitiateHomeScreen()
             }
         }
     }
@@ -69,13 +74,19 @@ fun InitiateHomeScreen(
         if (splashVisible) {
             ClasticSplashScreen(onSplashFinished = { splashVisible = false })
         } else {
-           NavHost(
+            NavHost(
                 navController = navHostController,
-                startDestination = Screen.articleList.route
+                startDestination = Screen.Home.route
             ) {
+                composable(Screen.Home.route){
+                    HomeScreen(onClick = { tag ->
+                        navHostController.navigate(Screen.ProductKnowledge.createRoute(tag))
+                    })
+                }
                 composable(Screen.articleList.route) {
                     ListArticleScreen(onClick = { articleUrl ->
-                        val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
+                        val encodeArticleUrl =
+                            URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
                         navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
                     })
                 }
@@ -87,6 +98,19 @@ fun InitiateHomeScreen(
                         URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"))
                     Log.d("arguments", articleUrl.toString())
                     ArticleScreen(contentUrl = articleUrl)
+                }
+                composable(
+                    route = Screen.ProductKnowledge.route,
+                    arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                ){navBackStackEntry ->
+                    var plasticType: PlasticKnowledge? = null
+                    for(plastic in ProductData.plasticTypes){
+                        if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                            plasticType = plastic
+                        }
+                    }
+                    Log.d("productKnowledge", plasticType.toString())
+                    ProductKnowledgeScreen(plasticType = plasticType!!)
                 }
             }
         }

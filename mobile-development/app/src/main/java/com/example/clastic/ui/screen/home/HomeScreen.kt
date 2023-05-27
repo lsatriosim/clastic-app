@@ -1,9 +1,11 @@
 package com.example.clastic.ui.screen.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -20,19 +22,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import com.example.clastic.R
+import com.example.clastic.data.entity.PlasticKnowledge
+import com.example.clastic.data.entity.ProductData
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+    val listState = rememberLazyListState()
+    LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(4.dp)){
+        items(items = ProductData.plasticTypes, key = {it.tag}){ plasticType ->
+            ProductKnowledgeComponent(onClick = onClick, plasticType = plasticType)
+        }
+    }
 }
 
 @Composable
-fun ProductKnowledgeComponent(modifier: Modifier = Modifier, onClick:(String)->Unit) {
+fun ProductKnowledgeComponent(modifier: Modifier = Modifier,plasticType: PlasticKnowledge, onClick:(String)->Unit) {
     Column(modifier = modifier.padding(4.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
                 .size(70.dp)
                 .clip(CircleShape)
-                .background(color = Color("#47ACD8".toColorInt())).clickable { onClick("PET") },
+                .background(color = Color("#47ACD8".toColorInt()))
+                .clickable { onClick(plasticType.tag) },
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -43,18 +54,18 @@ fun ProductKnowledgeComponent(modifier: Modifier = Modifier, onClick:(String)->U
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = "PET", modifier = Modifier, color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold )
+        Text(text = plasticType.tag, modifier = Modifier, color = Color.Black, fontSize = 16.sp, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ProductKnowledgeComponentPreview() {
-    ProductKnowledgeComponent(onClick = {})
+    ProductKnowledgeComponent(onClick = {}, plasticType = PlasticKnowledge("","",0,"", emptyList()))
 }
 
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(modifier = Modifier)
+    HomeScreen(onClick = {})
 }
