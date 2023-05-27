@@ -13,13 +13,26 @@
 git clone (github links https)
 ```
 2. Go to directory of `cloud-computing`
-3. create an environment
+```
+cd cloud-computing
+```
+4. create an environment
+- For Windows
 ```
 py -3 -m venv .venv
 ```
-4. Activate the environment
+- For MacOS
+```
+python3 -m venv .venv
+```
+5. Activate the environment
+- For Windows
 ```
 .venv\Scripts\activate
+```
+- For MacOS
+```
+source .venv/bin/activate
 ```
 6. Install requirement.txt (all libraries that should be installed)
 ```
