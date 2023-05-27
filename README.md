@@ -17,20 +17,20 @@ git clone (github links https)
 cd cloud-computing
 ```
 4. create an environment
-For Windows
+- For Windows
 ```
 py -3 -m venv .venv
 ```
-For MacOS
+- For MacOS
 ```
 python3 -m venv .venv
 ```
 5. Activate the environment
-For Windows
+- For Windows
 ```
 .venv\Scripts\activate
 ```
-For MacOS
+- For MacOS
 ```
 source .venv/bin/activate
 ```
