@@ -92,7 +92,7 @@ fun ListArticle(
 
 @Composable
 fun RecycleTag(modifier: Modifier, tag: String) {
-    Box(modifier = modifier.padding(15.dp)) {
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
@@ -100,7 +100,7 @@ fun RecycleTag(modifier: Modifier, tag: String) {
                 .padding(horizontal = 12.dp, vertical = 4.dp),
             contentAlignment = Alignment.Center
         ) {
-            Row(modifier = Modifier, horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_recycle_blue),
                     contentDescription = "recycle icon",
