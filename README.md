@@ -43,14 +43,6 @@ pip install -r requirement.txt
 9. Test the API endpoint in `Postman` by open the link from Flask with `Postman` and change method to `POST` with `/predict` route and body with uploaded file of plastic that you want to predict the class
 
 # How to setup with Google Cloud Platform
-## Create Cloud Storage
-1. Choose Cloud Storage on navigation menu
-2. Click `Create Bucket`
-3. Name your bucket as you wish
-4. Location data : Region and choose `asia-southeast2 (Jakarta)`
-5. Create the Bucket
-6. Upload the `model.h5` to the bucket
-
 ## How To Deploy Flask API On Google Cloud Platform (Cloud Run)
 1. Create Flask API
 2. Create Dockerfile
@@ -86,8 +78,5 @@ git clone (github links https)
 ```
 7. Then type `ls` to see that we have sucess clone the github
 8. Change the directory to the github repository, type `cd (directory that we want to use)`
-9. Clcik Terminal
-10. In Terminal, we click `cloud clone`
-11. Than we click `Deploy to Cloud Run`
-12. In `Deploy to Cloud Run` we can settings configurations before deploy
-13. And than after we settings the configurations we clik `Deploy`
+9. In terminal, run `gcloud app deploy`
+10. Checkout the link given when the deploy is completed. You can check it to `Postman` like on the local before
