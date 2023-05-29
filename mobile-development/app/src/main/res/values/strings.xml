@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Clastic</string>
+    <string name="pet">PET</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in_with_google">Sign In With Google</string>
+    <string name="or">Or</string>
+    <string name="register_with_google">Register With Google</string>
+    <string name="name">Name</string>
+    <string name="login">Log In</string>
+    <string name="register">Register</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="enter_email">Enter your email here</string>
+    <string name="enter_a_password">Enter a password</string>
+    <string name="enter_your_password">Enter a password</string>
+    <string name="enter_name">Enter your full name</string>
+    <string name="invalid_password">Invalid password format</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="dont_have_account">Don\'t have an account yet?</string>
+    <string name="go_to_register">Register Now</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="go_to_login">Log In to Your Account</string>
+    <string name="verify_email">Please verify your email in your inbox</string>
+    <string name="web_client_id">721196747339-nc9h79jcud39j4nt31dgeiqvqm2saeqi.apps.googleusercontent.com</string>
+    <string name="logout">Logout</string>
 </resources>
