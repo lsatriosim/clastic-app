@@ -8,6 +8,7 @@ import com.example.clastic.R
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -33,28 +34,27 @@ class GoogleAuthUiClient(
         return result?.pendingIntent?.intentSender
     }
 
-    fun loginEmailPass(email: String, password: String): LoginResult {
+    suspend fun registerEmailPass(email: String, password: String): LoginResult {
         return try {
-            val user = auth.signInWithEmailAndPassword(email,password).result.user
+            val user = auth.createUserWithEmailAndPassword(email, password).await().user
             Log.d("TOKEN: ", user?.getIdToken(false).toString())
-            LoginResult(
-                data = user?.run {
-                    UserData(
-                        userId = uid,
-                        username = displayName,
-                        userImage = photoUrl?.toString(),
-                        token = getIdToken(false).toString(),
-                        // sus token input
-                    )
-                },
-                errorMessage = null
-            )
+            createLoginResultSuccess(user)
         } catch (e: Exception) {
+            e.printStackTrace()
             if (e is CancellationException) throw e
-            LoginResult(
-                data = null,
-                errorMessage = e.message
-            )
+            createLoginResultFailed(e.message)
+        }
+    }
+
+    suspend fun loginEmailPass(email: String, password: String): LoginResult {
+        return try {
+            val user = auth.signInWithEmailAndPassword(email, password).await().user
+            Log.d("TOKEN: ", user?.getIdToken(false).toString())
+            createLoginResultSuccess(user)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            createLoginResultFailed(e.message)
         }
     }
 
@@ -64,24 +64,11 @@ class GoogleAuthUiClient(
         val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
         return try {
             val user = auth.signInWithCredential(googleCredentials).await().user
-            LoginResult(
-                data = user?.run {
-                    UserData(
-                        userId = uid,
-                        username = displayName,
-                        userImage = photoUrl?.toString(),
-                        token = googleIdToken
-                    )
-                },
-                errorMessage = null
-            )
+            createLoginResultSuccess(user)
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            LoginResult(
-                data = null,
-                errorMessage = e.message
-            )
+            createLoginResultFailed(e.message)
         }
     }
 
@@ -101,6 +88,27 @@ class GoogleAuthUiClient(
             username = displayName,
             userImage = photoUrl?.toString(),
             token = getIdToken(false).toString()
+        )
+    }
+
+    private fun createLoginResultSuccess(user: FirebaseUser?): LoginResult {
+        return LoginResult(
+            data = user?.run {
+                UserData(
+                    userId = uid,
+                    username = displayName,
+                    userImage = photoUrl?.toString(),
+                    token = user.getIdToken(false).toString()
+                )
+            },
+            errorMessage = null
+        )
+    }
+
+    private fun createLoginResultFailed(message: String?): LoginResult {
+        return LoginResult(
+            data = null,
+            errorMessage = message
         )
     }
 

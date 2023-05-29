@@ -40,6 +40,8 @@ import com.example.clastic.ui.screen.authentication.components.GoogleSignInButto
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -50,6 +52,7 @@ fun LoginScreen(
     googleAuthUiClient: GoogleAuthUiClient,
     viewModel: LoginViewModel
 ) {
+    val mainScope = MainScope()
     var emailInput by rememberSaveable { mutableStateOf("") }
     var passInput by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
@@ -116,8 +119,10 @@ fun LoginScreen(
             AuthenticationButton(
                 stringId = R.string.login,
                 onClick = {
-                    val loginResult = googleAuthUiClient.loginEmailPass(emailInput, passInput)
-                    viewModel.onLoginResult(loginResult)
+                    mainScope.launch {
+                        val loginResult = googleAuthUiClient.loginEmailPass(emailInput, passInput)
+                        viewModel.onLoginResult(loginResult)
+                    }
                 },
                 modifier = modifier
                     .padding(bottom = 24.dp)

@@ -35,17 +35,25 @@ import com.example.clastic.R
 import com.example.clastic.ui.screen.authentication.components.AuthenticationButton
 import com.example.clastic.ui.screen.authentication.components.AuthenticationMethodDivider
 import com.example.clastic.ui.screen.authentication.components.EmailTextField
+import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.components.GoogleSignInButton
 import com.example.clastic.ui.screen.authentication.components.NameTextField
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
 import com.example.clastic.ui.theme.ClasticTheme
+import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     navigateToLogin: () -> Unit,
+    onRegisterClick: () -> Unit,
+    viewModel: RegisterViewModel,
+    googleAuthUiClient: GoogleAuthUiClient,
     modifier: Modifier = Modifier
 ) {
+    val mainScope = MainScope()
     var emailInput by remember { mutableStateOf("") }
     var passInput by remember { mutableStateOf("") }
     var nameInput by remember { mutableStateOf("") }
@@ -73,7 +81,7 @@ fun RegisterScreen(
             verticalArrangement = Arrangement.Center
         ) {
             GoogleSignInButton(
-                onClick = { TODO() },
+                onClick = onRegisterClick,
                 stringId = R.string.register_with_google,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
@@ -113,6 +121,10 @@ fun RegisterScreen(
                 stringId = R.string.register,
                 onClick = {
                     keyboard?.hide()
+                    mainScope.launch {
+                        val loginResult = googleAuthUiClient.registerEmailPass(emailInput, passInput)
+                        viewModel.onRegisterResult(loginResult)
+                    }
                 },
                 modifier = modifier
                     .padding(bottom = 24.dp)
@@ -141,6 +153,11 @@ fun RegisterScreenPreview() {
     ClasticTheme {
         RegisterScreen(
             navigateToLogin = {},
+            onRegisterClick = {},
+            googleAuthUiClient = GoogleAuthUiClient(
+                LocalContext.current, Identity.getSignInClient(
+                LocalContext.current)),
+            viewModel = RegisterViewModel()
         )
     }
 }
