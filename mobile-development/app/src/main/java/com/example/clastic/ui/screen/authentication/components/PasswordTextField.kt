@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -23,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -42,11 +45,12 @@ fun PasswordTextField(
     icon: ImageVector,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
     var passwordVisible by remember { mutableStateOf(false) }
 
+    // TODO(Password Criteria Here)
     //val isEmptyPassword = remember(password) { password.isBlank() }
     //val isValidPassword = remember(password) { password }
-    // TODO(Password Criteria Here)
     //val isError = isValidPassword && !isEmptyPassword
     val isError = false
 
@@ -78,6 +82,10 @@ fun PasswordTextField(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.clearFocus() }
             ),
             placeholder = {
                 Text(

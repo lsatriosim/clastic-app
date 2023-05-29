@@ -21,4 +21,7 @@
     <string name="go_to_register">Register Now</string>
     <string name="already_have_account">Already have an account?</string>
     <string name="go_to_login">Log In to Your Account</string>
+    <string name="verify_email">Please verify your email in your inbox</string>
+    <string name="web_client_id">721196747339-nc9h79jcud39j4nt31dgeiqvqm2saeqi.apps.googleusercontent.com</string>
+    <string name="logout">Logout</string>
 </resources>
