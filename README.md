@@ -75,12 +75,22 @@ CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 ```
 3. Go to Google Cloud Platform (https://console.cloud.google.com/)
 4. Create a Project
-5. Click cloud shell to clone git
+5. Click cloud shell terminal to clone git
 6. Clone the git with this command
 ```
 git clone (github links https)
 ```
 7. Then type `ls` to see that we have sucess clone the github
-8. Change the directory to the github repository, type `cd (directory that we want to use)`
-9. In terminal, run `gcloud app deploy`
-10. Checkout the link given when the deploy is completed. You can check it to `Postman` like on the local before
+8. Change the directory to the github repository that you want to deploy, type `cd (directory that we want to use)`
+9. In terminal, run these
+```
+gcloud builds submit --tag gcr.io/<project_id>/index
+gcloud run deploy --image gcr.io/<project_id>/index --platform managed
+```
+10. When you are prompted for the service name, press `“Enter”` to accept the default
+name
+11. If you are prompted to enable the Artifact Registry API or to allow creation of
+Artifact Registry repository or other API, respond by pressing `y`
+12. If you are prompted to enable the Artifact Registry API or to allow creation of
+Artifact Registry repository, respond by pressing `y`
+13. After the deployment process is done, there is should be url where you can use it to test on `Postman` like the on the local before with the endpoint `/predict`
