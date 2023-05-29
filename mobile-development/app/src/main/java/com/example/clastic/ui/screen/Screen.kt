@@ -8,4 +8,10 @@ sealed class Screen(val route:String) {
         fun createRoute(articleUrl: String) = "articleDetail/$articleUrl"
     }
     object articleList: Screen("article")
+
+    object Home: Screen("home")
+
+    object ProductKnowledge: Screen("productKnowledge/{tag}"){
+        fun createRoute(tag: String) = "productKnowledge/$tag"
+    }
 }

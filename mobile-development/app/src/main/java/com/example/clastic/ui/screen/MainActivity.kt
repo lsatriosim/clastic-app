@@ -48,8 +48,14 @@ import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.login.LoginViewModel
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
+import com.example.clastic.data.entity.PlasticKnowledge
+import com.example.clastic.data.entity.Product
+import com.example.clastic.data.entity.ProductData
+import com.example.clastic.ui.screen.home.HomeScreen
+import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -192,31 +198,10 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Screen.articleList.route) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            lifecycleScope.launch {googleAuthUiClient.logout()}
-                                            navHostController.popBackStack()
-                                            navHostController.navigate(Screen.login.route)
-                                        },
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.logout),
-                                            color = Color.White,
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-
-//                                ListArticleScreen(onClick = { articleUrl ->
-//                                    val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
-//                                    navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
-//                                })
+                                ListArticleScreen(onClick = { articleUrl ->
+                                    val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
+                                    navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
+                                })
                             }
                             composable(
                                 route = Screen.articleDetail.route,
@@ -229,6 +214,19 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+                }
+                composable(
+                    route = Screen.ProductKnowledge.route,
+                    arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                ){navBackStackEntry ->
+                    var plasticType: PlasticKnowledge? = null
+                    for(plastic in ProductData.plasticTypes){
+                        if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                            plasticType = plastic
+                        }
+                    }
+                    Log.d("productKnowledge", plasticType.toString())
+                    ProductKnowledgeScreen(plasticType = plasticType!!)
                 }
             }
         }
