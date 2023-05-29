@@ -1,96 +1,54 @@
-# What you need
+# Clastic: Classify Your Plastic
+
+*gambar app kita*
+
+## About Clastic
+
+## Machine Learning Team
+Has several responsibility such as:
+1. Collecting and cleaning dataset
+2. Build a model with transfer learning
+3. Testing model with model predict
+4. Convert model into HDF5
+
+## Mobile Development Team
+Has several responsibility such as:
+1. Developing app interface for clastic apps
+2. API endpoint development for database using firebase
+3. Integrating API to the apps
+
+## Cloud Computing Team
+Has several responsibility such as:
+1. API endpoint development for machine learning model
+2. API testing development
+3. API deployment
+4. API testing production
+5. Searching for database resources
+
+## Tools and Resources for Developing Chatbot
+
+### Machine Learning
+1. Code Platform: Jupyter Notebook and Google Collaboration
+2. Programming Language: Python
+3. Library: Pandas, Tensorflow, numpy
+
+### Mobile Development
+1. Text Editor: Android Studio
+2. Collaboration Tools: Github
+3. Programming Language: Kotlin
+4. Design Tools: Figma
+5. Prototype: [Click Here]([https://bit.ly/final-prototype-c22-cb04](https://www.figma.com/file/HTDOFOF24j8i12a5ZxqPRh/ClasTic?type=design&node-id=0%3A1&t=5tYWysVO0ZP098QM-1))
+
+### Cloud Computing
 1. Cloud Environment: Google Cloud Platform (Cloud Storage, Cloud Run)
 2. Programming Language: Python
 3. Web Server: Flask API
 4. Server: Cloud Run
 
-# Cloud Architecture
-*gambar cloud architecture kita*
-
-# How to setup Locally
-1. Clone the project first to your editor
-```
-git clone (github links https)
-```
-2. Go to directory of `cloud-computing`
-```
-cd cloud-computing
-```
-4. create an environment
-- For Windows
-```
-py -3 -m venv .venv
-```
-- For MacOS
-```
-python3 -m venv .venv
-```
-5. Activate the environment
-- For Windows
-```
-.venv\Scripts\activate
-```
-- For MacOS
-```
-source .venv/bin/activate
-```
-6. Install requirement.txt (all libraries that should be installed)
-```
-pip install -r requirement.txt
-```
-7. Make sure all dependencies are successfully installed by `pip list`
-8. Run `main.py` for running the API script with `python main.py`
-9. Test the API endpoint in `Postman` by open the link from Flask with `Postman` and change method to `POST` with `/predict` route and body with uploaded file of plastic that you want to predict the class
-
-# How to setup with Google Cloud Platform
-## How To Deploy Flask API On Google Cloud Platform (Cloud Run)
-1. Create Flask API
-2. Create Dockerfile
-```
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.9-slim
-
-# Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
-
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
-RUN apt-get update && apt-get install -y python3-opencv
-RUN pip install opencv-python
-
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-COPY . ./
-
-# Install production dependencies.
-RUN pip install -r requirement.txt
-
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-```
-3. Go to Google Cloud Platform (https://console.cloud.google.com/)
-4. Create a Project
-5. Click cloud shell terminal to clone git
-6. Clone the git with this command
-```
-git clone (github links https)
-```
-7. Then type `ls` to see that we have sucess clone the github
-8. Change the directory to the github repository that you want to deploy, type `cd (directory that we want to use)`
-9. In terminal, run these
-```
-gcloud builds submit --tag gcr.io/<project_id>/index
-gcloud run deploy --image gcr.io/<project_id>/index --platform managed
-```
-10. When you are prompted for the service name, press `“Enter”` to accept the default
-name
-11. If you are prompted to enable the Artifact Registry API or to allow creation of
-Artifact Registry repository or other API, respond by pressing `y`
-12. If you are prompted to enable the Artifact Registry API or to allow creation of
-Artifact Registry repository, respond by pressing `y`
-13. After the deployment process is done, there is should be url where you can use it to test on `Postman` like the on the local before with the endpoint `/predict`
+## Contributor
+1. M181DSY0201 – [Irene Patricia Wibowo](https://www.linkedin.com/in/irene-patricia-w/) – Universitas Indonesia - Machine Learning
+2. M038DSX1899 – [Darren Kang Wan Chee](https://www.linkedin.com/in/darren-kang-wan-chee-460386211/) – Institut Teknologi Sepuluh Nopember - Machine Learning
+3. C181DSY3429 – [Angelica Patricia Djaya Saputra](https://www.linkedin.com/in/angelica-patricia/) – Universitas Indonesia - Cloud Computing
+4. C181DSY3461 – [Latifa Aulia Esmananda](https://www.linkedin.com/in/latifa-aulia-esmananda/) – Universitas Indonesia - Cloud Computing
+5. A038DSX1029 – [Liefran Satrio Sim](https://www.linkedin.com/in/liefransatriosim/) – Institut Teknologi Sepuluh Nopember - Mobile Development
+6. A038DSX1094 – [Warren Gerald Polandra](https://www.linkedin.com/in/warren-gerald-polandra-a21b07206/) – Institut Teknologi Sepuluh Nopember - Mobile Development
