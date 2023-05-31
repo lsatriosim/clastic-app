@@ -1,6 +1,6 @@
 # Clastic: Classify Your Plastic
 
-*gambar app kita*
+![Clastic](https://github.com/lsatriosim/clastic-app/assets/85095564/37d6a39f-dab9-42bd-84c5-4b115b658db3)
 
 ## About Clastic
 
