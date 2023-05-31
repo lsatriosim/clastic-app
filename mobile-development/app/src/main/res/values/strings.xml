@@ -24,4 +24,14 @@
     <string name="verify_email">Please verify your email in your inbox</string>
     <string name="web_client_id">721196747339-nc9h79jcud39j4nt31dgeiqvqm2saeqi.apps.googleusercontent.com</string>
     <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="back">Back</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="transaction_made">Transaksi Dibuat</string>
+    <string name="gathered_plastic">Plastik Terkumpul</string>
+    <string name="kg">" kg"</string>
+    <string name="transaction_history">Riwayat Transaksi Plastik</string>
+    <string name="redeem_history">Riwayat Penukaran Points</string>
+    <string name="share_clastic">Bagikan Clastic ke Temanmu</string>
+    <string name="settings">Pengaturan</string>
 </resources>

@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +57,7 @@ import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
+import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -86,13 +88,13 @@ class MainActivity : ComponentActivity() {
                         .background(Color.White)
                 ) {
                     val navHostController: NavHostController = rememberNavController()
-                    var splashVisible by remember { mutableStateOf(true) }
+                    var splashVisible by rememberSaveable { mutableStateOf(true) }
                     if (splashVisible) {
                         ClasticSplashScreen(onSplashFinished = { splashVisible = false })
                     } else {
                         var startDestination = Screen.login.route
                         if (googleAuthUiClient.getLoggedInUser() != null) {
-                            startDestination = Screen.articleList.route
+                            startDestination = Screen.profile.route
                         }
 
                         NavHost(
@@ -212,21 +214,30 @@ class MainActivity : ComponentActivity() {
                                 Log.d("arguments", articleUrl.toString())
                                 ArticleScreen(contentUrl = articleUrl)
                             }
+                            composable(
+                                route = Screen.ProductKnowledge.route,
+                                arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                            ){navBackStackEntry ->
+                                var plasticType: PlasticKnowledge? = null
+                                for(plastic in ProductData.plasticTypes){
+                                    if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                                        plasticType = plastic
+                                    }
+                                }
+                                Log.d("productKnowledge", plasticType.toString())
+                                ProductKnowledgeScreen(plasticType = plasticType!!)
+                            }
+                            composable(Screen.profile.route) {
+                                ProfileScreen(onlogout = {
+                                    lifecycleScope.launch {
+                                        googleAuthUiClient.logout()
+                                    }
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.login.route)
+                                })
+                            }
                         }
                     }
-                }
-                composable(
-                    route = Screen.ProductKnowledge.route,
-                    arguments = listOf(navArgument("tag"){type = NavType.StringType})
-                ){navBackStackEntry ->
-                    var plasticType: PlasticKnowledge? = null
-                    for(plastic in ProductData.plasticTypes){
-                        if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
-                            plasticType = plastic
-                        }
-                    }
-                    Log.d("productKnowledge", plasticType.toString())
-                    ProductKnowledgeScreen(plasticType = plasticType!!)
                 }
             }
         }

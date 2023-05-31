@@ -14,4 +14,6 @@ sealed class Screen(val route:String) {
     object ProductKnowledge: Screen("productKnowledge/{tag}"){
         fun createRoute(tag: String) = "productKnowledge/$tag"
     }
+
+    object profile: Screen("profile")
 }
