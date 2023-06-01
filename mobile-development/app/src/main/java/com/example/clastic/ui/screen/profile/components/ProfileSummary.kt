@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,10 +58,12 @@ fun ProfileSummary(
                 Text(
                     text = totalTransaction,
                     fontSize = 24.sp,
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = stringResource(R.string.transaction_made),
+                    color = Color.Black,
                     fontSize = 16.sp,
                 )
             }
@@ -76,11 +79,13 @@ fun ProfileSummary(
             ) {
                 Text(
                     text = totalPlastic + stringResource(R.string.kg),
+                    color = Color.Black,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = stringResource(R.string.gathered_plastic),
+                    color = Color.Black,
                     fontSize = 16.sp,
                 )
             }

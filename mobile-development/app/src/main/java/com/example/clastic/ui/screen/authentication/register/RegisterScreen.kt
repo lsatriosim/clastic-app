@@ -1,5 +1,6 @@
 package com.example.clastic.ui.screen.authentication.register
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +42,7 @@ import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClien
 import com.example.clastic.ui.screen.authentication.components.GoogleSignInButton
 import com.example.clastic.ui.screen.authentication.components.NameTextField
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
+import com.example.clastic.ui.screen.authentication.login.LoginState
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.MainScope
@@ -47,6 +51,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
+    state: LoginState,
     navigateToLogin: () -> Unit,
     onRegisterClick: () -> Unit,
     viewModel: RegisterViewModel,
@@ -58,6 +63,18 @@ fun RegisterScreen(
     var passInput by remember { mutableStateOf("") }
     var nameInput by remember { mutableStateOf("") }
     val keyboard = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val isEnabled by viewModel.isEnabled.collectAsState()
+
+    LaunchedEffect(key1 = state.loginError) {
+        state.loginError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -83,6 +100,7 @@ fun RegisterScreen(
             GoogleSignInButton(
                 onClick = onRegisterClick,
                 stringId = R.string.register_with_google,
+                isEnabled = isEnabled,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
@@ -122,8 +140,8 @@ fun RegisterScreen(
                 onClick = {
                     keyboard?.hide()
                     mainScope.launch {
-                        val loginResult = googleAuthUiClient.registerEmailPass(emailInput, passInput)
-                        viewModel.onRegisterResult(loginResult)
+                        val registerResult = googleAuthUiClient.registerEmailPass(nameInput, emailInput, passInput)
+                        viewModel.onRegisterResult(registerResult)
                     }
                 },
                 modifier = modifier
@@ -152,6 +170,7 @@ fun RegisterScreen(
 fun RegisterScreenPreview() {
     ClasticTheme {
         RegisterScreen(
+            state = LoginState(),
             navigateToLogin = {},
             onRegisterClick = {},
             googleAuthUiClient = GoogleAuthUiClient(

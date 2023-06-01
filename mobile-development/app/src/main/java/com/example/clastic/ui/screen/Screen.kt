@@ -2,6 +2,7 @@ package com.example.clastic.ui.screen
 
 sealed class Screen(val route:String) {
 
+    object splashScreen: Screen("splashScreen")
     object login: Screen("login")
     object register: Screen("register")
     object articleDetail: Screen("articleDetail/{articleUrl}"){

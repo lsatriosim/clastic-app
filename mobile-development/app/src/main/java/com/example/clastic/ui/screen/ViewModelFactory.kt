@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.clastic.di.Injection
 import com.example.clastic.data.Repository
+import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
 import com.example.clastic.ui.screen.listArticle.ListArticleViewModel
 

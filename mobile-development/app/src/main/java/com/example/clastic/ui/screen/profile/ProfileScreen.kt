@@ -1,5 +1,6 @@
 package com.example.clastic.ui.screen.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,12 +39,15 @@ fun ProfileScreen(
                 onBackClick = { TODO() }
             )
         },
+        modifier = modifier
+            .background(Color.White)
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .background(Color.White),
         ) {
             // TODO(Change Static Data)
             ProfileCard(
@@ -51,7 +55,7 @@ fun ProfileScreen(
                 email = "liefran@gmail.com",
                 points = "2.000",
                 profileImage = painterResource(R.drawable.logo_botol_biru),
-                modifier = modifier
+                modifier = Modifier
                     .padding(vertical = 20.dp)
             )
             ProfileSummary(
@@ -95,7 +99,7 @@ fun ProfileScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun ProfileScreenPreview() {
     ClasticTheme {

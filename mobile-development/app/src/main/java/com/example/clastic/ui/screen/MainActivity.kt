@@ -9,12 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -25,16 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -43,17 +34,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.clastic.R
+import com.example.clastic.data.entity.PlasticKnowledge
+import com.example.clastic.data.entity.ProductData
 import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.login.LoginViewModel
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
-import com.example.clastic.data.entity.PlasticKnowledge
-import com.example.clastic.data.entity.Product
-import com.example.clastic.data.entity.ProductData
-import com.example.clastic.ui.screen.home.HomeScreen
-import com.example.clastic.ui.screen.home.ProductKnowledgeComponent
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
@@ -88,154 +75,166 @@ class MainActivity : ComponentActivity() {
                         .background(Color.White)
                 ) {
                     val navHostController: NavHostController = rememberNavController()
-                    var splashVisible by rememberSaveable { mutableStateOf(true) }
-                    if (splashVisible) {
-                        ClasticSplashScreen(onSplashFinished = { splashVisible = false })
-                    } else {
-                        var startDestination = Screen.login.route
-                        if (googleAuthUiClient.getLoggedInUser() != null) {
-                            startDestination = Screen.profile.route
+                    NavHost(
+                        navController = navHostController,
+                        startDestination = Screen.splashScreen.route
+                    ) {
+                        composable(Screen.splashScreen.route) {
+                            var splashVisible by rememberSaveable { mutableStateOf(true) }
+                            if (splashVisible) {
+                                ClasticSplashScreen(
+                                    onSplashFinished = {
+                                        splashVisible = false
+                                        navHostController.popBackStack()
+                                        if (googleAuthUiClient.getLoggedInUser() != null) {
+                                            // TODO(Start destination after splash screen here for debug)
+                                            navHostController.navigate(Screen.profile.route)
+                                        } else {
+                                            navHostController.navigate(Screen.login.route)
+                                        }
+                                    }
+                                )
+                            }
                         }
+                        composable(Screen.login.route) {
+                            val viewModel = viewModel<LoginViewModel>()
+                            val state by viewModel.state.collectAsState()
 
-                        NavHost(
-                            navController = navHostController,
-                            startDestination = startDestination
-                        ) {
-                            composable(Screen.login.route) {
-                                val viewModel = viewModel<LoginViewModel>()
-                                val state by viewModel.state.collectAsState()
-
-                                val launcher = rememberLauncherForActivityResult(
-                                    contract = ActivityResultContracts.StartIntentSenderForResult(),
-                                    onResult = { result ->
-                                        if (result.resultCode == RESULT_OK) {
-                                            lifecycleScope.launch {
-                                                val loginResult = googleAuthUiClient.loginWithIntent(
-                                                    intent = result.data ?: return@launch
-                                                )
-                                                viewModel.onLoginResult(loginResult)
-                                            }
-                                        }
-                                    }
-                                )
-                                LaunchedEffect(key1 = state.isLoginSuccessful) {
-                                    if (state.isLoginSuccessful) {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Login Success",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        navHostController.navigate(Screen.articleList.route)
-                                        viewModel.resetState()
-                                    }
-                                }
-
-                                LoginScreen(
-                                    state = state,
-                                    navigateToRegister = {
-                                        navHostController.popBackStack()
-                                        navHostController.navigate(Screen.register.route)
-                                    },
-                                    onLoginClick = {
+                            val launcher = rememberLauncherForActivityResult(
+                                contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                onResult = { result ->
+                                    if (result.resultCode == RESULT_OK) {
                                         lifecycleScope.launch {
-                                            val loginIntentSender = googleAuthUiClient.login()
-                                            launcher.launch(
-                                                IntentSenderRequest.Builder(
-                                                    loginIntentSender ?: return@launch
-                                                ).build()
+                                            val loginResult = googleAuthUiClient.loginWithIntent(
+                                                intent = result.data ?: return@launch
                                             )
+                                            viewModel.onLoginResult(loginResult)
                                         }
-                                    },
-                                    googleAuthUiClient = googleAuthUiClient,
-                                    viewModel = viewModel
-                                )
-                            }
-                            composable(Screen.register.route) {
-                                val viewModel = viewModel<RegisterViewModel>()
-                                val state by viewModel.state.collectAsState()
-
-                                LaunchedEffect(key1 = state.isLoginSuccessful) {
-                                    if (state.isLoginSuccessful) {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Register Success",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        navHostController.navigate(Screen.articleList.route)
-                                        viewModel.resetState()
                                     }
                                 }
-
-                                val launcher = rememberLauncherForActivityResult(
-                                    contract = ActivityResultContracts.StartIntentSenderForResult(),
-                                    onResult = { result ->
-                                        if (result.resultCode == RESULT_OK) {
-                                            lifecycleScope.launch {
-                                                val loginResult = googleAuthUiClient.loginWithIntent(
-                                                    intent = result.data ?: return@launch
-                                                )
-                                                viewModel.onRegisterResult(loginResult)
-                                            }
-                                        }
-                                    }
-                                )
-
-                                RegisterScreen(
-                                    navigateToLogin = {
-                                        navHostController.popBackStack()
-                                        navHostController.navigate(Screen.login.route)
-                                    },
-                                    onRegisterClick = {
-                                        lifecycleScope.launch {
-                                            val loginIntentSender = googleAuthUiClient.login()
-                                            launcher.launch(
-                                                IntentSenderRequest.Builder(
-                                                    loginIntentSender ?: return@launch
-                                                ).build()
-                                            )
-                                        }
-                                    },
-                                    viewModel = viewModel,
-                                    googleAuthUiClient = googleAuthUiClient
-                                )
-                            }
-                            composable(Screen.articleList.route) {
-                                ListArticleScreen(onClick = { articleUrl ->
-                                    val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
-                                    navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
-                                })
-                            }
-                            composable(
-                                route = Screen.articleDetail.route,
-                                arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
-                            ) { navBackStackEntry ->
-                                val articleUrl =
-                                    URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"))
-                                Log.d("arguments", articleUrl.toString())
-                                ArticleScreen(contentUrl = articleUrl)
-                            }
-                            composable(
-                                route = Screen.ProductKnowledge.route,
-                                arguments = listOf(navArgument("tag"){type = NavType.StringType})
-                            ){navBackStackEntry ->
-                                var plasticType: PlasticKnowledge? = null
-                                for(plastic in ProductData.plasticTypes){
-                                    if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
-                                        plasticType = plastic
-                                    }
+                            )
+                            LaunchedEffect(key1 = state.isLoginSuccessful) {
+                                if (state.isLoginSuccessful) {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Login Success",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    navHostController.popBackStack()
+                                    // TODO(Start destination after login here for debug)
+                                    navHostController.navigate(Screen.profile.route)
+                                    viewModel.resetState()
                                 }
-                                Log.d("productKnowledge", plasticType.toString())
-                                ProductKnowledgeScreen(plasticType = plasticType!!)
                             }
-                            composable(Screen.profile.route) {
-                                ProfileScreen(onlogout = {
+
+                            LoginScreen(
+                                state = state,
+                                navigateToRegister = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.register.route)
+                                },
+                                onLoginClick = {
                                     lifecycleScope.launch {
-                                        googleAuthUiClient.logout()
+                                        val loginIntentSender = googleAuthUiClient.login()
+                                        launcher.launch(
+                                            IntentSenderRequest.Builder(
+                                                loginIntentSender ?: return@launch
+                                            ).build()
+                                        )
                                     }
+                                },
+                                googleAuthUiClient = googleAuthUiClient,
+                                viewModel = viewModel
+                            )
+                        }
+                        composable(Screen.register.route) {
+                            val viewModel = viewModel<RegisterViewModel>()
+                            val state by viewModel.state.collectAsState()
+
+                            LaunchedEffect(key1 = state.isLoginSuccessful) {
+                                if (state.isLoginSuccessful) {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Register Success",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    navHostController.popBackStack()
+                                    // TODO(Start destination after register here for debug)
+                                    navHostController.navigate(Screen.profile.route)
+                                    viewModel.resetState()
+                                }
+                            }
+
+                            val launcher = rememberLauncherForActivityResult(
+                                contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                onResult = { result ->
+                                    if (result.resultCode == RESULT_OK) {
+                                        lifecycleScope.launch {
+                                            val registerResult = googleAuthUiClient.loginWithIntent(
+                                                intent = result.data ?: return@launch
+                                            )
+                                            viewModel.onLoginResult(registerResult)
+                                        }
+                                    }
+                                }
+                            )
+
+                            RegisterScreen(
+                                state = state,
+                                navigateToLogin = {
                                     navHostController.popBackStack()
                                     navHostController.navigate(Screen.login.route)
-                                })
+                                },
+                                onRegisterClick = {
+                                    lifecycleScope.launch {
+                                        val loginIntentSender = googleAuthUiClient.login()
+                                        launcher.launch(
+                                            IntentSenderRequest.Builder(
+                                                loginIntentSender ?: return@launch
+                                            ).build()
+                                        )
+                                    }
+                                },
+                                viewModel = viewModel,
+                                googleAuthUiClient = googleAuthUiClient
+                            )
+                        }
+                        composable(Screen.articleList.route) {
+                            ListArticleScreen(onClick = { articleUrl ->
+                                val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
+                                navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
+                            })
+                        }
+                        composable(
+                            route = Screen.articleDetail.route,
+                            arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+                        ) { navBackStackEntry ->
+                            val articleUrl =
+                                URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"), "UTF-8")
+                            Log.d("arguments", articleUrl.toString())
+                            ArticleScreen(contentUrl = articleUrl)
+                        }
+                        composable(
+                            route = Screen.ProductKnowledge.route,
+                            arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                        ){navBackStackEntry ->
+                            var plasticType: PlasticKnowledge? = null
+                            for(plastic in ProductData.plasticTypes){
+                                if(plastic.tag == navBackStackEntry.arguments?.getString("tag")){
+                                    plasticType = plastic
+                                }
                             }
+                            Log.d("productKnowledge", plasticType.toString())
+                            ProductKnowledgeScreen(plasticType = plasticType!!)
+                        }
+                        composable(Screen.profile.route) {
+                            ProfileScreen(onlogout = {
+                                lifecycleScope.launch {
+                                    googleAuthUiClient.logout()
+                                }
+                                navHostController.popBackStack()
+                                navHostController.navigate(Screen.login.route)
+                            })
                         }
                     }
                 }

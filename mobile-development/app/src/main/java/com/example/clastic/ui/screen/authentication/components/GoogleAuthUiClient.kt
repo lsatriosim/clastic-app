@@ -5,14 +5,19 @@ import android.content.Intent
 import android.content.IntentSender
 import android.util.Log
 import com.example.clastic.R
+import com.example.clastic.data.entity.User
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.CancellationException
 
 class GoogleAuthUiClient(
@@ -20,6 +25,7 @@ class GoogleAuthUiClient(
     private val oneTapClient: SignInClient
 ) {
     private val auth = Firebase.auth
+    private val db = Firebase.firestore
 
     suspend fun login(): IntentSender? {
         val result = try {
@@ -34,15 +40,15 @@ class GoogleAuthUiClient(
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun registerEmailPass(email: String, password: String): LoginResult {
+    suspend fun registerEmailPass(name: String, email: String, password: String): RegisterResult {
         return try {
             val user = auth.createUserWithEmailAndPassword(email, password).await().user
             Log.d("TOKEN: ", user?.getIdToken(false).toString())
-            createLoginResultSuccess(user)
+            createRegisterResultSuccess(user, name)
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            createLoginResultFailed(e.message)
+            createRegisterResultFailed(e.message)
         }
     }
 
@@ -92,8 +98,23 @@ class GoogleAuthUiClient(
     }
 
     private fun createLoginResultSuccess(user: FirebaseUser?): LoginResult {
+        val docRef = db.collection("user").document(user?.email!!)
+        var result: LoginResult = LoginResult(null, null)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    //TODO()
+                    result = LoginResult(data = null, errorMessage = null)
+                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Data Fetch failed with ", exception)
+            }
         return LoginResult(
-            data = user?.run {
+            data = user.run {
                 UserData(
                     userId = uid,
                     username = displayName,
@@ -105,8 +126,59 @@ class GoogleAuthUiClient(
         )
     }
 
+    private fun createRegisterResultSuccess(user: FirebaseUser?, name: String): RegisterResult {
+        val rawDate = Calendar.getInstance().time
+        val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val currentDate = df.format(rawDate)
+
+        user?.run {
+            val newUser = hashMapOf(
+                "userId" to uid,
+                "username" to name,
+                "userPhoto" to photoUrl?.toString(),
+                "coin" to 0,
+                "createdAt" to currentDate,
+                "level" to 1,
+                "exp" to 0,
+                "role" to "user"
+            )
+            db.collection("user").document(email!!).set(newUser)
+                .addOnSuccessListener {
+                    Log.d(TAG, "$name's account has been made")
+                }.addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+
+        }
+
+        return RegisterResult(
+            data = user?.run {
+                User(
+                    userId = uid,
+                    username = name,
+                    email = email,
+                    userPhoto = photoUrl?.toString(),
+                    token = user.getIdToken(false).toString(),
+                    coin = 0,
+                    createdAt = currentDate,
+                    level = 1,
+                    exp = 0,
+                    role = "user"
+                )
+            },
+            errorMessage = null
+        )
+    }
+
     private fun createLoginResultFailed(message: String?): LoginResult {
         return LoginResult(
+            data = null,
+            errorMessage = message
+        )
+    }
+
+    private fun createRegisterResultFailed(message: String?): RegisterResult {
+        return RegisterResult(
             data = null,
             errorMessage = message
         )
@@ -123,5 +195,9 @@ class GoogleAuthUiClient(
             )
             .setAutoSelectEnabled(true)
             .build()
+    }
+
+    companion object{
+        private const val TAG = "Firestore"
     }
 }

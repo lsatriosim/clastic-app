@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -36,6 +37,9 @@ fun LogoutButton(
         shape = RoundedCornerShape(13.dp),
         border = BorderStroke(2.dp, red),
         contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = Color.White
+        )
     ) {
         Icon(
             imageVector = Icons.Default.PowerSettingsNew,
