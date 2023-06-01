@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -35,11 +37,108 @@ import com.example.clastic.ui.screen.productKnowledge.PointTag
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
     val listState = rememberLazyListState()
-    LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        items(items = ProductData.plasticTypes, key = { it.tag }) { plasticType ->
-            ProductKnowledgeComponent(onClick = onClick, plasticType = plasticType)
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        Color("#3FB9CF".toColorInt()),
+                        Color("#0097B2".toColorInt())
+                    ),
+                    startX = 0F,
+                    endX = 800F
+                )
+            )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+            contentAlignment = Alignment.TopStart
+        ) {
+            Box(
+                modifier = modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(8.dp), contentAlignment = Alignment.TopEnd
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_notification_white),
+                        tint = Color.White,
+                        contentDescription = null
+                    )
+                }
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Image(
+                        painter = painterResource(id = R.drawable.clastic_logo_text),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .width(196.dp)
+                            .height(40.dp)
+                    )
+                    Text(
+                        text = "Hai, Liefran!",
+                        style = MaterialTheme.typography.h5.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Box(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(color = Color.White)
+                            .padding(8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                modifier = modifier,
+                                painter = painterResource(id = R.drawable.ic_coin),
+                                tint = Color("#0198B3".toColorInt()),
+                                contentDescription = null
+                            )
+                            Text(
+                                modifier = modifier,
+                                text = "2,000.00 pts",
+                                style = MaterialTheme.typography.subtitle1.copy(
+                                    color = Color("#0198B3".toColorInt()),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        }
+
+                    }
+                }
+            }
+        }
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        .background(color = Color.White)
+                ) {
+                    LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        items(items = ProductData.plasticTypes, key = { it.tag }) { plasticType ->
+                            ProductKnowledgeComponent(onClick = onClick, plasticType = plasticType)
+                        }
+                    }
+                }
+            }
         }
     }
+
 }
 
 @Composable
@@ -69,22 +168,6 @@ fun ProductKnowledgeComponent(
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = plasticType.tag,
-            modifier = Modifier,
-            color = Color.Black,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = "PET",
-            modifier = Modifier,
-            color = Color.Black,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
         Text(
             text = plasticType.tag,
             modifier = Modifier,

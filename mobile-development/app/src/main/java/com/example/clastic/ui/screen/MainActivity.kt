@@ -212,22 +212,23 @@ class MainActivity : ComponentActivity() {
                                 Log.d("arguments", articleUrl.toString())
                                 ArticleScreen(contentUrl = articleUrl)
                             }
+                            composable(
+                                route = Screen.ProductKnowledge.route,
+                                arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                            ){navBackStackEntry ->
+                                var plasticType: PlasticKnowledge? = null
+                                for(plastic in ProductData.plasticTypes){
+                                    if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                                        plasticType = plastic
+                                    }
+                                }
+                                Log.d("productKnowledge", plasticType.toString())
+                                ProductKnowledgeScreen(plasticType = plasticType!!)
+                            }
                         }
                     }
                 }
-                composable(
-                    route = Screen.ProductKnowledge.route,
-                    arguments = listOf(navArgument("tag"){type = NavType.StringType})
-                ){navBackStackEntry ->
-                    var plasticType: PlasticKnowledge? = null
-                    for(plastic in ProductData.plasticTypes){
-                        if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
-                            plasticType = plastic
-                        }
-                    }
-                    Log.d("productKnowledge", plasticType.toString())
-                    ProductKnowledgeScreen(plasticType = plasticType!!)
-                }
+
             }
         }
     }
