@@ -1,6 +1,10 @@
 package com.example.clastic.ui.screen.authentication.login
 
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +19,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,7 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clastic.R
+import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.authentication.components.AuthenticationButton
 import com.example.clastic.ui.screen.authentication.components.AuthenticationMethodDivider
 import com.example.clastic.ui.screen.authentication.components.EmailTextField
@@ -45,17 +52,50 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    state: LoginState,
     navigateToRegister: () -> Unit,
-    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
     googleAuthUiClient: GoogleAuthUiClient,
-    viewModel: LoginViewModel
+    navigateToHome: () -> Unit
 ) {
     val mainScope = MainScope()
     var emailInput by rememberSaveable { mutableStateOf("") }
     var passInput by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+    val viewModel: LoginViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(
+            LocalContext.current
+        )
+    )
+
+    val isEnabled by viewModel.isEnabled.collectAsState()
+    val state by viewModel.state.collectAsState()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == ComponentActivity.RESULT_OK) {
+                mainScope.launch {
+                    val loginResult = googleAuthUiClient.loginWithIntent(
+                        intent = result.data ?: return@launch
+                    )
+                    viewModel.onLoginResult(loginResult)
+                }
+            }
+        }
+    )
+
+    LaunchedEffect(key1 = state.isLoginSuccessful) {
+        if (state.isLoginSuccessful) {
+            Toast.makeText(
+                context,
+                "Login Success",
+                Toast.LENGTH_LONG
+            ).show()
+            viewModel.resetState()
+            navigateToHome()
+        }
+    }
+
     LaunchedEffect(key1 = state.loginError) {
         state.loginError?.let { error ->
             Toast.makeText(
@@ -88,8 +128,18 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             GoogleSignInButton(
-                onClick = onLoginClick,
+                onClick = {
+                    mainScope.launch {
+                        val loginIntentSender = googleAuthUiClient.login()
+                        launcher.launch(
+                            IntentSenderRequest.Builder(
+                                loginIntentSender ?: return@launch
+                            ).build()
+                        )
+                    }
+                },
                 stringId = R.string.sign_in_with_google,
+                isEnabled = isEnabled,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
@@ -150,12 +200,10 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     ClasticTheme {
         LoginScreen(
-            state = LoginState(),
-            onLoginClick = {},
             navigateToRegister = {},
             googleAuthUiClient = GoogleAuthUiClient(LocalContext.current, Identity.getSignInClient(
                 LocalContext.current)),
-            viewModel = LoginViewModel()
+            navigateToHome = {}
         )
     }
 }

@@ -3,17 +3,22 @@ package com.example.clastic.ui.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.clastic.di.Injection
 import com.example.clastic.data.Repository
+import com.example.clastic.di.Injection
+import com.example.clastic.ui.screen.authentication.login.LoginViewModel
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
 import com.example.clastic.ui.screen.listArticle.ListArticleViewModel
+import com.example.clastic.ui.screen.profile.ProfileViewModel
 
 class ViewModelFactory(private val repository: Repository) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        when {
-            modelClass.isAssignableFrom(ListArticleViewModel::class.java) -> return ListArticleViewModel(repository) as T
+        return when {
+            modelClass.isAssignableFrom(ListArticleViewModel::class.java) -> ListArticleViewModel(repository) as T
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel() as T
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> RegisterViewModel() as T
+            modelClass.isAssignableFrom(ProfileViewModel::class.java) -> ProfileViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
