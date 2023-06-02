@@ -34,6 +34,7 @@ import com.example.clastic.ui.screen.profile.components.ProfileTopBar
 import com.example.clastic.ui.theme.ClasticTheme
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 
 @Composable
 fun ProfileScreen(
@@ -69,7 +70,7 @@ fun ProfileScreen(
             ProfileCard(
                 name = user?.username ?: "-",
                 email = user?.email ?: "-",
-                points = if(user?.coin == null) "0" else user?.coin.toString(),
+                points = if(user?.coin == null) "0" else NumberFormat.getInstance().format(user?.coin).toString(),
                 profileImage = if(user?.userPhoto == null) painterResource(R.drawable.logo_botol_biru)
                 else painterResource(R.drawable.logo_botol_biru),
                 modifier = Modifier
