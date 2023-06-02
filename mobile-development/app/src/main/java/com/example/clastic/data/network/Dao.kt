@@ -3,10 +3,8 @@ package com.example.clastic.data.network
 import android.util.Log
 import com.example.clastic.data.entity.Article
 import com.example.clastic.data.entity.User
-import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.components.LoginResult
 import com.example.clastic.ui.screen.authentication.components.RegisterResult
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -140,9 +138,8 @@ class Dao {
                 User(
                     userId = uid,
                     username = name,
-                    email = email,
+                    email = email!!,
                     userPhoto = photoUrl?.toString(),
-                    token = user.getIdToken(false).toString(),
                     coin = 0,
                     createdAt = currentDate,
                     level = 1,
@@ -177,9 +174,8 @@ class Dao {
                     user = currentUser.run {
                         User(
                             userId = currentUser.uid,
-                            email = currentUser.email,
+                            email = currentUser.email!!,
                             username = documentsSnapshot.getString("username"),
-                            token = currentUser.getIdToken(false).toString(),
                             coin = documentsSnapshot.getLong("coin")?.toInt() ?: 0,
                             userPhoto = documentsSnapshot.getString("userPhoto"),
                             level = documentsSnapshot.getLong("level")?.toInt() ?: 1,

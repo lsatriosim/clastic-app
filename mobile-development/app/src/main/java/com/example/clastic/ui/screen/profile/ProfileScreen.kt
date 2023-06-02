@@ -31,6 +31,7 @@ import com.example.clastic.ui.screen.profile.components.ProfileCard
 import com.example.clastic.ui.screen.profile.components.ProfileMenu
 import com.example.clastic.ui.screen.profile.components.ProfileSummary
 import com.example.clastic.ui.screen.profile.components.ProfileTopBar
+
 import com.example.clastic.ui.theme.ClasticTheme
 
 @Composable

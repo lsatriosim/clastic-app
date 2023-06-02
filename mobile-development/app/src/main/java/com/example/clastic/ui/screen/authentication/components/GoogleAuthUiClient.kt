@@ -156,9 +156,8 @@ class GoogleAuthUiClient(
                 User(
                     userId = uid,
                     username = name,
-                    email = email,
+                    email = email!!,
                     userPhoto = photoUrl?.toString(),
-                    token = user.getIdToken(false).toString(),
                     coin = 0,
                     createdAt = currentDate,
                     level = 1,
