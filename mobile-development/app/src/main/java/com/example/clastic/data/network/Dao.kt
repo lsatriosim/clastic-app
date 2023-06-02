@@ -1,17 +1,23 @@
 package com.example.clastic.data.network
 
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
 import android.util.Log
+import com.example.clastic.R
 import com.example.clastic.data.entity.Article
 import com.example.clastic.data.entity.User
-import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
-import com.example.clastic.ui.screen.authentication.components.LoginResult
-import com.example.clastic.ui.screen.authentication.components.RegisterResult
+import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
 import com.example.clastic.ui.screen.authentication.components.UserData
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -99,7 +105,31 @@ class Dao {
             }
     }
 
-    suspend fun registerEmailPass(name: String, email: String, password: String): RegisterResult {
+    suspend fun login(context: Context, oneTapClient: SignInClient): IntentSender? {
+        val result = try {
+            oneTapClient.beginSignIn(
+                buildLoginRequest(context)
+            ).await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            null
+        }
+        return result?.pendingIntent?.intentSender
+    }
+    private fun buildLoginRequest(context: Context): BeginSignInRequest {
+        return BeginSignInRequest.Builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(context.getString(R.string.web_client_id))
+                    .build()
+            )
+            .setAutoSelectEnabled(true)
+            .build()
+    }
+    suspend fun registerEmailPass(name: String, email: String, password: String): AuthenticationResult {
         return try {
             val user = auth.createUserWithEmailAndPassword(email, password).await().user
             Log.d("TOKEN: ", user?.getIdToken(false).toString())
@@ -107,11 +137,11 @@ class Dao {
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            createRegisterResultFailed(e.message)
+            createAuthenticationResultFailed(e.message)
         }
     }
 
-    suspend fun loginEmailPass(email: String, password: String): LoginResult {
+    suspend fun loginEmailPass(email: String, password: String): AuthenticationResult? {
         return try {
             val user = auth.signInWithEmailAndPassword(email, password).await().user
             Log.d("TOKEN: ", user?.getIdToken(false).toString())
@@ -119,11 +149,32 @@ class Dao {
         } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            createLoginResultFailed(e.message)
+            createAuthenticationResultFailed(e.message)
         }
     }
 
-    private fun createRegisterResultSuccess(user: FirebaseUser?, name: String): RegisterResult {
+    suspend fun loginWithIntent(intent: Intent, oneTapClient: SignInClient): AuthenticationResult? {
+        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
+        val googleIdToken = credential.googleIdToken
+        val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+        return try {
+            val user = auth.signInWithCredential(googleCredentials).await().user
+            val documentSnapshot = db.collection("user").document(user?.email!!).get().await()
+
+            if (documentSnapshot.exists()) {
+                Log.d("resultLogOneTap", user.toString())
+                createLoginResultSuccess(user)
+            } else {
+                createRegisterResultSuccess(user, user.email!!)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            createAuthenticationResultFailed(e.message)
+        }
+    }
+
+    private fun createRegisterResultSuccess(user: FirebaseUser?, name: String): AuthenticationResult {
         val rawDate = Calendar.getInstance().time
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         val currentDate = df.format(rawDate)
@@ -148,7 +199,7 @@ class Dao {
 
         }
 
-        return RegisterResult(
+        return AuthenticationResult(
             data = user?.run {
                 User(
                     userId = uid,
@@ -166,50 +217,51 @@ class Dao {
         )
     }
 
-    private fun createLoginResultSuccess(user: FirebaseUser?): LoginResult {
-        val docRef = db.collection("user").document(user?.email!!)
-        var result: LoginResult = LoginResult(null, null)
-        docRef.get()
+    private suspend fun createLoginResultSuccess(user: FirebaseUser?): AuthenticationResult? {
+        val deferred = CompletableDeferred<AuthenticationResult?>()
+
+        db.collection("user").document(user?.email!!).get()
             .addOnSuccessListener { document ->
-                if (document != null) {
-                    //TODO()
-                    result = LoginResult(data = null, errorMessage = null)
-                    Log.d("Firestore", "DocumentSnapshot data: ${document.data}")
+                if (document.exists()) {
+                    val result = AuthenticationResult(
+                        data = user.run {
+                            User(
+                                userId = uid,
+                                email = email!!,
+                                username = document.getString("username"),
+                                coin = document.getLong("coin")?.toInt() ?: 0,
+                                userPhoto = document.getString("userPhoto"),
+                                level = document.getLong("level")?.toInt() ?: 1,
+                                exp = document.getLong("exp")?.toInt() ?: 0,
+                                createdAt = document.getString("createdAt") ?: "-",
+                                role = document.getString("role") ?: "user",
+                            )
+                        },
+                        errorMessage = null
+                    )
+                    deferred.complete(result)
+                    Log.d("fetchUser", "User Found")
                 } else {
-                    Log.d("Firestore", "No such document")
+                    deferred.complete(null)
+                    Log.d("fetchUser", "No such document")
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("Firestore", "Data Fetch failed with ", exception)
+                Log.d("fetchUser", "Data Fetch failed with ", exception)
+                deferred.completeExceptionally(exception)
             }
-        return LoginResult(
-            data = user.run {
-                UserData(
-                    userId = uid,
-                    username = displayName,
-                    userImage = photoUrl?.toString(),
-                    token = user.getIdToken(false).toString()
-                )
-            },
-            errorMessage = null
-        )
+
+        return deferred.await()
     }
 
-    private fun createLoginResultFailed(message: String?): LoginResult {
-        return LoginResult(
+    private fun createAuthenticationResultFailed(message: String?): AuthenticationResult {
+        return AuthenticationResult(
             data = null,
             errorMessage = message
         )
     }
 
-    private fun createRegisterResultFailed(message: String?): RegisterResult {
-        return RegisterResult(
-            data = null,
-            errorMessage = message
-        )
-    }
-
-    fun getLoggedInUser(callback: (User?, Exception?) -> Unit) {
+    fun getLoggedInUserData(callback: (User?, Exception?) -> Unit) {
         var user: User? = null
         val currentUser = auth.currentUser
         db.collection("user").document(currentUser?.email!!).get()
@@ -236,5 +288,21 @@ class Dao {
                 Log.d("fetchUser", "User not found: ${exception.message.toString()}")
             }
     }
-
+    fun getLoggedInUser(): UserData? = auth.currentUser?.run {
+        UserData(
+            userId = uid,
+            username = displayName,
+            userImage = photoUrl?.toString(),
+            token = getIdToken(false).toString()
+        )
+    }
+    suspend fun logout(oneTapClient: SignInClient){
+        try {
+            oneTapClient.signOut().await()
+            auth.signOut()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+        }
+    }
 }

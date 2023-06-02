@@ -31,8 +31,9 @@ import com.example.clastic.ui.screen.profile.components.ProfileCard
 import com.example.clastic.ui.screen.profile.components.ProfileMenu
 import com.example.clastic.ui.screen.profile.components.ProfileSummary
 import com.example.clastic.ui.screen.profile.components.ProfileTopBar
-
 import com.example.clastic.ui.theme.ClasticTheme
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -44,7 +45,9 @@ fun ProfileScreen(
             LocalContext.current
         )
     )
+    val mainScope = MainScope()
     val user by viewModel.user.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -106,7 +109,12 @@ fun ProfileScreen(
                     }
             )
             LogoutButton(
-                onClick = onLogout,
+                onClick = {
+                    mainScope.launch {
+                        viewModel.logout(context)
+                    }
+                    onLogout()
+                },
                 modifier = Modifier
                     .padding(top = 20.dp)
             )

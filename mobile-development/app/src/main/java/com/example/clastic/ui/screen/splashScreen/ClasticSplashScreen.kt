@@ -1,6 +1,5 @@
-package com.example.clastic.ui.screen
+package com.example.clastic.ui.screen.splashScreen
 
-import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.os.Looper
 import android.widget.VideoView
@@ -11,7 +10,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.clastic.R
 
 @Composable
-fun ClasticSplashScreen(onSplashFinished: () -> Unit) {
+fun ClasticSplashScreen(
+    viewModel: SplashScreenViewModel,
+    onSplashFinished: () -> Unit
+) {
     val videoUri = "android.resource://com.example.clastic/${R.raw.clastic_splash_screen}"
 
     AndroidView(

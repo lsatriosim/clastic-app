@@ -42,11 +42,9 @@ import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.authentication.components.AuthenticationButton
 import com.example.clastic.ui.screen.authentication.components.AuthenticationMethodDivider
 import com.example.clastic.ui.screen.authentication.components.EmailTextField
-import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.components.GoogleSignInButton
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
 import com.example.clastic.ui.theme.ClasticTheme
-import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -54,7 +52,6 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navigateToRegister: () -> Unit,
     modifier: Modifier = Modifier,
-    googleAuthUiClient: GoogleAuthUiClient,
     navigateToHome: () -> Unit
 ) {
     val mainScope = MainScope()
@@ -75,17 +72,17 @@ fun LoginScreen(
         onResult = { result ->
             if (result.resultCode == ComponentActivity.RESULT_OK) {
                 mainScope.launch {
-                    val loginResult = googleAuthUiClient.loginWithIntent(
-                        intent = result.data ?: return@launch
+                    viewModel.loginWithIntent(
+                        intent = result.data ?: return@launch,
+                        context = context
                     )
-                    viewModel.onLoginResult(loginResult)
                 }
             }
         }
     )
 
-    LaunchedEffect(key1 = state.isLoginSuccessful) {
-        if (state.isLoginSuccessful) {
+    LaunchedEffect(key1 = state.isAuthSuccessful) {
+        if (state.isAuthSuccessful) {
             Toast.makeText(
                 context,
                 "Login Success",
@@ -96,8 +93,8 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(key1 = state.loginError) {
-        state.loginError?.let { error ->
+    LaunchedEffect(key1 = state.authError) {
+        state.authError?.let { error ->
             Toast.makeText(
                 context,
                 error,
@@ -130,7 +127,7 @@ fun LoginScreen(
             GoogleSignInButton(
                 onClick = {
                     mainScope.launch {
-                        val loginIntentSender = googleAuthUiClient.login()
+                        val loginIntentSender = viewModel.login(context)
                         launcher.launch(
                             IntentSenderRequest.Builder(
                                 loginIntentSender ?: return@launch
@@ -172,8 +169,7 @@ fun LoginScreen(
                 stringId = R.string.login,
                 onClick = {
                     mainScope.launch {
-                        val loginResult = googleAuthUiClient.loginEmailPass(emailInput, passInput)
-                        viewModel.onLoginResult(loginResult)
+                        viewModel.loginEmailPass(emailInput, passInput)
                     }
                 },
                 isEnabled = isEnabled,
@@ -204,8 +200,6 @@ fun LoginScreenPreview() {
     ClasticTheme {
         LoginScreen(
             navigateToRegister = {},
-            googleAuthUiClient = GoogleAuthUiClient(LocalContext.current, Identity.getSignInClient(
-                LocalContext.current)),
             navigateToHome = {}
         )
     }

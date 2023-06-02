@@ -9,14 +9,16 @@ import com.example.clastic.ui.screen.authentication.login.LoginViewModel
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
 import com.example.clastic.ui.screen.listArticle.ListArticleViewModel
 import com.example.clastic.ui.screen.profile.ProfileViewModel
+import com.example.clastic.ui.screen.splashScreen.SplashScreenViewModel
 
 class ViewModelFactory(private val repository: Repository) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
+            modelClass.isAssignableFrom(SplashScreenViewModel::class.java) -> SplashScreenViewModel(repository) as T
             modelClass.isAssignableFrom(ListArticleViewModel::class.java) -> ListArticleViewModel(repository) as T
-            modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel() as T
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel(repository) as T
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> RegisterViewModel(repository) as T
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> ProfileViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

@@ -19,8 +19,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -29,32 +30,24 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
-import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
+import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
+import com.example.clastic.ui.screen.splashScreen.SplashScreenViewModel
 import com.example.clastic.ui.theme.ClasticTheme
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.launch
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
-
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,13 +65,18 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Screen.splashScreen.route) {
                             var splashVisible by rememberSaveable { mutableStateOf(true) }
+                            val viewModel: SplashScreenViewModel = viewModel(
+                                factory = ViewModelFactory.getInstance(
+                                    LocalContext.current
+                                )
+                            )
                             if (splashVisible) {
                                 ClasticSplashScreen(
+                                    viewModel = viewModel,
                                     onSplashFinished = {
                                         splashVisible = false
                                         navHostController.popBackStack()
-                                        if (googleAuthUiClient.getLoggedInUser() != null) {
-                                            // TODO(Start destination after splash screen here for debug)
+                                        if (viewModel.getLoggedInUser() != null) {
                                             navHostController.navigate(Screen.profile.route)
                                         } else {
                                             navHostController.navigate(Screen.login.route)
@@ -89,7 +87,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.login.route) {
                             LoginScreen(
-                                googleAuthUiClient = googleAuthUiClient,
                                 navigateToRegister = {
                                     navHostController.popBackStack()
                                     navHostController.navigate(Screen.register.route)
@@ -103,7 +100,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.register.route) {
                             RegisterScreen(
-                                googleAuthUiClient = googleAuthUiClient,
                                 navigateToLogin = {
                                     navHostController.popBackStack()
                                     navHostController.navigate(Screen.login.route)
@@ -145,9 +141,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.profile.route) {
                             ProfileScreen(onLogout = {
-                                lifecycleScope.launch {
-                                    googleAuthUiClient.logout()
-                                }
                                 navHostController.popBackStack()
                                 navHostController.navigate(Screen.login.route)
                             })
