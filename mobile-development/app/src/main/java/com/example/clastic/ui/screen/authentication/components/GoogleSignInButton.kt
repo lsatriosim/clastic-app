@@ -22,6 +22,7 @@ fun GoogleSignInButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     stringId: Int,
+    isEnabled: Boolean
 ) {
     Button(
         modifier = modifier,
@@ -29,6 +30,7 @@ fun GoogleSignInButton(
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color.White
         ),
+        enabled = isEnabled,
         onClick = onClick
     ) {
         Image(
@@ -50,6 +52,6 @@ fun GoogleSignInButton(
 @Composable
 fun GoogleSignInButtonPreview() {
     ClasticTheme {
-        GoogleSignInButton(onClick = {}, stringId = R.string.sign_in_with_google)
+        GoogleSignInButton(onClick = {}, stringId = R.string.sign_in_with_google, isEnabled = true)
     }
 }

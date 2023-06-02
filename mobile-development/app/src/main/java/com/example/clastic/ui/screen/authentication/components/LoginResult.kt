@@ -1,7 +1,14 @@
 package com.example.clastic.ui.screen.authentication.components
 
+import com.example.clastic.data.entity.User
+
 data class LoginResult(
     val data: UserData?,
+    val errorMessage: String?
+)
+
+data class RegisterResult(
+    val data: User?,
     val errorMessage: String?
 )
 

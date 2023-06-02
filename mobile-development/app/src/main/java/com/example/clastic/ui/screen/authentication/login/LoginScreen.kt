@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -56,6 +57,8 @@ fun LoginScreen(
     var emailInput by rememberSaveable { mutableStateOf("") }
     var passInput by rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+    val isEnabled by viewModel.isEnabled.collectAsState()
+
     LaunchedEffect(key1 = state.loginError) {
         state.loginError?.let { error ->
             Toast.makeText(
@@ -90,6 +93,7 @@ fun LoginScreen(
             GoogleSignInButton(
                 onClick = onLoginClick,
                 stringId = R.string.sign_in_with_google,
+                isEnabled = isEnabled,
                 modifier = Modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()

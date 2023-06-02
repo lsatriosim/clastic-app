@@ -27,7 +27,7 @@ fun AuthenticationButton(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.cyan_button)
+            backgroundColor = colorResource(R.color.cyan_primary)
         ),
         modifier = modifier
             .heightIn(min = 48.dp)
