@@ -13,15 +13,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -37,7 +31,6 @@ import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
-import com.example.clastic.ui.screen.splashScreen.SplashScreenViewModel
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -64,26 +57,17 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.splashScreen.route
                     ) {
                         composable(Screen.splashScreen.route) {
-                            var splashVisible by rememberSaveable { mutableStateOf(true) }
-                            val viewModel: SplashScreenViewModel = viewModel(
-                                factory = ViewModelFactory.getInstance(
-                                    LocalContext.current
-                                )
+                            ClasticSplashScreen(
+                                //TODO(Change navigation here for debug)
+                                navigateToHome = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.profile.route)
+                                },
+                                navigateToLogin = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.login.route)
+                                },
                             )
-                            if (splashVisible) {
-                                ClasticSplashScreen(
-                                    viewModel = viewModel,
-                                    onSplashFinished = {
-                                        splashVisible = false
-                                        navHostController.popBackStack()
-                                        if (viewModel.getLoggedInUser() != null) {
-                                            navHostController.navigate(Screen.profile.route)
-                                        } else {
-                                            navHostController.navigate(Screen.login.route)
-                                        }
-                                    }
-                                )
-                            }
                         }
                         composable(Screen.login.route) {
                             LoginScreen(
