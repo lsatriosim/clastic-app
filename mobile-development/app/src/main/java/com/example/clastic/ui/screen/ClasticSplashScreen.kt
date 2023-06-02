@@ -28,9 +28,6 @@ fun ClasticSplashScreen(onSplashFinished: () -> Unit) {
                         onSplashFinished()
                     }, 2000)
                 }
-                OnPreparedListener{
-
-                }
             }
         },
         modifier = Modifier
