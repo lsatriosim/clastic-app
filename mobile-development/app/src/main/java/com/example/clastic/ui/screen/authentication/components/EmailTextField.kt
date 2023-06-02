@@ -34,6 +34,7 @@ import com.example.clastic.ui.theme.ClasticTheme
 @Composable
 fun EmailTextField(
     email: String,
+    isEnabled: Boolean,
     onInputChanged: (String) -> Unit,
     icon: ImageVector,
     modifier: Modifier = Modifier
@@ -53,6 +54,7 @@ fun EmailTextField(
         )
         OutlinedTextField(
             value = email,
+            enabled = isEnabled,
             onValueChange = onInputChanged,
             leadingIcon = {
                 Icon(
@@ -104,6 +106,7 @@ fun EmailTextFieldPreview() {
         EmailTextField(
             email = "invalid input",
             onInputChanged = {},
+            isEnabled = true,
             icon = Icons.Default.Email
         )
     }

@@ -66,7 +66,7 @@ fun ProfileScreen(
             ProfileCard(
                 name = user?.username ?: "-",
                 email = user?.email ?: "-",
-                points = user?.coin.toString(),
+                points = if(user?.coin == null) "0" else user?.coin.toString(),
                 profileImage = if(user?.userPhoto == null) painterResource(R.drawable.logo_botol_biru)
                 else painterResource(R.drawable.logo_botol_biru),
                 modifier = Modifier

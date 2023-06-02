@@ -14,8 +14,8 @@ class Repository(private val dao:Dao) {
         dao.getLoggedInUser(callback)
     }
 
-    suspend fun registerEmailPass(callback: (RegisterResult) -> Unit, name: String, email: String, password: String) {
-        dao.registerEmailPass(
+    suspend fun registerEmailPass(name: String, email: String, password: String): RegisterResult {
+        return dao.registerEmailPass(
             name = name,
             email = email,
             password = password,

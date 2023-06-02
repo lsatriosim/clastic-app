@@ -38,10 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clastic.R
-import com.example.clastic.ui.screen.Screen
 import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.authentication.components.AuthenticationButton
 import com.example.clastic.ui.screen.authentication.components.AuthenticationMethodDivider
@@ -50,7 +48,6 @@ import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClien
 import com.example.clastic.ui.screen.authentication.components.GoogleSignInButton
 import com.example.clastic.ui.screen.authentication.components.NameTextField
 import com.example.clastic.ui.screen.authentication.components.PasswordTextField
-import com.example.clastic.ui.screen.authentication.login.LoginState
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.MainScope
@@ -156,6 +153,7 @@ fun RegisterScreen(
             AuthenticationMethodDivider()
             NameTextField(
                 name = nameInput,
+                isEnabled = isEnabled,
                 onInputChanged = { newValue ->
                     nameInput = newValue
                 },
@@ -168,6 +166,7 @@ fun RegisterScreen(
                 onInputChanged = { newValue ->
                     emailInput = newValue
                 },
+                isEnabled = isEnabled,
                 modifier = modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
@@ -178,6 +177,7 @@ fun RegisterScreen(
                 onInputChanged = { newValue ->
                     passInput = newValue
                 },
+                isEnabled = isEnabled,
                 placeholderId = R.string.enter_your_password,
                 modifier = modifier
                     .padding(bottom = 12.dp)
@@ -188,10 +188,10 @@ fun RegisterScreen(
                 onClick = {
                     keyboard?.hide()
                     mainScope.launch {
-                        val registerResult = googleAuthUiClient.registerEmailPass(nameInput, emailInput, passInput)
-                        viewModel.onRegisterResult(registerResult)
+                        viewModel.registerEmailPass(nameInput, emailInput, passInput)
                     }
                 },
+                isEnabled = isEnabled,
                 modifier = modifier
                     .padding(bottom = 24.dp)
             )

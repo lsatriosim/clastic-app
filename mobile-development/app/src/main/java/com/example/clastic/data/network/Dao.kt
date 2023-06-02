@@ -3,8 +3,10 @@ package com.example.clastic.data.network
 import android.util.Log
 import com.example.clastic.data.entity.Article
 import com.example.clastic.data.entity.User
+import com.example.clastic.ui.screen.authentication.components.GoogleAuthUiClient
 import com.example.clastic.ui.screen.authentication.components.LoginResult
 import com.example.clastic.ui.screen.authentication.components.RegisterResult
+import com.example.clastic.ui.screen.authentication.components.UserData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -108,6 +110,19 @@ class Dao {
             createRegisterResultFailed(e.message)
         }
     }
+
+    suspend fun loginEmailPass(email: String, password: String): LoginResult {
+        return try {
+            val user = auth.signInWithEmailAndPassword(email, password).await().user
+            Log.d("TOKEN: ", user?.getIdToken(false).toString())
+            createLoginResultSuccess(user)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            createLoginResultFailed(e.message)
+        }
+    }
+
     private fun createRegisterResultSuccess(user: FirebaseUser?, name: String): RegisterResult {
         val rawDate = Calendar.getInstance().time
         val df = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -145,6 +160,35 @@ class Dao {
                     level = 1,
                     exp = 0,
                     role = "user"
+                )
+            },
+            errorMessage = null
+        )
+    }
+
+    private fun createLoginResultSuccess(user: FirebaseUser?): LoginResult {
+        val docRef = db.collection("user").document(user?.email!!)
+        var result: LoginResult = LoginResult(null, null)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    //TODO()
+                    result = LoginResult(data = null, errorMessage = null)
+                    Log.d("Firestore", "DocumentSnapshot data: ${document.data}")
+                } else {
+                    Log.d("Firestore", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Firestore", "Data Fetch failed with ", exception)
+            }
+        return LoginResult(
+            data = user.run {
+                UserData(
+                    userId = uid,
+                    username = displayName,
+                    userImage = photoUrl?.toString(),
+                    token = user.getIdToken(false).toString()
                 )
             },
             errorMessage = null

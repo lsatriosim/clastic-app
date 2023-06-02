@@ -40,18 +40,6 @@ class GoogleAuthUiClient(
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun registerEmailPass(name: String, email: String, password: String): RegisterResult {
-        return try {
-            val user = auth.createUserWithEmailAndPassword(email, password).await().user
-            Log.d("TOKEN: ", user?.getIdToken(false).toString())
-            createRegisterResultSuccess(user, name)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-            createRegisterResultFailed(e.message)
-        }
-    }
-
     suspend fun loginEmailPass(email: String, password: String): LoginResult {
         return try {
             val user = auth.signInWithEmailAndPassword(email, password).await().user

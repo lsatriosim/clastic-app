@@ -151,6 +151,7 @@ fun LoginScreen(
                     emailInput = newValue
                 },
                 email = emailInput,
+                isEnabled = isEnabled,
                 modifier = modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
@@ -162,6 +163,7 @@ fun LoginScreen(
                     passInput = newValue
                 },
                 placeholderId = R.string.enter_a_password,
+                isEnabled = isEnabled,
                 modifier = modifier
                     .padding(bottom = 12.dp)
                     .fillMaxWidth()
@@ -174,6 +176,7 @@ fun LoginScreen(
                         viewModel.onLoginResult(loginResult)
                     }
                 },
+                isEnabled = isEnabled,
                 modifier = modifier
                     .padding(bottom = 24.dp)
             )

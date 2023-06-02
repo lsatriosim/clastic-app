@@ -17,7 +17,7 @@ class ViewModelFactory(private val repository: Repository) :
         return when {
             modelClass.isAssignableFrom(ListArticleViewModel::class.java) -> ListArticleViewModel(repository) as T
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> LoginViewModel() as T
-            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> RegisterViewModel() as T
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> RegisterViewModel(repository) as T
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> ProfileViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
