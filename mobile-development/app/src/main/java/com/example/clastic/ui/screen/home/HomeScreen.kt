@@ -54,8 +54,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
+                .fillMaxWidth(),
             contentAlignment = Alignment.TopStart
         ) {
             Box(
@@ -73,7 +72,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
                         contentDescription = null
                     )
                 }
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Image(
                         painter = painterResource(id = R.drawable.clastic_logo_text),
                         contentDescription = null,
@@ -90,26 +89,25 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
-                    Box(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(color = Color.White)
-                            .padding(8.dp)
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(color = Color.White)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.padding(4.dp),
                         ) {
                             Icon(
-                                modifier = modifier,
+                                modifier = Modifier,
                                 painter = painterResource(id = R.drawable.ic_coin),
                                 tint = Color("#0198B3".toColorInt()),
                                 contentDescription = null
                             )
                             Text(
-                                modifier = modifier,
+                                modifier = Modifier,
                                 text = "2,000.00 pts",
                                 style = MaterialTheme.typography.subtitle1.copy(
                                     color = Color("#0198B3".toColorInt()),
@@ -117,7 +115,13 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
                                 )
                             )
                         }
-
+                    }
+                    Box(modifier = Modifier.fillMaxWidth()){
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.align(
+                            Alignment.Center)){
+                            Text(text = "Want to get more points?", style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
+                            Icon(painter = painterResource(id = R.drawable.ic_question_white), contentDescription = null, tint = Color.White )
+                        }
                     }
                 }
             }
