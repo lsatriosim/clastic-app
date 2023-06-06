@@ -143,11 +143,13 @@ class MainActivity : ComponentActivity() {
                             ProductKnowledgeScreen(plasticType = plasticType!!)
                         }
                         composable(Screen.profile.route) {
-                            ProfileScreen(onLogout = {
+                            ProfileScreen(
+                                onLogout = {
                                 navHostController.popBackStack()
                                 navHostController.navigate(Screen.login.route)
-                            },
-                            navHostController= navHostController)
+                                },
+                                navHostController= navHostController
+                            )
                         }
                     }
                 }

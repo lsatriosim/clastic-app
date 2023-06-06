@@ -15,19 +15,8 @@ import com.example.clastic.R
 import com.example.clastic.ui.theme.ClasticTheme
 
 @Composable
-fun ProfileTopBar(
-    onBackClick: () -> Unit,
-) {
+fun ProfileTopBar() {
     TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(R.string.back),
-                    tint = Color.White
-                )
-            }
-        },
         title = {
             Text(
                 text = stringResource(R.string.profile),
@@ -42,8 +31,6 @@ fun ProfileTopBar(
 @Composable
 fun ProfileTopBarPreview(){
     ClasticTheme {
-        ProfileTopBar(
-            onBackClick = {}
-        )
+        ProfileTopBar()
     }
 }
