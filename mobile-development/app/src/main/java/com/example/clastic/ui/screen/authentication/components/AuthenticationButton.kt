@@ -20,14 +20,16 @@ import com.example.clastic.ui.theme.ClasticTheme
 @Composable
 fun AuthenticationButton(
     stringId: Int,
+    isEnabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
+        enabled = isEnabled,
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(R.color.cyan_button)
+            backgroundColor = colorResource(R.color.cyan_primary)
         ),
         modifier = modifier
             .heightIn(min = 48.dp)
@@ -47,7 +49,8 @@ fun AuthenticationButtonPreview() {
     ClasticTheme {
         AuthenticationButton(
             stringId = R.string.login,
-            onClick = {}
+            onClick = {},
+            isEnabled = true,
         )
     }
 }

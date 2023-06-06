@@ -40,6 +40,7 @@ import com.example.clastic.ui.theme.ClasticTheme
 @Composable
 fun PasswordTextField(
     password: String,
+    isEnabled: Boolean,
     placeholderId: Int,
     onInputChanged: (String) -> Unit,
     icon: ImageVector,
@@ -65,6 +66,7 @@ fun PasswordTextField(
         OutlinedTextField(
             value = password,
             onValueChange = onInputChanged,
+            enabled = isEnabled,
             leadingIcon = {
                 Icon(
                     imageVector = icon,
@@ -131,6 +133,7 @@ fun PasswordTextFieldPreview() {
             password = "invalid input",
             placeholderId = R.string.enter_a_password,
             onInputChanged = {},
+            isEnabled = true,
             icon = Icons.Default.Lock
         )
     }

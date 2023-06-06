@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="cyan_button">#FF0097B2</color>
+    <color name="cyan_primary">#FF0097B2</color>
+    <color name="cyan_primary_variant2">#FF3FB9CF</color>
     <color name="cyan_textfield">#FF75D3E3</color>
+    <color name="cyan_primary_variant">#FF008BA9</color>
 </resources>

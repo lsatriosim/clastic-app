@@ -29,6 +29,7 @@ import com.example.clastic.ui.theme.ClasticTheme
 @Composable
 fun NameTextField(
     name: String,
+    isEnabled: Boolean,
     onInputChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,6 +44,7 @@ fun NameTextField(
         )
         OutlinedTextField(
             value = name,
+            enabled = isEnabled,
             onValueChange = onInputChanged,
             leadingIcon = {
                 Icon(
@@ -81,7 +83,8 @@ fun NameTextFieldPreview() {
     ClasticTheme {
         NameTextField(
             name = "",
-            onInputChanged = {}
+            onInputChanged = {},
+            isEnabled = true,
         )
     }
 }
