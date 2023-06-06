@@ -147,7 +147,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                 Box(
                     modifier = Modifier
-                        .height(616.dp)
+                        .height(560.dp)
                         .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                         .background(color = Color.White)
                 ) {
