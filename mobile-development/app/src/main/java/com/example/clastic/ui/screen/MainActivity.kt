@@ -120,14 +120,25 @@ class MainActivity : ComponentActivity() {
                                     plasticType = plastic
                                 }
                             }
-                            Log.d("productKnowledge", plasticType.toString())
-                            ProductKnowledgeScreen(plasticType = plasticType!!)
-                        }
-                        composable(Screen.profile.route) {
+                            composable(
+                                route = Screen.ProductKnowledge.route,
+                                arguments = listOf(navArgument("tag"){type = NavType.StringType})
+                            ){navBackStackEntry ->
+                                var plasticType: PlasticKnowledge? = null
+                                for(plastic in ProductData.plasticTypes){
+                                    if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                                        plasticType = plastic
+                                    }
+                                }
+                                Log.d("productKnowledge", plasticType.toString())
+                                ProductKnowledgeScreen(plasticType = plasticType!!)
+                            }
+                            composable(Screen.profile.route) {
                             ProfileScreen(onLogout = {
                                 navHostController.popBackStack()
                                 navHostController.navigate(Screen.login.route)
                             })
+                        }
                         }
                     }
                 }
