@@ -11,28 +11,45 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clastic.R
+import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.profile.components.LogoutButton
 import com.example.clastic.ui.screen.profile.components.ProfileCard
 import com.example.clastic.ui.screen.profile.components.ProfileMenu
 import com.example.clastic.ui.screen.profile.components.ProfileSummary
 import com.example.clastic.ui.screen.profile.components.ProfileTopBar
 import com.example.clastic.ui.theme.ClasticTheme
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.text.NumberFormat
 
 @Composable
 fun ProfileScreen(
-    onlogout: () -> Unit,
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: ProfileViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(
+            LocalContext.current
+        )
+    )
+    val mainScope = MainScope()
+    val user by viewModel.user.collectAsState()
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             ProfileTopBar(
@@ -49,15 +66,17 @@ fun ProfileScreen(
                 .padding(paddingValues)
                 .background(Color.White),
         ) {
-            // TODO(Change Static Data)
+            // TODO(Change Static Picture)
             ProfileCard(
-                name = "Liefran",
-                email = "liefran@gmail.com",
-                points = "2.000",
-                profileImage = painterResource(R.drawable.logo_botol_biru),
+                name = user?.username ?: "-",
+                email = user?.email ?: "-",
+                points = if(user?.coin == null) "0" else NumberFormat.getInstance().format(user?.coin).toString(),
+                profileImage = if(user?.userPhoto == null) painterResource(R.drawable.logo_botol_biru)
+                else painterResource(R.drawable.logo_botol_biru),
                 modifier = Modifier
                     .padding(vertical = 20.dp)
             )
+            // TODO(Change Static Data)
             ProfileSummary(
                 totalTransaction = "14",
                 totalPlastic = "6.5",
@@ -91,7 +110,12 @@ fun ProfileScreen(
                     }
             )
             LogoutButton(
-                onClick = onlogout,
+                onClick = {
+                    mainScope.launch {
+                        viewModel.logout(context)
+                    }
+                    onLogout()
+                },
                 modifier = Modifier
                     .padding(top = 20.dp)
             )
@@ -103,6 +127,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     ClasticTheme {
-        ProfileScreen(onlogout = {})
+        ProfileScreen(onLogout = {})
     }
 }
