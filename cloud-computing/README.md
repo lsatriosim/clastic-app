@@ -91,6 +91,4 @@ gcloud run deploy --image gcr.io/<project_id>/index --platform managed
 name
 11. If you are prompted to enable the Artifact Registry API or to allow creation of
 Artifact Registry repository or other API, respond by pressing `y`
-12. If you are prompted to enable the Artifact Registry API or to allow creation of
-Artifact Registry repository, respond by pressing `y`
-13. After the deployment process is done, there is should be url where you can use it to test on `Postman` like the on the local before with the endpoint `/predict`
+12. After the deployment process is done, there is should be url where you can use it to test on `Postman` like the on the local before with the endpoint `/predict`
