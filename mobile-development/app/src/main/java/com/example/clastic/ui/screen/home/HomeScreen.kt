@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +17,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,203 +25,209 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.navigation.NavController
 import com.example.clastic.R
 import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
+import com.example.clastic.ui.screen.BottomBar
 import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController) {
     val listState = rememberLazyListState()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        Color("#3FB9CF".toColorInt()),
-                        Color("#0097B2".toColorInt())
-                    ),
-                    startX = 0F,
-                    endX = 800F
-                )
-            )
-    ) {
+    Scaffold(
+        bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
+    ) {innerPadding ->
         Box(
             modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.TopStart
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color("#3FB9CF".toColorInt()),
+                            Color("#0097B2".toColorInt())
+                        ),
+                        startX = 0F,
+                        endX = 800F
+                    )
+                )
         ) {
             Box(
-                modifier = modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.TopStart
             ) {
                 Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(8.dp), contentAlignment = Alignment.TopEnd
+                    modifier = modifier.padding(horizontal = 2.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.TopStart
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_notification_white),
-                        tint = Color.White,
-                        contentDescription = null
-                    )
-                }
-                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Image(
-                        painter = painterResource(id = R.drawable.clastic_logo_text),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(196.dp)
-                            .height(40.dp)
-                    )
-                    Text(
-                        text = "Hai, Liefran!",
-                        style = MaterialTheme.typography.h5.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
                     Box(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(color = Color.White)
+                            .padding(8.dp), contentAlignment = Alignment.TopEnd
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.padding(4.dp),
-                        ) {
-                            Icon(
-                                modifier = Modifier,
-                                painter = painterResource(id = R.drawable.ic_coin),
-                                tint = Color("#0198B3".toColorInt()),
-                                contentDescription = null
-                            )
-                            Text(
-                                modifier = Modifier,
-                                text = "2,000.00 pts",
-                                style = MaterialTheme.typography.subtitle1.copy(
-                                    color = Color("#0198B3".toColorInt()),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_notification_white),
+                            tint = Color.White,
+                            contentDescription = null
+                        )
                     }
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.align(
-                                Alignment.Center
-                            )
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.clastic_logo_text),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(196.dp)
+                                .height(40.dp)
+                        )
+                        Text(
+                            text = "Hai, Liefran!",
+                            style = MaterialTheme.typography.h5.copy(
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(color = Color.White)
                         ) {
-                            Text(
-                                text = "Want to get more points?",
-                                style = MaterialTheme.typography.subtitle1.copy(
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(4.dp),
+                            ) {
+                                Icon(
+                                    modifier = Modifier,
+                                    painter = painterResource(id = R.drawable.ic_coin),
+                                    tint = Color("#0198B3".toColorInt()),
+                                    contentDescription = null
                                 )
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_question_white),
-                                contentDescription = null,
-                                tint = Color.White
-                            )
+                                Text(
+                                    modifier = Modifier,
+                                    text = "2,000.00 pts",
+                                    style = MaterialTheme.typography.subtitle1.copy(
+                                        color = Color("#0198B3".toColorInt()),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        }
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.align(
+                                    Alignment.Center
+                                )
+                            ) {
+                                Text(
+                                    text = "Want to get more points?",
+                                    style = MaterialTheme.typography.subtitle1.copy(
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_question_white),
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Box(
-                modifier = Modifier
-                    .height(616.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .background(color = Color.White)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.verticalScroll(
-                        rememberScrollState()
-                    )
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+                Box(
+                    modifier = Modifier
+                        .height(616.dp)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        .background(color = Color.White)
                 ) {
-                    //section: Tukarkan Plastikmu
-                    //title section: Tukarkan Plastikmu
-                    tukarkanPlastikComponent(modifier = modifier)
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(8.dp)
-                            .fillMaxWidth()
-                            .background(color = Color("#F5F5F5".toColorInt()))
-                            .alpha(0.6f)
-                    )
-
-                    MisiPlastikComponent(modifier = modifier)
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(8.dp)
-                            .fillMaxWidth()
-                            .background(color = Color("#F5F5F5".toColorInt()))
-                            .alpha(0.6f)
-                    )
-                    //List Product Knowledge
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.verticalScroll(
+                            rememberScrollState()
+                        )
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        ) {
-                            Text(
-                                text = "Jenis-jenis Plastik",
-                                style = MaterialTheme.typography.h5.copy(color = Color.Black)
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_trash),
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                        }
-                        Text(
-                            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
-                            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+                        //section: Tukarkan Plastikmu
+                        //title section: Tukarkan Plastikmu
+                        tukarkanPlastikComponent(modifier = modifier)
+
+                        Spacer(
+                            modifier = Modifier
+                                .height(8.dp)
+                                .fillMaxWidth()
+                                .background(color = Color("#F5F5F5".toColorInt()))
+                                .alpha(0.6f)
                         )
 
-                        LazyRow(
-                            state = listState,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        MisiPlastikComponent(modifier = modifier)
+
+                        Spacer(
+                            modifier = Modifier
+                                .height(8.dp)
+                                .fillMaxWidth()
+                                .background(color = Color("#F5F5F5".toColorInt()))
+                                .alpha(0.6f)
+                        )
+                        //List Product Knowledge
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            val listColor = listOf(
-                                Color("#8DCF92".toColorInt()),
-                                Color("#4D9E3F".toColorInt()),
-                                Color("#D17021".toColorInt()),
-                                Color("#47ACD8".toColorInt()),
-                                Color("#0387B8".toColorInt()),
-                                Color("#614E9D".toColorInt()),
-                                Color("#707176".toColorInt()),
-                            )
-                            items(
-                                items = ProductData.plasticTypes,
-                                key = { it.tag }) { plasticType ->
-                                val colorIndex = ProductData.plasticTypes.indexOf(plasticType) %listColor.size
-                                ProductKnowledgeComponent(
-                                    onClick = onClick,
-                                    plasticType = plasticType,
-                                    backgroundColor = listColor[colorIndex]
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            ) {
+                                Text(
+                                    text = "Jenis-jenis Plastik",
+                                    style = MaterialTheme.typography.h5.copy(color = Color.Black)
                                 )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_trash),
+                                    contentDescription = null,
+                                    tint = Color.Gray
+                                )
+                            }
+                            Text(
+                                text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+                                style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+                            )
+
+                            LazyRow(
+                                state = listState,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                val listColor = listOf(
+                                    Color("#8DCF92".toColorInt()),
+                                    Color("#4D9E3F".toColorInt()),
+                                    Color("#D17021".toColorInt()),
+                                    Color("#47ACD8".toColorInt()),
+                                    Color("#0387B8".toColorInt()),
+                                    Color("#614E9D".toColorInt()),
+                                    Color("#707176".toColorInt()),
+                                )
+                                items(
+                                    items = ProductData.plasticTypes,
+                                    key = { it.tag }) { plasticType ->
+                                    val colorIndex = ProductData.plasticTypes.indexOf(plasticType) %listColor.size
+                                    ProductKnowledgeComponent(
+                                        onClick = onClick,
+                                        plasticType = plasticType,
+                                        backgroundColor = listColor[colorIndex]
+                                    )
+                                }
                             }
                         }
                     }
@@ -231,7 +235,6 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
             }
         }
     }
-
 }
 
 @Composable
@@ -277,13 +280,8 @@ fun tukarkanPlastikComponent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
-                text = "Tukarkan Plastikmu",
+                text = "Tukarkan Plastikmu♻️",
                 style = MaterialTheme.typography.h5.copy(color = Color.Black)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_recycle_blue),
-                contentDescription = null,
-                tint = Color.Green
             )
         }
         Text(
@@ -427,7 +425,7 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {})
+    HomeScreen(onClick = {}, navController = NavController(LocalContext.current))
 }
 
 @Composable

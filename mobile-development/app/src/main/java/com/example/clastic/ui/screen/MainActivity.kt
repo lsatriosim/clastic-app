@@ -26,6 +26,7 @@ import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
+import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
@@ -95,39 +96,46 @@ class MainActivity : ComponentActivity() {
                                 },
                             )
                         }
+                        composable(Screen.Home.route) {
+                            HomeScreen(onClick = {}, navController = navHostController)
+                        }
                         composable(Screen.articleList.route) {
-                            ListArticleScreen(onClick = { articleUrl ->
-                                val encodeArticleUrl = URLEncoder.encode(articleUrl, StandardCharsets.UTF_8.toString())
-                                navHostController.navigate(Screen.articleDetail.createRoute(encodeArticleUrl))
-                            })
+                            ListArticleScreen(
+                                onClick = { articleUrl ->
+                                    val encodeArticleUrl = URLEncoder.encode(
+                                        articleUrl,
+                                        StandardCharsets.UTF_8.toString()
+                                    )
+                                    navHostController.navigate(
+                                        Screen.articleDetail.createRoute(
+                                            encodeArticleUrl
+                                        )
+                                    )
+                                },
+                                navController = navHostController
+                            )
                         }
                         composable(
                             route = Screen.articleDetail.route,
-                            arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+                            arguments = listOf(navArgument("articleUrl") {
+                                type = NavType.StringType
+                            })
                         ) { navBackStackEntry ->
                             val articleUrl =
-                                URLDecoder.decode(navBackStackEntry.arguments?.getString("articleUrl"), "UTF-8")
+                                URLDecoder.decode(
+                                    navBackStackEntry.arguments?.getString("articleUrl"),
+                                    "UTF-8"
+                                )
                             Log.d("arguments", articleUrl.toString())
                             ArticleScreen(contentUrl = articleUrl)
                         }
                         composable(
                             route = Screen.ProductKnowledge.route,
-                            arguments = listOf(navArgument("tag"){type = NavType.StringType})
-                        ){navBackStackEntry ->
+                            arguments = listOf(navArgument("tag") { type = NavType.StringType })
+                        ) { navBackStackEntry ->
                             var plasticType: PlasticKnowledge? = null
-                            for(plastic in ProductData.plasticTypes){
-                                if(plastic.tag == navBackStackEntry.arguments?.getString("tag")){
-                                    plasticType = plastic
-                                }
-                            }
-                        }
-                        composable(
-                            route = Screen.ProductKnowledge.route,
-                            arguments = listOf(navArgument("tag"){type = NavType.StringType})
-                        ){navBackStackEntry ->
-                            var plasticType: PlasticKnowledge? = null
-                            for(plastic in ProductData.plasticTypes){
-                                if(plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))){
+                            for (plastic in ProductData.plasticTypes) {
+                                if (plastic.tag.equals(navBackStackEntry.arguments?.getString("tag"))) {
                                     plasticType = plastic
                                 }
                             }
@@ -138,7 +146,8 @@ class MainActivity : ComponentActivity() {
                             ProfileScreen(onLogout = {
                                 navHostController.popBackStack()
                                 navHostController.navigate(Screen.login.route)
-                            })
+                            },
+                            navHostController= navHostController)
                         }
                     }
                 }
@@ -146,6 +155,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun MainContent() {
     val db = Firebase.firestore

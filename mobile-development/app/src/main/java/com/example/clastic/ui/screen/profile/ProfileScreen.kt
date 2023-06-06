@@ -24,7 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.clastic.R
+import com.example.clastic.ui.screen.BottomBar
 import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.profile.components.LogoutButton
 import com.example.clastic.ui.screen.profile.components.ProfileCard
@@ -39,7 +41,8 @@ import java.text.NumberFormat
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navHostController:NavHostController
 ) {
     val viewModel: ProfileViewModel = viewModel(
         factory = ViewModelFactory.getInstance(
@@ -56,8 +59,9 @@ fun ProfileScreen(
                 onBackClick = { TODO() }
             )
         },
+        bottomBar = { BottomBar(currentMenu = "Profile", navController = navHostController)},
         modifier = modifier
-            .background(Color.White)
+            .background(Color.White),
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -127,6 +131,6 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     ClasticTheme {
-        ProfileScreen(onLogout = {})
+        ProfileScreen(onLogout = {}, navHostController = NavHostController(LocalContext.current))
     }
 }
