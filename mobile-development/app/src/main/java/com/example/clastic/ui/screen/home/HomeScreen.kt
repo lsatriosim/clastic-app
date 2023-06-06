@@ -1,8 +1,6 @@
 package com.example.clastic.ui.screen.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -16,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
@@ -89,11 +88,12 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
                         textAlign = TextAlign.Start,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(color = Color.White)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(color = Color.White)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -116,26 +116,115 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
                             )
                         }
                     }
-                    Box(modifier = Modifier.fillMaxWidth()){
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.align(
-                            Alignment.Center)){
-                            Text(text = "Want to get more points?", style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
-                            Icon(painter = painterResource(id = R.drawable.ic_question_white), contentDescription = null, tint = Color.White )
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.align(
+                                Alignment.Center
+                            )
+                        ) {
+                            Text(
+                                text = "Want to get more points?",
+                                style = MaterialTheme.typography.subtitle1.copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_question_white),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
                         }
                     }
                 }
             }
         }
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                        .background(color = Color.White)
+            Box(
+                modifier = Modifier
+                    .height(616.dp)
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .background(color = Color.White)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.verticalScroll(
+                        rememberScrollState()
+                    )
                 ) {
-                    LazyRow(state = listState, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        items(items = ProductData.plasticTypes, key = { it.tag }) { plasticType ->
-                            ProductKnowledgeComponent(onClick = onClick, plasticType = plasticType)
+                    //section: Tukarkan Plastikmu
+                    //title section: Tukarkan Plastikmu
+                    tukarkanPlastikComponent(modifier = modifier)
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(8.dp)
+                            .fillMaxWidth()
+                            .background(color = Color("#F5F5F5".toColorInt()))
+                            .alpha(0.6f)
+                    )
+
+                    MisiPlastikComponent(modifier = modifier)
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(8.dp)
+                            .fillMaxWidth()
+                            .background(color = Color("#F5F5F5".toColorInt()))
+                            .alpha(0.6f)
+                    )
+                    //List Product Knowledge
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            Text(
+                                text = "Jenis-jenis Plastik",
+                                style = MaterialTheme.typography.h5.copy(color = Color.Black)
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_trash),
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
+                        Text(
+                            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+                            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+                        )
+
+                        LazyRow(
+                            state = listState,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            val listColor = listOf(
+                                Color("#8DCF92".toColorInt()),
+                                Color("#4D9E3F".toColorInt()),
+                                Color("#D17021".toColorInt()),
+                                Color("#47ACD8".toColorInt()),
+                                Color("#0387B8".toColorInt()),
+                                Color("#614E9D".toColorInt()),
+                                Color("#707176".toColorInt()),
+                            )
+                            items(
+                                items = ProductData.plasticTypes,
+                                key = { it.tag }) { plasticType ->
+                                val colorIndex = ProductData.plasticTypes.indexOf(plasticType) %listColor.size
+                                ProductKnowledgeComponent(
+                                    onClick = onClick,
+                                    plasticType = plasticType,
+                                    backgroundColor = listColor[colorIndex]
+                                )
+                            }
                         }
                     }
                 }
@@ -146,9 +235,151 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
 }
 
 @Composable
+fun MisiPlastikComponent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Text(
+                text = "Misi Plastik",
+                style = MaterialTheme.typography.h5.copy(color = Color.Black)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_campaign_white),
+                contentDescription = null,
+                tint = Color.Gray
+            )
+        }
+        Text(
+            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+        )
+
+        //content section: Tukarkan Plastikmu
+        MissionCard()
+    }
+}
+
+@Composable
+fun tukarkanPlastikComponent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Text(
+                text = "Tukarkan Plastikmu",
+                style = MaterialTheme.typography.h5.copy(color = Color.Black)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_recycle_blue),
+                contentDescription = null,
+                tint = Color.Green
+            )
+        }
+        Text(
+            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+        )
+
+        //content section: Tukarkan Plastikmu
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            //Drop Off Point
+            Box(
+                modifier = Modifier
+                    .border(
+                        2.dp, color = Color("#0198B3".toColorInt()),
+                        RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp)
+                    .background(color = Color.White)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            Text(
+                                text = "Drop Off Point",
+                                style = MaterialTheme.typography.subtitle1.copy(
+                                    color = Color("#0198B3".toColorInt()),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_location_white),
+                                contentDescription = null,
+                                tint = Color.Red
+                            )
+                        }
+                        Text(
+                            text = "Pilih Drop Off Point terdekat\ndan tukarkan plastikmu!",
+                            style = MaterialTheme.typography.caption.copy(color = Color.Black)
+                        )
+                        Spacer(modifier = modifier.height(1.dp))
+                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_forward_white),
+                        contentDescription = null,
+                        tint = Color("#0198B3".toColorInt())
+                    )
+                }
+            }
+            //My Barcode
+            Box(
+                modifier = Modifier
+                    .border(
+                        2.dp, color = Color("#0198B3".toColorInt()),
+                        RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp)
+                    .background(color = Color.White)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        text = "My\nBarcode",
+                        style = MaterialTheme.typography.subtitle1.copy(
+                            color = Color("#0198B3".toColorInt()),
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.qrcode),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun ProductKnowledgeComponent(
     modifier: Modifier = Modifier,
     plasticType: PlasticKnowledge,
+    backgroundColor: Color,
     onClick: (String) -> Unit
 ) {
     Column(
@@ -160,7 +391,7 @@ fun ProductKnowledgeComponent(
             modifier = Modifier
                 .size(70.dp)
                 .clip(CircleShape)
-                .background(color = Color("#47ACD8".toColorInt()))
+                .background(color = backgroundColor)
                 .clickable { onClick(plasticType.tag) },
             contentAlignment = Alignment.Center
         ) {
@@ -188,7 +419,8 @@ fun ProductKnowledgeComponent(
 fun ProductKnowledgeComponentPreview() {
     ProductKnowledgeComponent(
         onClick = {},
-        plasticType = PlasticKnowledge("", "", 0, "", emptyList())
+        plasticType = PlasticKnowledge("", "", 0, "", emptyList()),
+        backgroundColor = Color.Blue
     )
 }
 
