@@ -29,6 +29,7 @@ import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
@@ -150,6 +151,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navHostController= navHostController
                             )
+                        }
+                        composable(Screen.myQRCode.route){
+                            MyQRCodeScreen(qrText = "Liefran Ganteng Kali")
                         }
                     }
                 }

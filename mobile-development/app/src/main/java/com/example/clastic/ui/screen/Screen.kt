@@ -17,4 +17,6 @@ sealed class Screen(val route:String) {
     }
 
     object profile: Screen("profile")
+
+    object myQRCode: Screen("myQRCode")
 }
