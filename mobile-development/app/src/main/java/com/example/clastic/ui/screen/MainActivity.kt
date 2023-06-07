@@ -34,6 +34,7 @@ import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
 import com.example.clastic.ui.theme.ClasticTheme
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -43,7 +44,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
-
+    private val auth = Firebase.auth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -98,7 +99,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.Home.route) {
-                            HomeScreen(onClick = {}, navController = navHostController)
+                            HomeScreen(onClick = {plasticTag ->
+                                navHostController.navigate(Screen.ProductKnowledge.createRoute(plasticTag))
+                            }, navController = navHostController,
+                            navigateToQrCode = {
+                                navHostController.navigate(Screen.myQRCode.route)
+                            })
                         }
                         composable(Screen.articleList.route) {
                             ListArticleScreen(
@@ -153,7 +159,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.myQRCode.route){
-                            MyQRCodeScreen(qrText = "Liefran Ganteng Kali")
+                            MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
                         }
                     }
                 }
