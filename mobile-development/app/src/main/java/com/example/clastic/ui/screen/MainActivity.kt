@@ -33,6 +33,7 @@ import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
+import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                 //TODO(Change navigation here for debug)
                                 navigateToHome = {
                                     navHostController.popBackStack()
-                                    navHostController.navigate(Screen.profile.route)
+                                    navHostController.navigate(Screen.qrCodeScanner.route)
                                 },
                                 navigateToLogin = {
                                     navHostController.popBackStack()
@@ -160,6 +161,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.myQRCode.route){
                             MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
+                        }
+                        composable(Screen.qrCodeScanner.route) {
+                            QRScannerScreen()
                         }
                     }
                 }

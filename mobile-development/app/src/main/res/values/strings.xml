@@ -34,4 +34,6 @@
     <string name="redeem_history">Riwayat Penukaran Points</string>
     <string name="share_clastic">Bagikan Clastic ke Temanmu</string>
     <string name="settings">Pengaturan</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="scan_qr_code_to_start">Scan QR Code pengguna untuk memulai transaksi</string>
 </resources>
