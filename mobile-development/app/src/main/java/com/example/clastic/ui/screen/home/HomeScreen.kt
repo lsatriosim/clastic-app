@@ -34,7 +34,7 @@ import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit ) {
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -147,7 +147,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                 Box(
                     modifier = Modifier
-                        .height(616.dp)
+                        .height(560.dp)
                         .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                         .background(color = Color.White)
                 ) {
@@ -160,7 +160,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                     ) {
                         //section: Tukarkan Plastikmu
                         //title section: Tukarkan Plastikmu
-                        tukarkanPlastikComponent(modifier = modifier)
+                        tukarkanPlastikComponent(modifier = modifier, navigateToQrCode)
 
                         Spacer(
                             modifier = Modifier
@@ -201,7 +201,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                                 )
                             }
                             Text(
-                                text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+                                text = "Yuk kenalan dengan jenis-jenis plastik!",
                                 style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
                             )
 
@@ -259,7 +259,7 @@ fun MisiPlastikComponent(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
+            text = "Ayo tukarkan sisa plastikmu menjadi point!!!",
             style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
         )
 
@@ -269,7 +269,7 @@ fun MisiPlastikComponent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun tukarkanPlastikComponent(modifier: Modifier = Modifier) {
+fun tukarkanPlastikComponent(modifier: Modifier = Modifier, navigateToQrCode: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -349,6 +349,7 @@ fun tukarkanPlastikComponent(modifier: Modifier = Modifier) {
                         2.dp, color = Color("#0198B3".toColorInt()),
                         RoundedCornerShape(8.dp)
                     )
+                    .clickable { navigateToQrCode() }
                     .padding(8.dp)
                     .background(color = Color.White)
             ) {
@@ -425,7 +426,7 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {}, navController = NavController(LocalContext.current))
+    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {})
 }
 
 @Composable

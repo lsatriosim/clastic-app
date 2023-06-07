@@ -29,10 +29,12 @@ import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
 import com.example.clastic.ui.theme.ClasticTheme
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -42,7 +44,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class MainActivity : ComponentActivity() {
-
+    private val auth = Firebase.auth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -97,7 +99,12 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.Home.route) {
-                            HomeScreen(onClick = {}, navController = navHostController)
+                            HomeScreen(onClick = {plasticTag ->
+                                navHostController.navigate(Screen.ProductKnowledge.createRoute(plasticTag))
+                            }, navController = navHostController,
+                            navigateToQrCode = {
+                                navHostController.navigate(Screen.myQRCode.route)
+                            })
                         }
                         composable(Screen.articleList.route) {
                             ListArticleScreen(
@@ -143,11 +150,16 @@ class MainActivity : ComponentActivity() {
                             ProductKnowledgeScreen(plasticType = plasticType!!)
                         }
                         composable(Screen.profile.route) {
-                            ProfileScreen(onLogout = {
+                            ProfileScreen(
+                                onLogout = {
                                 navHostController.popBackStack()
                                 navHostController.navigate(Screen.login.route)
-                            },
-                            navHostController= navHostController)
+                                },
+                                navHostController= navHostController
+                            )
+                        }
+                        composable(Screen.myQRCode.route){
+                            MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
                         }
                     }
                 }

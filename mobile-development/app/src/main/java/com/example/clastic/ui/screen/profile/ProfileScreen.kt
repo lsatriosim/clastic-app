@@ -44,20 +44,17 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navHostController:NavHostController
 ) {
+    val context = LocalContext.current
     val viewModel: ProfileViewModel = viewModel(
-        factory = ViewModelFactory.getInstance(
-            LocalContext.current
-        )
+        factory = ViewModelFactory.getInstance(context)
     )
     val mainScope = MainScope()
     val user by viewModel.user.collectAsState()
-    val context = LocalContext.current
+
 
     Scaffold(
         topBar = {
-            ProfileTopBar(
-                onBackClick = { TODO() }
-            )
+            ProfileTopBar()
         },
         bottomBar = { BottomBar(currentMenu = "Profile", navController = navHostController)},
         modifier = modifier
