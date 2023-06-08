@@ -63,6 +63,7 @@ fun BottomBar(
                             "Home" -> navController.navigate(Screen.Home.route)
                             "Article" -> navController.navigate(Screen.articleList.route)
                             "Profile" -> navController.navigate(Screen.profile.route)
+                            "Classify" -> navController.navigate(Screen.classifier.route)
                         }
                     }
                 },
