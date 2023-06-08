@@ -10,21 +10,21 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
@@ -233,6 +233,7 @@ class MainActivity : ComponentActivity() {
 
                             val plasticTypeResult by viewModel.plasticType.collectAsState()
                             val isLoadingSubmit by viewModel.isLoading.collectAsState()
+                            val showDialog = remember { mutableStateOf(false) }
 
                             Log.d("testNetwork", viewModel.result.toString())
 
@@ -245,23 +246,41 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onError = { Log.e("kilo", "View Error:", it) },
                                 )
-                            }else{
+                            } else {
                                 Scaffold(topBar = {
                                     TopAppBar(
                                         title = { Text(text = "Classify") },
                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                     )
                                 }) { innerPadding ->
+                                    if (showDialog.value) {
+                                        Dialog(onDismissRequest = { showDialog.value = false }) {
+                                            PopUpCard(closePopUp = {showDialog.value = false})
+                                        }
+                                    }
                                     Box(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .padding(innerPadding)
                                     ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(16.dp), contentAlignment = Alignment.TopEnd
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.ic_question_white),
+                                                contentDescription = null,
+                                                tint = Color.Gray,
+                                                modifier = Modifier.clickable {
+                                                    showDialog.value = true
+                                                })
+                                        }
                                         Column(
                                             horizontalAlignment = Alignment.CenterHorizontally,
                                             verticalArrangement = Arrangement.Center,
                                         ) {
-                                            if(photoUri.value != Uri.EMPTY){
+                                            if (photoUri.value != Uri.EMPTY) {
                                                 Image(
                                                     painter = rememberImagePainter(data = photoUri.value),
                                                     contentDescription = null,
@@ -273,7 +292,7 @@ class MainActivity : ComponentActivity() {
                                                             vertical = 12.dp
                                                         )
                                                 )
-                                            }else{
+                                            } else {
                                                 Image(
                                                     painter = painterResource(id = R.drawable.preview_photo),
                                                     contentDescription = null,
@@ -333,9 +352,17 @@ class MainActivity : ComponentActivity() {
                                             ) {
                                                 Text(text = "Submit")
                                             }
-                                            if(plasticTypeResult!=""){
-                                                Text(text = "Hasil : ", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold))
-                                                Text(text = plasticTypeResult, style = MaterialTheme.typography.subtitle1)
+                                            if (plasticTypeResult != "") {
+                                                Text(
+                                                    text = "Hasil : ",
+                                                    style = MaterialTheme.typography.h5.copy(
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                )
+                                                Text(
+                                                    text = plasticTypeResult,
+                                                    style = MaterialTheme.typography.subtitle1
+                                                )
                                             }
                                         }
                                     }
