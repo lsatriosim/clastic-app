@@ -48,6 +48,7 @@ import com.example.clastic.ui.screen.classifier.ClassifierViewModel
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.mission.MissionListScreen
 import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
@@ -226,6 +227,9 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.myQRCode.route) {
                             MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
                         }
+                        composable(Screen.missionList.route){
+                            MissionListScreen()
+                        }
                         composable(Screen.classifier.route) {
                             val viewModel: ClassifierViewModel = viewModel(
                                 factory = ViewModelFactory.getInstance(LocalContext.current)
@@ -249,7 +253,7 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 Scaffold(topBar = {
                                     TopAppBar(
-                                        title = { Text(text = "Classify") },
+                                        title = { Text(text = "Classify", color = Color.White) },
                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                     )
                                 }) { innerPadding ->

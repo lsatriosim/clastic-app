@@ -21,4 +21,6 @@ sealed class Screen(val route:String) {
     object myQRCode: Screen("myQRCode")
 
     object classifier: Screen("classifier")
+
+    object missionList: Screen("missionList")
 }
