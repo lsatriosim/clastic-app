@@ -1,6 +1,5 @@
 package com.example.clastic.ui.screen.transaction.transactionCreated
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +37,6 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
     suspend fun getTransaction(id: String) {
         val transaction =  repository.getTransactionById(id)
         _username.value = getNameByUid(transaction.userId)
-        Log.d("USERNAME VALUE: ", _username.value)
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList

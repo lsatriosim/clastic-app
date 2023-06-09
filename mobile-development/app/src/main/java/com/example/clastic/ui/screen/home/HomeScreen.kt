@@ -38,7 +38,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
-    ) {innerPadding ->
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

@@ -65,113 +65,117 @@ fun TransactionCreatedScreen(
         viewModel.getTransaction(transactionId)
     }
 
-    LazyColumn(
-        verticalArrangement = Arrangement.Center,
+    Column(
         modifier = modifier
-            .fillMaxSize()
     ) {
-        item {
-            TransactionTopBar(
-                navigateToHome = navigateToHome,
-                stringId = R.string.transaction_result
-            )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .padding(horizontal = 12.dp, vertical = 20.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.transaction_created),
-                    fontSize = 35.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Icon(
-                    imageVector = Icons.Default.Verified,
-                    contentDescription = null,
-                    tint = colorResource(R.color.cyan_primary),
-                    modifier = Modifier
-                        .padding(top = 40.dp, bottom = 40.dp)
-                        .size(150.dp)
-                )
+        TransactionTopBar(
+            navigateToHome = navigateToHome,
+            stringId = R.string.transaction_result
+        )
+        LazyColumn(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            item {
                 Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.transaction_information),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = Color.Black
-                    )
-                    TransactionDetailItem(
-                        fieldName = stringResource(R.string.transaction_code),
-                        fieldValue = transactionId
-                    )
-                    TransactionDetailItem(
-                        fieldName = stringResource(R.string.receiver),
-                        fieldValue = username
-                    )
-                    TransactionDetailItem(
-                        fieldName = stringResource(R.string.location),
-                        fieldValue = location
-                    )
-                    TransactionDetailItem(
-                        fieldName = stringResource(R.string.time),
-                        fieldValue = transactionDate
-                    )
-                    Divider(
-                        color = colorResource(R.color.cyan_primary_variant),
-                        modifier = Modifier
-                            .padding(vertical = 5.dp)
-                            .height(2.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.plastic_transaction_detail),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = colorResource(R.color.cyan_primary),
-                    )
-                    transactionList.forEach { (type, data) ->
-                        TransactionResultList(
-                            plasticType = type,
-                            plasticWeight = (data["weight"] as Number).toFloat(),
-                            totalPoints = (data["points"] as Number).toInt()
-                        )
-                    }
-                }
-                Column(
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .padding(horizontal = 12.dp)
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .padding(horizontal = 12.dp, vertical = 20.dp)
                 ) {
                     Text(
-                        text = "Total Point: $totalPoints pts",
+                        text = stringResource(R.string.transaction_created),
                         fontSize = 35.sp,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(R.color.cyan_primary),
-                        modifier = Modifier
-                            .padding(vertical = 20.dp)
+                        color = Color.Black
                     )
-                    Button(
-                        onClick = navigateToHome,
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = colorResource(R.color.cyan_primary)
-                        ),
-                        modifier = modifier
-                            .heightIn(min = 48.dp)
+                    Icon(
+                        imageVector = Icons.Default.Verified,
+                        contentDescription = null,
+                        tint = colorResource(R.color.cyan_primary),
+                        modifier = Modifier
+                            .padding(top = 40.dp, bottom = 40.dp)
+                            .size(150.dp)
+                    )
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.back_to_home),
-                            color = Color.White,
+                            text = stringResource(R.string.transaction_information),
+                            fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            color = Color.Black
                         )
+                        TransactionDetailItem(
+                            fieldName = stringResource(R.string.transaction_code),
+                            fieldValue = transactionId
+                        )
+                        TransactionDetailItem(
+                            fieldName = stringResource(R.string.receiver),
+                            fieldValue = username
+                        )
+                        TransactionDetailItem(
+                            fieldName = stringResource(R.string.location),
+                            fieldValue = location
+                        )
+                        TransactionDetailItem(
+                            fieldName = stringResource(R.string.time),
+                            fieldValue = transactionDate
+                        )
+                        Divider(
+                            color = colorResource(R.color.cyan_primary_variant),
+                            modifier = Modifier
+                                .padding(vertical = 5.dp)
+                                .height(2.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.plastic_transaction_detail),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            color = colorResource(R.color.cyan_primary),
+                        )
+                        transactionList.forEach { (type, data) ->
+                            TransactionResultList(
+                                plasticType = type,
+                                plasticWeight = (data["weight"] as Number).toFloat(),
+                                totalPoints = (data["points"] as Number).toInt()
+                            )
+                        }
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                    ) {
+                        Text(
+                            text = "Total Point: $totalPoints pts",
+                            fontSize = 35.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(R.color.cyan_primary),
+                            modifier = Modifier
+                                .padding(vertical = 20.dp)
+                        )
+                        Button(
+                            onClick = navigateToHome,
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = colorResource(R.color.cyan_primary)
+                            ),
+                            modifier = modifier
+                                .heightIn(min = 48.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.back_to_home),
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
