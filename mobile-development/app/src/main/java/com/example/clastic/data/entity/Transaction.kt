@@ -1,11 +1,9 @@
 package com.example.clastic.data.entity
 
 data class Transaction(
-    val user: User,
-    val dropPoint: DropPoint,
+    val userId: String,
+    val ownerId: String,
     val transactionDate: String,
-    val dropPointOwner: User,
-    val plastic: List<PlasticKnowledge>,
-    val totalPrice: Int,
-    val status: String
+    val totalPoints: Int,
+    val transactionList: Map<String, Map<String, Any>>
 )

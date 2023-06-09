@@ -1,5 +1,6 @@
 package com.example.clastic.ui.screen.transaction.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -21,6 +22,7 @@ import com.example.clastic.ui.theme.ClasticTheme
 
 @Composable
 fun TransactionTopBar(
+    navigateToHome: () -> Unit,
     stringId: Int
 ) {
     TopAppBar(
@@ -32,6 +34,7 @@ fun TransactionTopBar(
                 modifier = Modifier
                     .padding(start = 10.dp)
                     .size(30.dp)
+                    .clickable { navigateToHome() }
             )
         },
         title = {
@@ -51,7 +54,8 @@ fun TransactionTopBar(
 fun TransactionTopBarPreview(){
     ClasticTheme {
         TransactionTopBar(
-            stringId = R.string.scan_qr_code
+            stringId = R.string.scan_qr_code,
+            navigateToHome = {}
         )
     }
 }

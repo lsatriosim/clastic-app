@@ -28,17 +28,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clastic.R
+import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.transaction.components.QRCamera
 import com.example.clastic.ui.screen.transaction.components.TransactionTopBar
 import com.example.clastic.ui.theme.ClasticTheme
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun QRScannerScreen(
     onScanned: (String) -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val mainScope = MainScope()
     val context = LocalContext.current
+    val viewModel: QRScannerScreenViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(context)
+    )
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -57,15 +66,15 @@ fun QRScannerScreen(
         launcher.launch(Manifest.permission.CAMERA)
     }
 
-    var scannedString by remember {
-        mutableStateOf("")
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        TransactionTopBar(stringId = R.string.scan_qr_code)
+        TransactionTopBar(
+            stringId = R.string.scan_qr_code,
+            navigateToHome = navigateToHome
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -85,11 +94,19 @@ fun QRScannerScreen(
                         .size(400.dp)
                         .padding(vertical = 20.dp),
                     onQRCodeScanned = { result ->
-                    scannedString = result
-                })
+                        mainScope.launch {
+                            val isUserExist = viewModel.isUserExist(result)
+                            if (isUserExist) {
+                                onScanned(result)
+                            } else {
+                                viewModel.showToast(context, context.getString(R.string.user_not_exist))
+                            }
+                        }
+                    }
+                )
             }
             Text(
-                text = "Text: $scannedString",
+                text = stringResource(R.string.scan_qr_warning),
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -101,6 +118,9 @@ fun QRScannerScreen(
 @Composable
 fun QRScannerScreenPreview() {
     ClasticTheme {
-        QRScannerScreen(onScanned = {})
+        QRScannerScreen(
+            onScanned = {},
+            navigateToHome = {}
+        )
     }
 }
