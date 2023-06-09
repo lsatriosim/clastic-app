@@ -1,0 +1,9 @@
+Flask
+gunicorn
+tensorflow
+numpy
+pillow
+Keras-Applications
+keras-preprocessing
+opencv-python
+firebase-admin
