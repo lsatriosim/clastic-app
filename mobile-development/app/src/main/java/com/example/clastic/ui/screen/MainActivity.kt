@@ -37,11 +37,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.compose.rememberImagePainter
 import com.example.clastic.R
+import com.example.clastic.data.Repository
 import com.example.clastic.data.entity.Mission
 import com.example.clastic.data.entity.MissionData
 import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
 import com.example.clastic.data.network.ApiConfig
+import com.example.clastic.di.Injection
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.classifier.CameraView
@@ -111,6 +113,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
+        ApiConfig.getApiService().predict("")
 
         setContent {
             ClasticTheme {

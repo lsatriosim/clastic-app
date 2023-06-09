@@ -32,143 +32,130 @@ import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
 fun MissionDetailScreen(mission: Mission, joinCampaign: (String) -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.verticalScroll(
-                rememberScrollState()
-            )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
-            ) {
-                BannerWithGradient(imageName = mission.image)
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .padding(8.dp), contentAlignment = Alignment.TopEnd
-                ) {
-                    RecycleTag(modifier = Modifier, tag = mission.tag)
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .padding(12.dp), contentAlignment = Alignment.BottomStart
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(
-                            text = mission.title,
-                            style = MaterialTheme.typography.h5.copy(
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-                        PointTag(modifier = Modifier, point = mission.reward)
-                    }
-                }
-
-            }
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = "Description",
-                    style = MaterialTheme.typography.h5.copy(
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
+    Scaffold(
+        bottomBar = { MissionBottomBar(mission = mission, joinCampaign = joinCampaign) },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Mission Detail",
+                        color = Color.White
                     )
-                )
-                Text(
-                    text = mission.description,
-                    style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
-                )
-            }
-            Spacer(
-                modifier = Modifier
-                    .height(8.dp)
-                    .fillMaxWidth()
-                    .background(color = Color("#F5F5F5".toColorInt()))
-                    .alpha(0.6f)
+                },
+                backgroundColor = Color("#1FA4BB".toColorInt())
             )
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = "Same Yearly Impact",
-                    style = MaterialTheme.typography.h5.copy(
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Text(
-                    text = "This action will have equals impact with these several activities",
-                    style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
-                )
-                Box(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            ImpactCard(impact = mission.listImpact[0])
-                            ImpactCard(impact = mission.listImpact[1])
-                        }
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            ImpactCard(impact = mission.listImpact[2])
-                            ImpactCard(impact = mission.listImpact[3])
-                        }
-                    }
-                }
-            }
         }
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 8.dp)
-                    .background(color = Color.White), contentAlignment = Alignment.Center
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.verticalScroll(
+                    rememberScrollState()
+                )
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
+                ) {
+                    BannerWithGradient(imageName = mission.image)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .padding(8.dp), contentAlignment = Alignment.TopEnd
+                    ) {
+                        RecycleTag(modifier = Modifier, tag = mission.tag)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp)
+                            .padding(12.dp), contentAlignment = Alignment.BottomStart
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                text = mission.title,
+                                style = MaterialTheme.typography.h5.copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                            PointTag(modifier = Modifier, point = mission.reward)
+                        }
+                    }
+
+                }
                 Column(
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "Syarat dan Ketentuan Berlaku",
-                        style = MaterialTheme.typography.subtitle1.copy(color = Color("#02B4CC".toColorInt())),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        text = "Description",
+                        style = MaterialTheme.typography.h5.copy(
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                    Button(
-                        onClick = { joinCampaign(mission.title) },
-                        modifier = Modifier.clip(RoundedCornerShape(60.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color("#1FA4BB".toColorInt())
+                    Text(
+                        text = mission.description,
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+                    )
+                }
+                Spacer(
+                    modifier = Modifier
+                        .height(8.dp)
+                        .fillMaxWidth()
+                        .background(color = Color("#F5F5F5".toColorInt()))
+                        .alpha(0.6f)
+                )
+                Column(
+                    modifier = Modifier.padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Same Yearly Impact",
+                        style = MaterialTheme.typography.h5.copy(
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
                         )
+                    )
+                    Text(
+                        text = "This action will have equals impact with these several activities",
+                        style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
+                    )
+                    Box(
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "Submit",
-                            style = MaterialTheme.typography.subtitle1.copy(color = Color.White),
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                ImpactCard(impact = mission.listImpact[0])
+                                ImpactCard(impact = mission.listImpact[1])
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                ImpactCard(impact = mission.listImpact[2])
+                                ImpactCard(impact = mission.listImpact[3])
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 }
@@ -177,8 +164,8 @@ fun MissionDetailScreen(mission: Mission, joinCampaign: (String) -> Unit) {
 fun ImpactCard(impact: Impact) {
     Box(
         modifier = Modifier
-            .width(155.dp)
-            .height(100.dp)
+            .width(165.dp)
+            .height(115.dp)
             .clip(RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center
     ) {
         Image(
@@ -203,6 +190,43 @@ fun ImpactCard(impact: Impact) {
             )
         }
     }
+}
+
+@Composable
+fun MissionBottomBar(mission: Mission, joinCampaign: (String) -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 8.dp)
+            .background(color = Color.White), contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Syarat dan Ketentuan Berlaku",
+                style = MaterialTheme.typography.subtitle1.copy(color = Color("#02B4CC".toColorInt())),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            Button(
+                onClick = { joinCampaign(mission.title) },
+                modifier = Modifier.clip(RoundedCornerShape(60.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color("#1FA4BB".toColorInt())
+                )
+            ) {
+                Text(
+                    text = "Submit",
+                    style = MaterialTheme.typography.subtitle1.copy(color = Color.White),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+        }
+    }
+
 }
 
 @Preview(showBackground = true)
