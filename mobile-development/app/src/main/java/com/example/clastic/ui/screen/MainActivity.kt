@@ -33,6 +33,7 @@ import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
+import com.example.clastic.ui.screen.tutorial.TutorialScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -104,7 +105,13 @@ class MainActivity : ComponentActivity() {
                             }, navController = navHostController,
                             navigateToQrCode = {
                                 navHostController.navigate(Screen.myQRCode.route)
+                            },
+                            tutorialScreen = {
+                                navHostController.navigate(Screen.tutorial.route)
                             })
+                        }
+                        composable(Screen.tutorial.route){
+                            TutorialScreen()
                         }
                         composable(Screen.articleList.route) {
                             ListArticleScreen(

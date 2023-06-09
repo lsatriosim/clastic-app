@@ -34,7 +34,7 @@ import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit ) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit, tutorialScreen: ()->Unit ) {
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -134,11 +134,13 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                                         fontWeight = FontWeight.Bold
                                     )
                                 )
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_question_white),
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
+                                IconButton(onClick = { tutorialScreen() }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_question_white),
+                                        contentDescription = null,
+                                        tint = Color.White
+                                    )
+                                }
                             }
                         }
                     }
@@ -426,7 +428,7 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {})
+    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {}, tutorialScreen = {})
 }
 
 @Composable
