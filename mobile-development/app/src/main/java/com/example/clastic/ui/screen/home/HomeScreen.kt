@@ -27,14 +27,15 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.clastic.R
-import com.example.clastic.data.entity.PlasticKnowledge
-import com.example.clastic.data.entity.ProductData
+import com.example.clastic.data.entity.*
 import com.example.clastic.ui.screen.BottomBar
+import com.example.clastic.ui.screen.Screen
 import com.example.clastic.ui.screen.listArticle.RecycleTag
+import com.example.clastic.ui.screen.mission.MissionCard
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit ) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit, onMissionClick: (String)->Unit ) {
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -170,7 +171,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                                 .alpha(0.6f)
                         )
 
-                        MisiPlastikComponent(modifier = modifier)
+                        MisiPlastikComponent(modifier = modifier, onMissionClick = onMissionClick)
 
                         Spacer(
                             modifier = Modifier
@@ -238,7 +239,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
 }
 
 @Composable
-fun MisiPlastikComponent(modifier: Modifier = Modifier) {
+fun MisiPlastikComponent(modifier: Modifier = Modifier, onMissionClick: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -264,7 +265,8 @@ fun MisiPlastikComponent(modifier: Modifier = Modifier) {
         )
 
         //content section: Tukarkan Plastikmu
-        MissionCard()
+        MissionCard(mission =
+            MissionData.dummyMission[0], onClick = onMissionClick)
     }
 }
 
@@ -426,108 +428,15 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {})
+    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {}, onMissionClick = {})
 }
 
-@Composable
-fun MissionCard(modifier: Modifier = Modifier) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .clickable { }
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-        ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.article1),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp)
-                            .padding(18.dp), contentAlignment = Alignment.BottomStart
-                    ) {
-                        Text(
-                            text = "Kumpulkan Plastik Rumah Tangga",
-                            style = MaterialTheme.typography.h5.copy(color = Color.White),
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp), contentAlignment = Alignment.TopStart
-                    ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            RecycleTag(modifier = Modifier, tag = "PET")
-                            PointTag(modifier = Modifier, point = "500pts")
-                            Text(
-                                text = "20 Days Left",
-                                style = MaterialTheme.typography.subtitle1.copy(
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                textAlign = TextAlign.End,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color("#0097B2".toColorInt())),
-                ) {
-                    Box(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp, vertical = 4.dp),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            text = "Jalankan Misi",
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.h5.copy(
-                                color = Color.White
-                            )
-                        )
-                        Box(
-                            modifier = modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_forward_white),
-                                contentDescription = null,
-                            )
-                        }
-                    }
 
-                }
-            }
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
 fun MissionCardPreview() {
     Box(modifier = Modifier.padding(20.dp)) {
-        MissionCard(modifier = Modifier)
+        MissionCard(modifier = Modifier, mission = MissionData.dummyMission[0], {})
     }
 }
