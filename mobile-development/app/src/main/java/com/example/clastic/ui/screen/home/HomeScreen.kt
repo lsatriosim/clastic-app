@@ -29,12 +29,13 @@ import androidx.navigation.NavController
 import com.example.clastic.R
 import com.example.clastic.data.entity.*
 import com.example.clastic.ui.screen.BottomBar
+import com.example.clastic.ui.screen.Screen
 import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.mission.MissionCard
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit ) {
+fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit, onMissionClick: (String)->Unit ) {
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -170,7 +171,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                                 .alpha(0.6f)
                         )
 
-                        MisiPlastikComponent(modifier = modifier)
+                        MisiPlastikComponent(modifier = modifier, onMissionClick = onMissionClick)
 
                         Spacer(
                             modifier = Modifier
@@ -238,7 +239,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
 }
 
 @Composable
-fun MisiPlastikComponent(modifier: Modifier = Modifier) {
+fun MisiPlastikComponent(modifier: Modifier = Modifier, onMissionClick: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -265,7 +266,7 @@ fun MisiPlastikComponent(modifier: Modifier = Modifier) {
 
         //content section: Tukarkan Plastikmu
         MissionCard(mission =
-            MissionData.dummyMission[0])
+            MissionData.dummyMission[0], onClick = onMissionClick)
     }
 }
 
@@ -427,7 +428,7 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {})
+    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {}, onMissionClick = {})
 }
 
 
@@ -436,6 +437,6 @@ fun HomePreview() {
 @Composable
 fun MissionCardPreview() {
     Box(modifier = Modifier.padding(20.dp)) {
-        MissionCard(modifier = Modifier, mission = MissionData.dummyMission[0])
+        MissionCard(modifier = Modifier, mission = MissionData.dummyMission[0], {})
     }
 }

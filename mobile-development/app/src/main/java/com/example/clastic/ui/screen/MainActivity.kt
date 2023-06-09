@@ -37,6 +37,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.compose.rememberImagePainter
 import com.example.clastic.R
+import com.example.clastic.data.entity.Mission
+import com.example.clastic.data.entity.MissionData
 import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
 import com.example.clastic.data.network.ApiConfig
@@ -48,6 +50,7 @@ import com.example.clastic.ui.screen.classifier.ClassifierViewModel
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
+import com.example.clastic.ui.screen.mission.MissionDetailScreen
 import com.example.clastic.ui.screen.mission.MissionListScreen
 import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
@@ -170,7 +173,10 @@ class MainActivity : ComponentActivity() {
                             }, navController = navHostController,
                                 navigateToQrCode = {
                                     navHostController.navigate(Screen.myQRCode.route)
-                                })
+                                },
+                            onMissionClick = {missionTitle ->
+                                navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
+                            })
                         }
                         composable(Screen.articleList.route) {
                             ListArticleScreen(
@@ -227,8 +233,25 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.myQRCode.route) {
                             MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
                         }
-                        composable(Screen.missionList.route){
-                            MissionListScreen()
+                        composable(Screen.missionList.route) {
+                            MissionListScreen(onClick = {missionTitle ->
+                                navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
+                            })
+                        }
+                        composable(route = Screen.missionDetail.route,
+                            arguments = listOf(navArgument("missionTitle") {
+                                type = NavType.StringType
+                            })
+                        ) {
+                            var mission: Mission? = null
+                            for(missions in MissionData.dummyMission){
+                                if(missions.title.equals(it.arguments?.getString("missionTitle"))){
+                                    mission = missions
+                                }
+                            }
+                            MissionDetailScreen(mission = mission!!, joinCampaign = {missionTitle ->
+
+                            })
                         }
                         composable(Screen.classifier.route) {
                             val viewModel: ClassifierViewModel = viewModel(
@@ -253,13 +276,20 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 Scaffold(topBar = {
                                     TopAppBar(
-                                        title = { Text(text = "Classify", color = Color.White) },
+                                        title = {
+                                            Text(
+                                                text = "Classify",
+                                                color = Color.White
+                                            )
+                                        },
                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                     )
                                 }) { innerPadding ->
                                     if (showDialog.value) {
-                                        Dialog(onDismissRequest = { showDialog.value = false }) {
-                                            PopUpCard(closePopUp = {showDialog.value = false})
+                                        Dialog(onDismissRequest = {
+                                            showDialog.value = false
+                                        }) {
+                                            PopUpCard(closePopUp = { showDialog.value = false })
                                         }
                                     }
                                     Box(
@@ -270,7 +300,8 @@ class MainActivity : ComponentActivity() {
                                         Box(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .padding(16.dp), contentAlignment = Alignment.TopEnd
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.TopEnd
                                         ) {
                                             Icon(
                                                 painter = painterResource(id = R.drawable.ic_question_white),
@@ -346,7 +377,10 @@ class MainActivity : ComponentActivity() {
                                                         photoUri.value,
                                                         this@MainActivity
                                                     )
-                                                    Log.d("testNetwork", photoFile.name.toString())
+                                                    Log.d(
+                                                        "testNetwork",
+                                                        photoFile.name.toString()
+                                                    )
                                                     viewModel.addPhoto(photoFile)
                                                 },
                                                 colors = ButtonDefaults.buttonColors(

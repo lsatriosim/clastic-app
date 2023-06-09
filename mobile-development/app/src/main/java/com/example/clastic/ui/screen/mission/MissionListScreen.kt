@@ -28,7 +28,7 @@ import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun MissionListScreen(modifier: Modifier = Modifier) {
+fun MissionListScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(text = "Mission", color = Color.White) },
@@ -42,7 +42,7 @@ fun MissionListScreen(modifier: Modifier = Modifier) {
             ) {
                 LazyColumn{
                     items(MissionData.dummyMission, key = {it.title}){mission ->
-                        MissionCard(mission = mission)
+                        MissionCard(mission = mission, onClick = onClick)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
@@ -53,12 +53,12 @@ fun MissionListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MissionCard(modifier: Modifier = Modifier, mission: Mission) {
+fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .clickable { },
+            .clickable { onClick(mission.title) },
         elevation = 10.dp
     ) {
         Box(
@@ -151,5 +151,5 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission) {
 @Preview(showBackground = true)
 @Composable
 fun MissionListPreview() {
-    MissionListScreen()
+    MissionListScreen(onClick = {})
 }
