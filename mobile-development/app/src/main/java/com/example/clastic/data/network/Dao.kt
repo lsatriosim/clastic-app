@@ -3,6 +3,7 @@ package com.example.clastic.data.network
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.net.Uri
 import android.util.Log
 import com.example.clastic.R
 import com.example.clastic.data.entity.Article
@@ -20,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -35,6 +37,18 @@ class Dao {
             Log.d("firebase: add", "item has been store succesfully with document id: ${it.id}")
         }.addOnFailureListener {
             Log.d("firebase: add", it.message.toString())
+        }
+    }
+
+    fun addPhoto(photoFile: File, callback:(String?, Exception?)->Unit){
+        val file = Uri.fromFile(photoFile)
+        val imageRef = storageRef.child("images/classifier/${photoFile.name}")
+        imageRef.putFile(file).addOnSuccessListener {
+            Log.d("testUpload", "File Upload Succesfully: ${it.toString()}")
+            callback("Berhasil", null)
+        }.addOnFailureListener{exception ->
+            Log.d("testUpload", "File Can't Upload")
+            callback(null, exception)
         }
     }
 
@@ -72,18 +86,18 @@ class Dao {
         return listDocument
     }
 
-    fun getPhotoUrl(imageName: String, callback: (String) -> Unit) {
-        val imageRef = storageRef.child(imageName)
+    fun getPhotoUrl(file: File, callback: (String?, Exception?) -> Unit) {
+        val imageRef = storageRef.child("images/classifier/${file.name}")
 
         imageRef.downloadUrl
             .addOnSuccessListener { uri ->
                 val downloadUrl = uri.toString()
                 Log.d("getPhotoUrl", "Image URL Accepted: $downloadUrl")
-                callback(downloadUrl)
+                callback(downloadUrl, null)
             }
             .addOnFailureListener { exception ->
                 Log.d("getPhotoUrl", "Failed to get image URL: ${exception.message.toString()}")
-                callback("")
+                callback(null, exception)
             }
     }
 

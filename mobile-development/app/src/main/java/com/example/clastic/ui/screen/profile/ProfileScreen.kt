@@ -2,6 +2,7 @@ package com.example.clastic.ui.screen.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -53,19 +54,21 @@ fun ProfileScreen(
 
 
     Scaffold(
+        modifier = modifier
+            .fillMaxSize(),
         topBar = {
             ProfileTopBar()
         },
         bottomBar = { BottomBar(currentMenu = "Profile", navController = navHostController)},
-        modifier = modifier
-            .background(Color.White),
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            // TODO(Illegal Padding?)
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(paddingValues)
-                .background(Color.White),
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(bottom = 100.dp),
         ) {
             // TODO(Change Static Picture)
             ProfileCard(

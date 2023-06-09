@@ -1,5 +1,7 @@
 package com.example.clastic.ui.screen
 
+import com.example.clastic.data.entity.Mission
+
 sealed class Screen(val route:String) {
 
     object splashScreen: Screen("splashScreen")
@@ -26,5 +28,12 @@ sealed class Screen(val route:String) {
 
     object transactionCreated: Screen("transactionCreated/{transactionId}") {
         fun createRoute(transactionId: String) = "transactionCreated/$transactionId"
+
+    object classifier: Screen("classifier")
+
+    object missionList: Screen("missionList")
+
+    object missionDetail: Screen("missionDetail/{missionTitle}"){
+        fun createRoute(missionTitle: String) = "missionDetail/${missionTitle}"
     }
 }
