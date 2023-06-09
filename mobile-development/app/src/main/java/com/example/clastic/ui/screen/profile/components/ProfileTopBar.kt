@@ -23,7 +23,7 @@ fun ProfileTopBar() {
                 text = stringResource(R.string.profile),
                 color = Color.White,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .padding(start = 15.dp),
             )
