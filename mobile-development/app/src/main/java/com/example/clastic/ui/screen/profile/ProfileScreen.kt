@@ -122,7 +122,7 @@ fun ProfileScreen(
                 },
                 // TODO(Illegal Padding?)
                 modifier = Modifier
-                    .padding(top = 20.dp, bottom = 100.dp)
+                    .padding(top = 15.dp)
             )
         }
     }
