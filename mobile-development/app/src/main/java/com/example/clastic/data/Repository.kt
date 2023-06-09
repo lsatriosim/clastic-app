@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.util.Log
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.entity.Transaction
 import com.example.clastic.data.entity.User
 import com.example.clastic.data.network.Dao
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
@@ -57,6 +58,26 @@ class Repository(private val dao:Dao) {
 
     suspend fun logout(oneTapClient: SignInClient) {
         dao.logout(oneTapClient)
+    }
+
+    suspend fun isUserExist(uid: String): Boolean {
+        return dao.isUserExist(uid)
+    }
+
+    suspend fun getNameByUid(uid: String): String {
+        return dao.getNameByUid(uid)
+    }
+
+    suspend fun createTransaction(transactionResult: Transaction): String {
+        return dao.createTransaction(transactionResult)
+    }
+
+    suspend fun getDropPointName(): String {
+        return dao.getDropPointName()
+    }
+
+    suspend fun getTransactionById(id: String): Transaction {
+        return dao.getTransactionById(id)
     }
 
     companion object {

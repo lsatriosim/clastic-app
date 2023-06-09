@@ -58,6 +58,9 @@ import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
+import com.example.clastic.ui.screen.transaction.createTransaction.CreateTransactionScreen
+import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreen
+import com.example.clastic.ui.screen.transaction.transactionCreated.TransactionCreatedScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.example.clastic.uriToFile
 import com.google.android.gms.common.util.CollectionUtils.listOf
@@ -132,7 +135,7 @@ class MainActivity : ComponentActivity() {
                                 //TODO(Change navigation here for debug)
                                 navigateToHome = {
                                     navHostController.popBackStack()
-                                    navHostController.navigate(Screen.profile.route)
+                                    navHostController.navigate(Screen.qrCodeScanner.route)
                                 },
                                 navigateToLogin = {
                                     navHostController.popBackStack()
@@ -236,6 +239,59 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.myQRCode.route) {
                             MyQRCodeScreen(qrText = auth.currentUser?.uid.toString())
                         }
+                        composable(Screen.qrCodeScanner.route) {
+                            QRScannerScreen(
+                                navigateToHome = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.Home.route)
+                                },
+                                onScanned = { scannedUID ->
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(
+                                        Screen.createTransaction.createRoute(
+                                            scannedUID
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                        composable(
+                            route = Screen.createTransaction.route,
+                            arguments = listOf(navArgument("scannedUID"){
+                                type = NavType.StringType
+                            })
+                        ) { navBackStackEntry ->
+                            val scannedUID = navBackStackEntry.arguments?.getString("scannedUID")
+                            CreateTransactionScreen(
+                                scannedUID = scannedUID,
+                                navigateToHome = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.Home.route)
+                                },
+                                navigateToTransactionCreated = { transactionId ->
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(
+                                        Screen.transactionCreated.createRoute(
+                                            transactionId
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                        composable(
+                            route = Screen.transactionCreated.route,
+                            arguments = listOf(navArgument("transactionId"){
+                                type = NavType.StringType
+                            })
+                        ) { navBackStackEntry ->
+                            val transactionId = navBackStackEntry.arguments?.getString("transactionId")
+                            TransactionCreatedScreen(
+                                transactionId = transactionId!!,
+                                navigateToHome = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.Home.route)
+                                }
+                            )
                         composable(Screen.missionList.route) {
                             MissionListScreen(onClick = {missionTitle ->
                                 navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))

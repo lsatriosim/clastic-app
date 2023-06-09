@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.clastic.R
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.entity.Transaction
 import com.example.clastic.data.entity.User
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
 import com.example.clastic.ui.screen.authentication.components.UserData
@@ -320,5 +321,112 @@ class Dao {
         }
     }
 
+    suspend fun isUserExist(uid: String): Boolean {
+        return try {
+            val querySnapshot = db.collection("user").whereEqualTo("userId", uid).get().await()
+            !querySnapshot.isEmpty
+        } catch (e: Exception) {
+            false
+        }
+    }
 
+    suspend fun getNameByUid(uid: String): String {
+        return try {
+            val snapshot = db.collection("user")
+                .whereEqualTo("userId", uid)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents.first()
+                document.getString("username") ?: throw Exception("User not found")
+            } else {
+                throw Exception("User not found")
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getDropPointName(): String {
+        val uid = getLoggedInUser()?.userId
+        return try {
+            val snapshot = db.collection("dropPoint")
+                .whereEqualTo("ownerId", uid)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents.first()
+                document.getString("name") ?: throw Exception("Location not found")
+            } else {
+                throw Exception("Drop point not found")
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+    private suspend fun addPointsToUser(userId: String, additionalPoints: Int) {
+        try {
+            val snapshot = db.collection("user")
+                .whereEqualTo("userId", userId)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents[0]
+                val currentPoints = document.getLong("coin") ?: 0L
+                val newPoints = currentPoints + additionalPoints
+
+                document.reference.update("coin", newPoints)
+                    .addOnSuccessListener {
+                        Log.d("testFirebase", "Points added successfully.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("testFirebase", "Error adding points: $e")
+                    }
+            } else {
+                Log.w("testFirebase", "User not found.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun createTransaction(transaction: Transaction): String {
+        val newTransaction = hashMapOf(
+            "userId" to transaction.userId,
+            "ownerId" to transaction.ownerId,
+            "date" to transaction.transactionDate,
+            "totalPoints" to transaction.totalPoints,
+            "transactionList" to transaction.transactionList
+        )
+
+        val deferred = CompletableDeferred<String>()
+
+        db.collection("transaction").add(newTransaction)
+            .addOnSuccessListener { documentReference ->
+                Log.d("testFirebase", "Document has been made with id : ${documentReference.id}")
+                deferred.complete(documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w("testFirebase", "Error adding document", e)
+                deferred.completeExceptionally(e)
+            }
+        addPointsToUser(transaction.userId, transaction.totalPoints)
+        return deferred.await()
+    }
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getTransactionById(id: String): Transaction {
+        val documentRef = db.collection("transaction").document(id)
+        val documentSnapshot = documentRef.get().await()
+
+        val data = documentSnapshot.data
+        val userId = data?.get("userId") as String
+        val ownerId = data["ownerId"] as String
+        val date = data["date"] as String
+        val totalPoints = (data["totalPoints"] as Long).toInt()
+        val transactionList = data["transactionList"] as Map<String, Map<String, Any>>
+        return Transaction(userId, ownerId, date, totalPoints, transactionList)
+    }
 }
