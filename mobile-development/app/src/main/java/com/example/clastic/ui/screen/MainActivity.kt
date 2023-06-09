@@ -10,19 +10,35 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
@@ -37,17 +53,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.compose.rememberImagePainter
 import com.example.clastic.R
-import com.example.clastic.data.Repository
 import com.example.clastic.data.entity.Mission
 import com.example.clastic.data.entity.MissionData
 import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
 import com.example.clastic.data.network.ApiConfig
-import com.example.clastic.di.Injection
 import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.classifier.CameraView
-import com.example.clastic.ui.screen.classifier.ClassifierScreen
 import com.example.clastic.ui.screen.classifier.ClassifierViewModel
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
@@ -58,21 +71,15 @@ import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
-import com.example.clastic.ui.screen.tutorial.TutorialScreen
 import com.example.clastic.ui.screen.transaction.createTransaction.CreateTransactionScreen
 import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreen
 import com.example.clastic.ui.screen.transaction.transactionCreated.TransactionCreatedScreen
+import com.example.clastic.ui.screen.tutorial.TutorialScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.example.clastic.uriToFile
 import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -291,7 +298,8 @@ class MainActivity : ComponentActivity() {
                                 type = NavType.StringType
                             })
                         ) { navBackStackEntry ->
-                            val transactionId = navBackStackEntry.arguments?.getString("transactionId")
+                            val transactionId =
+                                navBackStackEntry.arguments?.getString("transactionId")
                             TransactionCreatedScreen(
                                 transactionId = transactionId!!,
                                 navigateToHome = {
@@ -299,6 +307,7 @@ class MainActivity : ComponentActivity() {
                                     navHostController.navigate(Screen.Home.route)
                                 }
                             )
+                        }
                         composable(Screen.missionList.route) {
                             MissionListScreen(onClick = {missionTitle ->
                                 navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
@@ -478,7 +487,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     private fun requestCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(
