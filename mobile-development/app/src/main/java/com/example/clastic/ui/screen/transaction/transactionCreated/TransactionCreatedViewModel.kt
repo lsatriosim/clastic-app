@@ -1,5 +1,6 @@
 package com.example.clastic.ui.screen.transaction.transactionCreated
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,8 +11,8 @@ import java.util.Locale
 
 class TransactionCreatedViewModel(private val repository: Repository): ViewModel() {
 
-    private val _userId = MutableStateFlow("")
-    val userId = _userId.asStateFlow()
+    private val _username = MutableStateFlow("")
+    val username = _username.asStateFlow()
 
     private val _transactionDate = MutableStateFlow("")
     val transactionDate = _transactionDate.asStateFlow()
@@ -30,9 +31,14 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
     val transactionList: StateFlow<Map<String, Map<String, Any>>>
         get() = _transactionList
 
+    private suspend fun getNameByUid(uid: String): String {
+        return repository.getNameByUid(uid)
+    }
+
     suspend fun getTransaction(id: String) {
         val transaction =  repository.getTransactionById(id)
-        _userId.value = transaction.userId
+        _username.value = getNameByUid(transaction.userId)
+        Log.d("USERNAME VALUE: ", _username.value)
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList

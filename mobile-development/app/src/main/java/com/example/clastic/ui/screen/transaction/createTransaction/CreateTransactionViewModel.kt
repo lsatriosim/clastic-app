@@ -10,6 +10,7 @@ import com.example.clastic.data.entity.Transaction
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,6 +26,12 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
 
     private val _formattedPoints = MutableStateFlow("0")
     val formattedPoints: StateFlow<String> get() = _formattedPoints
+
+    private val _username = MutableStateFlow("")
+    val username = _username.asStateFlow()
+
+    private val _dropPointName = MutableStateFlow("")
+    val dropPointName = _dropPointName.asStateFlow()
 
     fun removeLast() {
         val currentList = _listOfPoints.value.toMutableList()
@@ -119,11 +126,10 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
         return resultMap
     }
 
-    suspend fun getNameByUid(uid: String): String {
-        return repository.getNameByUid(uid)
+    suspend fun getNameByUid(uid: String) {
+        _username.value = repository.getNameByUid(uid)
     }
 
-    // TODO(Not finished)
     suspend fun uploadTransaction(context: Context, userId: String, date: String,
                                   navigateToTransactionCreated: (String) -> Unit) {
         if ("" in _listOfPlasticTypes.value || 0f in _listOfWeights.value ||
@@ -145,8 +151,8 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
         }
     }
 
-    suspend fun getDropPointName(): String {
-        return repository.getDropPointName()
+    suspend fun getDropPointName() {
+        _dropPointName.value = repository.getDropPointName()
     }
 
     fun showAlertDialog(context: Context, navigateToHome: () -> Unit) {

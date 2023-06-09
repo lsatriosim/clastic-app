@@ -55,7 +55,7 @@ fun TransactionCreatedScreen(
         )
     )
     var location by remember { mutableStateOf("") }
-    val userId by viewModel.userId.collectAsState()
+    val username by viewModel.username.collectAsState()
     val transactionDate by viewModel.transactionDate.collectAsState()
     val totalPoints by viewModel.totalPoints.collectAsState()
     val transactionList by viewModel.transactionList.collectAsState()
@@ -114,7 +114,7 @@ fun TransactionCreatedScreen(
                     )
                     TransactionDetailItem(
                         fieldName = stringResource(R.string.receiver),
-                        fieldValue = userId
+                        fieldValue = username
                     )
                     TransactionDetailItem(
                         fieldName = stringResource(R.string.location),

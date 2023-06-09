@@ -16,9 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,13 +54,13 @@ fun CreateTransactionScreen(
     )
     val formattedPoints by viewModel.formattedPoints.collectAsState()
     val plasticRowCount by viewModel.plasticRowCount.collectAsState()
-    var dropPointName by remember { mutableStateOf("") }
+    val dropPointName by viewModel.dropPointName.collectAsState()
     val currentDate = viewModel.getCurrentDateTimeText()
-    var username by remember { mutableStateOf("") }
+    val username by viewModel.username.collectAsState()
 
     LaunchedEffect(Unit) {
-        username = viewModel.getNameByUid(scannedUID!!)
-        dropPointName = viewModel.getDropPointName()
+        viewModel.getNameByUid(scannedUID!!)
+        viewModel.getDropPointName()
     }
 
     Column(
