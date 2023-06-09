@@ -58,6 +58,7 @@ import com.example.clastic.ui.screen.myqrcode.MyQRCodeScreen
 import com.example.clastic.ui.screen.productKnowledge.ProductKnowledgeScreen
 import com.example.clastic.ui.screen.profile.ProfileScreen
 import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
+import com.example.clastic.ui.screen.tutorial.TutorialScreen
 import com.example.clastic.ui.screen.transaction.createTransaction.CreateTransactionScreen
 import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreen
 import com.example.clastic.ui.screen.transaction.transactionCreated.TransactionCreatedScreen
@@ -177,12 +178,18 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             }, navController = navHostController,
-                                navigateToQrCode = {
-                                    navHostController.navigate(Screen.myQRCode.route)
-                                },
+                            navigateToQrCode = {
+                                navHostController.navigate(Screen.myQRCode.route)
+                            },
+                            tutorialScreen = {
+                                navHostController.navigate(Screen.tutorial.route)
+                            },
                             onMissionClick = {missionTitle ->
                                 navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
                             })
+                        }
+                        composable(Screen.tutorial.route){
+                            TutorialScreen()
                         }
                         composable(Screen.articleList.route) {
                             ListArticleScreen(

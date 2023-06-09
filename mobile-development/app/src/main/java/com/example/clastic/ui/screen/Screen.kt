@@ -21,6 +21,8 @@ sealed class Screen(val route:String) {
     object profile: Screen("profile")
 
     object myQRCode: Screen("myQRCode")
+
+    object tutorial: Screen("tutorial")
     object qrCodeScanner: Screen("qrCodeScanner")
     object createTransaction: Screen("createTransaction/{scannedUID}") {
         fun createRoute(scannedUID: String) = "createTransaction/$scannedUID"
