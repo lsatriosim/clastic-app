@@ -2,10 +2,11 @@ package com.example.clastic.ui.screen.transaction.transactionCreated
 
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
-import com.example.clastic.formatNumber
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.text.NumberFormat
+import java.util.Locale
 
 class TransactionCreatedViewModel(private val repository: Repository): ViewModel() {
 
@@ -39,6 +40,11 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList
+    }
+
+    private fun formatNumber(number: Int): String {
+        val numberFormat = NumberFormat.getInstance(Locale.getDefault())
+        return numberFormat.format(number)
     }
 
     suspend fun getDropPointName(): String {
