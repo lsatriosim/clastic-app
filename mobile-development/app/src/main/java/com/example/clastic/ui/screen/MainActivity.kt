@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
                                 //TODO(Change navigation here for debug)
                                 navigateToHome = {
                                     navHostController.popBackStack()
-                                    navHostController.navigate(Screen.qrCodeScanner.route)
+                                    navHostController.navigate(Screen.Home.route)
                                 },
                                 navigateToLogin = {
                                     navHostController.popBackStack()
@@ -196,15 +196,19 @@ class MainActivity : ComponentActivity() {
                                 tutorialScreen = {
                                     navHostController.navigate(Screen.tutorial.route)
                                 },
-                                onMissionClick = {missionTitle ->
-                                    navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
+                                onMissionClick = { missionTitle ->
+                                    navHostController.navigate(
+                                        Screen.missionDetail.createRoute(
+                                            missionTitle
+                                        )
+                                    )
                                 },
                                 navigateToDropPointMap = {
                                     navHostController.navigate(Screen.dropPointMap.route)
                                 }
                             )
                         }
-                        composable(Screen.tutorial.route){
+                        composable(Screen.tutorial.route) {
                             TutorialScreen()
                         }
                         composable(Screen.articleList.route) {
@@ -283,7 +287,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             route = Screen.createTransaction.route,
-                            arguments = listOf(navArgument("scannedUID"){
+                            arguments = listOf(navArgument("scannedUID") {
                                 type = NavType.StringType
                             })
                         ) { navBackStackEntry ->
@@ -306,7 +310,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             route = Screen.transactionCreated.route,
-                            arguments = listOf(navArgument("transactionId"){
+                            arguments = listOf(navArgument("transactionId") {
                                 type = NavType.StringType
                             })
                         ) { navBackStackEntry ->
@@ -321,24 +325,31 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.missionList.route) {
-                            MissionListScreen(onClick = {missionTitle ->
-                                navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
-                            })
+                            MissionListScreen(onClick = { missionTitle ->
+                                navHostController.navigate(
+                                    Screen.missionDetail.createRoute(
+                                        missionTitle
+                                    )
+                                )
+                            }, navHostController = navHostController)
                         }
-                        composable(route = Screen.missionDetail.route,
+                        composable(
+                            route = Screen.missionDetail.route,
                             arguments = listOf(navArgument("missionTitle") {
                                 type = NavType.StringType
                             })
                         ) {
                             var mission: Mission? = null
-                            for(missions in MissionData.dummyMission){
-                                if(missions.title.equals(it.arguments?.getString("missionTitle"))){
+                            for (missions in MissionData.dummyMission) {
+                                if (missions.title.equals(it.arguments?.getString("missionTitle"))) {
                                     mission = missions
                                 }
                             }
-                            MissionDetailScreen(mission = mission!!, joinCampaign = {missionTitle ->
+                            MissionDetailScreen(
+                                mission = mission!!,
+                                joinCampaign = { missionTitle ->
 
-                            })
+                                })
                         }
                         composable(Screen.classifier.route) {
                             val viewModel: ClassifierViewModel = viewModel(
@@ -371,7 +382,13 @@ class MainActivity : ComponentActivity() {
                                         },
                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                     )
-                                }) { innerPadding ->
+                                },
+                                    bottomBar = {
+                                        BottomBar(
+                                            currentMenu = "Classify",
+                                            navController = navHostController
+                                        )
+                                    }) { innerPadding ->
                                     if (showDialog.value) {
                                         Dialog(onDismissRequest = {
                                             showDialog.value = false
@@ -503,15 +520,17 @@ class MainActivity : ComponentActivity() {
                                     navHostController.navigate(Screen.profile.route)
                                 },
                                 navigateToDetail = { transactionId ->
-                                    navHostController.navigate(Screen.transactionHistoryDetail.createRoute(
-                                        transactionId
-                                    ))
+                                    navHostController.navigate(
+                                        Screen.transactionHistoryDetail.createRoute(
+                                            transactionId
+                                        )
+                                    )
                                 }
                             )
                         }
                         composable(
                             route = Screen.transactionHistoryDetail.route,
-                            arguments = listOf(navArgument("transactionId"){
+                            arguments = listOf(navArgument("transactionId") {
                                 type = NavType.StringType
                             })
                         ) { navBackStackEntry ->
@@ -538,6 +557,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     private fun requestCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(

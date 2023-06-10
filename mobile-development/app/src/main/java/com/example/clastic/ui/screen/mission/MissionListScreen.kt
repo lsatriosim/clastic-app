@@ -26,25 +26,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import androidx.navigation.NavHostController
 import com.example.clastic.R
 import com.example.clastic.data.entity.Mission
 import com.example.clastic.data.entity.MissionData
+import com.example.clastic.ui.screen.BottomBar
 import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun MissionListScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+fun MissionListScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navHostController: NavHostController) {
     Scaffold(topBar = {
         TopAppBar(
             title = { Text(text = "Mission", color = Color.White) },
             backgroundColor = Color("#1FA4BB".toColorInt())
         )
+    },
+    bottomBar = {
+        BottomBar(currentMenu = "Mission", navController = navHostController)
     }){innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)){
             Box(
@@ -162,7 +168,7 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (Strin
 @Preview(showBackground = true)
 @Composable
 fun MissionListPreview() {
-    MissionListScreen(onClick = {})
+    MissionListScreen(onClick = {}, navHostController = NavHostController(LocalContext.current))
 }
 
 @Preview(showBackground = true)
