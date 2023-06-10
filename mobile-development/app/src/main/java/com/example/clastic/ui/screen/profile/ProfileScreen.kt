@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.ui.screen.profile.components.LogoutButton
 import com.example.clastic.ui.screen.profile.components.ProfileCard
 import com.example.clastic.ui.screen.profile.components.ProfileMenu
+import com.example.clastic.ui.screen.profile.components.ProfileMenuPlaceholder
 import com.example.clastic.ui.screen.profile.components.ProfileSummary
 import com.example.clastic.ui.screen.profile.components.ProfileTopBar
 import com.example.clastic.ui.theme.ClasticTheme
@@ -41,6 +43,7 @@ import java.text.NumberFormat
 
 @Composable
 fun ProfileScreen(
+    navigateToTransactionHistory: () -> Unit,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     navHostController:NavHostController
@@ -51,7 +54,11 @@ fun ProfileScreen(
     )
     val mainScope = MainScope()
     val user by viewModel.user.collectAsState()
-
+    val transactionCount by viewModel.transactionCount.collectAsState()
+    val totalWeight by viewModel.weightTotal.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.getDataSummary()
+    }
 
     Scaffold(
         modifier = modifier
@@ -80,26 +87,26 @@ fun ProfileScreen(
                 modifier = Modifier
                     .padding(vertical = 20.dp)
             )
-            // TODO(Change Static Data)
             ProfileSummary(
-                totalTransaction = "14",
-                totalPlastic = "6.5",
+                totalTransaction = transactionCount.toString(),
+                totalPlastic = totalWeight.toString(),
                 modifier = Modifier
                     .padding(bottom = 20.dp)
             )
             ProfileMenu(
                 title = stringResource(R.string.transaction_history),
-                icon = Icons.Default.List
+                icon = Icons.Default.List,
+                onClick = navigateToTransactionHistory
             )
-            ProfileMenu(
+            ProfileMenuPlaceholder(
                 title = stringResource(R.string.redeem_history),
-                icon = Icons.Default.FiberSmartRecord
+                icon = Icons.Default.FiberSmartRecord,
             )
-            ProfileMenu(
+            ProfileMenuPlaceholder(
                 title = stringResource(R.string.share_clastic),
-                icon = Icons.Default.Share
+                icon = Icons.Default.Share,
             )
-            ProfileMenu(
+            ProfileMenuPlaceholder(
                 title = stringResource(R.string.settings),
                 icon = Icons.Default.Settings,
                 modifier = Modifier
@@ -132,6 +139,10 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenPreview() {
     ClasticTheme {
-        ProfileScreen(onLogout = {}, navHostController = NavHostController(LocalContext.current))
+        ProfileScreen(
+            onLogout = {},
+            navHostController = NavHostController(LocalContext.current),
+            navigateToTransactionHistory = {},
+        )
     }
 }

@@ -72,15 +72,28 @@ class Repository(private val dao:Dao) {
         return dao.createTransaction(transactionResult)
     }
 
-    suspend fun getDropPointName(): String {
-        return dao.getDropPointName()
+    suspend fun getDropPointNameByOwnerId(uid: String): String {
+        return dao.getDropPointNameByOwnerId(uid)
     }
 
     suspend fun getTransactionById(id: String): Transaction {
         return dao.getTransactionById(id)
     }
 
-    companion object {
+    suspend fun getTransactionListByUid(userId: String): List<Transaction>? {
+        return dao.getTransactionListByUid(userId)
+    }
+
+    suspend fun getTransactionCountByUserId(): Int {
+        return dao.getTransactionCountByUserId()
+    }
+
+    suspend fun getSumOfWeightByUid(): Float {
+        return dao.getSumOfWeightByUid()
+    }
+
+
+        companion object {
         @Volatile
         private var instance: Repository? = null
         fun getInstance(

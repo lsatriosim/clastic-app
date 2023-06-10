@@ -1,6 +1,7 @@
 package com.example.clastic.data.entity
 
 data class Transaction(
+    val id: String,
     val userId: String,
     val ownerId: String,
     val transactionDate: String,

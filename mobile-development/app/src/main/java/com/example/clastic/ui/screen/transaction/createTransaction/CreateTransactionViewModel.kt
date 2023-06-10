@@ -139,6 +139,7 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
         } else {
             repository.getLoggedInUser()?.let { owner ->
                 val transaction = Transaction(
+                    id = "",
                     userId = userId,
                     ownerId = owner.userId,
                     transactionDate = date,
@@ -151,8 +152,9 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
         }
     }
 
-    suspend fun getDropPointName() {
-        _dropPointName.value = repository.getDropPointName()
+    suspend fun getDropPointNameByOwnerId() {
+        val uid = repository.getLoggedInUser()?.userId
+        _dropPointName.value = repository.getDropPointNameByOwnerId(uid!!)
     }
 
     fun showAlertDialog(context: Context, navigateToHome: () -> Unit) {

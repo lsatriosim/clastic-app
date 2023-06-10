@@ -20,6 +20,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.text.SimpleDateFormat
@@ -348,8 +351,7 @@ class Dao {
         }
     }
 
-    suspend fun getDropPointName(): String {
-        val uid = getLoggedInUser()?.userId
+    suspend fun getDropPointNameByOwnerId(uid: String): String {
         return try {
             val snapshot = db.collection("dropPoint")
                 .whereEqualTo("ownerId", uid)
@@ -395,27 +397,29 @@ class Dao {
 
     suspend fun createTransaction(transaction: Transaction): String {
         val newTransaction = hashMapOf(
+            "id" to transaction.id,
             "userId" to transaction.userId,
             "ownerId" to transaction.ownerId,
             "date" to transaction.transactionDate,
             "totalPoints" to transaction.totalPoints,
             "transactionList" to transaction.transactionList
         )
-
         val deferred = CompletableDeferred<String>()
-
-        db.collection("transaction").add(newTransaction)
-            .addOnSuccessListener { documentReference ->
-                Log.d("testFirebase", "Document has been made with id : ${documentReference.id}")
-                deferred.complete(documentReference.id)
+        val collectionRef = db.collection("transaction")
+        val newDocumentRef = collectionRef.document()
+        val documentId = newDocumentRef.id
+        newTransaction["id"] = documentId
+        newDocumentRef.set(newTransaction)
+            .addOnSuccessListener {
+                deferred.complete(documentId)
             }
             .addOnFailureListener { e ->
-                Log.w("testFirebase", "Error adding document", e)
                 deferred.completeExceptionally(e)
             }
         addPointsToUser(transaction.userId, transaction.totalPoints)
         return deferred.await()
     }
+
     @Suppress("UNCHECKED_CAST")
     suspend fun getTransactionById(id: String): Transaction {
         val documentRef = db.collection("transaction").document(id)
@@ -427,6 +431,76 @@ class Dao {
         val date = data["date"] as String
         val totalPoints = (data["totalPoints"] as Long).toInt()
         val transactionList = data["transactionList"] as Map<String, Map<String, Any>>
-        return Transaction(userId, ownerId, date, totalPoints, transactionList)
+        return Transaction(id, userId, ownerId, date, totalPoints, transactionList)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getTransactionListByUid(userId: String): List<Transaction>? {
+        val collectionRef = db.collection("transaction")
+
+        return try {
+            val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+            val transactionList = querySnapshot.documents.map { document ->
+                val id = document.id
+                val ownerId = document.getString("ownerId") ?: ""
+                val date = document.getString("date") ?: ""
+                val totalPoints = document.getLong("totalPoints")?.toInt() ?: 0
+                val transactionList = document.get("transactionList") as Map<String, Map<String, Any>>
+
+                Transaction(id, userId, ownerId, date, totalPoints, transactionList)
+            }
+            transactionList
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getLoggedInUserId(): String {
+        val user = auth.currentUser?.run {
+            UserData(
+                userId = uid,
+                username = displayName,
+                userImage = photoUrl?.toString(),
+                token = getIdToken(false).toString()
+            )
+        }
+        return user?.userId ?: throw IllegalStateException("User is not logged in.")
+    }
+
+    suspend fun getTransactionCountByUserId(): Int = kotlinx.coroutines.withContext(Dispatchers.Default) {
+        val userId = getLoggedInUserId()
+        val collectionRef = db.collection("transaction")
+        val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+        return@withContext querySnapshot.size()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getSumOfWeightByUid(): Float {
+        val userId = getLoggedInUserId()
+        val collectionRef = db.collection("transaction")
+
+        return try {
+            val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+            var sum = 0f
+
+            for (document in querySnapshot.documents) {
+                val transactionList = document.get("transactionList") as? Map<String, Map<String, Any>>
+                Log.d("LOGGINGRESULT Transaction List:", "$transactionList")
+                if (transactionList != null) {
+                    for (transaction in transactionList.values) {
+                        Log.d("LOGGINGRESULT Transaction:", "$transaction")
+                        val weight = (transaction["weight"] as Double).toFloat()
+                        Log.d("LOGGINGRESULT Weight:", "$weight")
+                        sum += weight
+                    }
+                }
+            }
+
+            sum
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0f
+        }
     }
 }

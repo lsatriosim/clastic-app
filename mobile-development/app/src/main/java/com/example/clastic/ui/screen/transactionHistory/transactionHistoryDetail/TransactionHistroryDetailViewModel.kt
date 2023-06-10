@@ -1,4 +1,4 @@
-package com.example.clastic.ui.screen.transaction.transactionCreated
+package com.example.clastic.ui.screen.transactionHistory.transactionHistoryDetail
 
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
@@ -8,8 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.text.NumberFormat
 import java.util.Locale
 
-class TransactionCreatedViewModel(private val repository: Repository): ViewModel() {
-
+class TransactionHistoryDetailViewModel(private val repository: Repository): ViewModel() {
     private val _username = MutableStateFlow("")
     val username = _username.asStateFlow()
 
@@ -18,6 +17,9 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
 
     private val _totalPoints = MutableStateFlow("")
     val totalPoints = _totalPoints.asStateFlow()
+
+    private val _location = MutableStateFlow("")
+    val location = _location.asStateFlow()
 
     private val _transactionList = MutableStateFlow<Map<String, Map<String, Any>>>(
         mapOf(
@@ -40,6 +42,7 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList
+        _location.value = getDropPointName(transaction.ownerId)
     }
 
     private fun formatNumber(number: Int): String {
@@ -47,8 +50,7 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
         return numberFormat.format(number)
     }
 
-    suspend fun getDropPointName(): String {
-        val uid = repository.getLoggedInUser()?.userId
-        return repository.getDropPointNameByOwnerId(uid!!)
+    suspend fun getDropPointName(ownerId: String): String {
+        return repository.getDropPointNameByOwnerId(ownerId)
     }
 }
