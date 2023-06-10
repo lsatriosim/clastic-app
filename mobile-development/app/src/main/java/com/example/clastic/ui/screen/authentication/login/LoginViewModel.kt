@@ -31,7 +31,6 @@ class LoginViewModel(private val repository: Repository): ViewModel() {
     }
 
     suspend fun loginWithIntent(intent: Intent, context: Context) {
-        _isEnabled.value = false
         onLoginResult(repository.loginWithIntent(intent, Identity.getSignInClient(context)))
     }
 
