@@ -2,8 +2,6 @@ package com.example.clastic.ui.screen.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -28,6 +24,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,15 +38,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.clastic.R
-import com.example.clastic.data.entity.MissionData
-import com.example.clastic.data.entity.PlasticKnowledge
 import com.example.clastic.data.entity.ProductData
 import com.example.clastic.ui.screen.BottomBar
-import com.example.clastic.ui.screen.mission.MissionCard
+import com.example.clastic.ui.screen.ViewModelFactory
+import com.example.clastic.ui.screen.home.components.MisiPlastikComponent
+import com.example.clastic.ui.screen.home.components.ProductKnowledgeComponent
+import com.example.clastic.ui.screen.home.components.TukarkanPlastikComponent
+import java.text.NumberFormat
 
 @Composable
 fun HomeScreen(
@@ -60,7 +60,13 @@ fun HomeScreen(
     onMissionClick: (String)->Unit,
     tutorialScreen: ()->Unit
 ) {
+    val context = LocalContext.current
+    val viewModel: HomeScreenViewModel = viewModel(
+        factory = ViewModelFactory.getInstance(context)
+    )
     val listState = rememberLazyListState()
+    val user by viewModel.user.collectAsState()
+
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
     ) { innerPadding ->
@@ -108,7 +114,7 @@ fun HomeScreen(
                                 .height(40.dp)
                         )
                         Text(
-                            text = "Hai, Liefran!",
+                            text = ("Hai, " + user?.username),
                             style = MaterialTheme.typography.h5.copy(
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
@@ -136,7 +142,7 @@ fun HomeScreen(
                                 )
                                 Text(
                                     modifier = Modifier,
-                                    text = "2,000.00 pts",
+                                    text = if(user?.coin == null) "0 pts" else NumberFormat.getInstance().format(user?.coin).toString() + " pts",
                                     style = MaterialTheme.typography.subtitle1.copy(
                                         color = Color("#0198B3".toColorInt()),
                                         fontWeight = FontWeight.Bold
@@ -187,7 +193,7 @@ fun HomeScreen(
                     ) {
                         //section: Tukarkan Plastikmu
                         //title section: Tukarkan Plastikmu
-                        tukarkanPlastikComponent(modifier = modifier, navigateToQrCode, navigateToDropPointMap)
+                        TukarkanPlastikComponent(modifier = modifier, navigateToQrCode, navigateToDropPointMap)
 
                         Spacer(
                             modifier = Modifier
@@ -264,198 +270,6 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun MisiPlastikComponent(modifier: Modifier = Modifier, onMissionClick: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            Text(
-                text = "Misi Plastik",
-                style = MaterialTheme.typography.h5.copy(color = Color.Black)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_campaign_white),
-                contentDescription = null,
-                tint = Color.Gray
-            )
-        }
-        Text(
-            text = "Ayo tukarkan sisa plastikmu menjadi point!!!",
-            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
-        )
-
-        //content section: Tukarkan Plastikmu
-        MissionCard(mission =
-            MissionData.dummyMission[0], onClick = onMissionClick)
-    }
-}
-
-@Composable
-fun tukarkanPlastikComponent(
-    modifier: Modifier = Modifier,
-    navigateToQrCode: () -> Unit,
-    navigateToDropPointMap: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            Text(
-                text = "Tukarkan Plastikmu♻️",
-                style = MaterialTheme.typography.h5.copy(color = Color.Black)
-            )
-        }
-        Text(
-            text = "Ayo tukarkan sisa plastikmu menjadi coin!!!",
-            style = MaterialTheme.typography.subtitle1.copy(color = Color.Gray)
-        )
-
-        //content section: Tukarkan Plastikmu
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(3.dp)
-        ) {
-            //Drop Off Point
-            Box(
-                modifier = Modifier
-                    .border(
-                        2.dp, color = Color("#0198B3".toColorInt()),
-                        RoundedCornerShape(8.dp)
-                    )
-                    .padding(8.dp)
-                    .background(color = Color.White)
-                    .clickable { navigateToDropPointMap() }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            Text(
-                                text = "Drop Off Point",
-                                style = MaterialTheme.typography.subtitle1.copy(
-                                    color = Color("#0198B3".toColorInt()),
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_location_white),
-                                contentDescription = null,
-                                tint = Color.Red
-                            )
-                        }
-                        Text(
-                            text = "Pilih Drop Off Point terdekat\ndan tukarkan plastikmu!",
-                            style = MaterialTheme.typography.caption.copy(color = Color.Black)
-                        )
-                        Spacer(modifier = modifier.height(1.dp))
-                    }
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_forward_white),
-                        contentDescription = null,
-                        tint = Color("#0198B3".toColorInt())
-                    )
-                }
-            }
-            //My Barcode
-            Box(
-                modifier = Modifier
-                    .border(
-                        2.dp, color = Color("#0198B3".toColorInt()),
-                        RoundedCornerShape(8.dp)
-                    )
-                    .clickable { navigateToQrCode() }
-                    .padding(8.dp)
-                    .background(color = Color.White)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        text = "My\nBarcode",
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            color = Color("#0198B3".toColorInt()),
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.qrcode),
-                        contentDescription = null
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProductKnowledgeComponent(
-    modifier: Modifier = Modifier,
-    plasticType: PlasticKnowledge,
-    backgroundColor: Color,
-    onClick: (String) -> Unit
-) {
-    Column(
-        modifier = modifier.padding(4.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .size(70.dp)
-                .clip(CircleShape)
-                .background(color = backgroundColor)
-                .clickable { onClick(plasticType.tag) },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(55.dp),
-                painter = painterResource(id = R.drawable.logo_bottle_pet),
-                contentDescription = "logo recycle",
-                tint = Color.White,
-            )
-        }
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = plasticType.tag,
-            modifier = Modifier,
-            color = Color.Black,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProductKnowledgeComponentPreview() {
-    ProductKnowledgeComponent(
-        onClick = {},
-        plasticType = PlasticKnowledge("", "", 0, "", emptyList()),
-        backgroundColor = Color.Blue
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
@@ -467,14 +281,4 @@ fun HomePreview() {
         onMissionClick = {},
         navigateToDropPointMap = {}
     )
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun MissionCardPreview() {
-    Box(modifier = Modifier.padding(20.dp)) {
-        MissionCard(modifier = Modifier, mission = MissionData.dummyMission[0], {})
-    }
 }
