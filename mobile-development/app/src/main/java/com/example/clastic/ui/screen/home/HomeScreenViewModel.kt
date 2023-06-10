@@ -14,6 +14,9 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
     val user: StateFlow<User?> = _user
 
+    private val _role = MutableStateFlow("")
+    val role = _role.asStateFlow()
+
     init {
         viewModelScope.launch {
             fetchUser { user, _ ->

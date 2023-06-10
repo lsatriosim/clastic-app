@@ -162,8 +162,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navigateToHome = {
                                     navHostController.popBackStack()
-                                    // TODO(change navigation here for debug)
-                                    navHostController.navigate(Screen.profile.route)
+                                    navHostController.navigate(Screen.Home.route)
                                 }
                             )
                         }
@@ -175,8 +174,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navigateToHome = {
                                     navHostController.popBackStack()
-                                    // TODO(change navigation here for debug)
-                                    navHostController.navigate(Screen.profile.route)
+                                    navHostController.navigate(Screen.Home.route)
                                 },
                             )
                         }
@@ -205,6 +203,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navigateToDropPointMap = {
                                     navHostController.navigate(Screen.dropPointMap.route)
+                                },
+                                navigateToQRCodeScanner = {
+                                    navHostController.navigate(Screen.qrCodeScanner.route)
                                 }
                             )
                         }

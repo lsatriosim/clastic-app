@@ -57,6 +57,7 @@ fun HomeScreen(
     navController: NavController,
     navigateToQrCode: ()->Unit,
     navigateToDropPointMap: () -> Unit,
+    navigateToQRCodeScanner: () -> Unit,
     onMissionClick: (String)->Unit,
     tutorialScreen: ()->Unit
 ) {
@@ -66,6 +67,8 @@ fun HomeScreen(
     )
     val listState = rememberLazyListState()
     val user by viewModel.user.collectAsState()
+
+    val role by viewModel.role.collectAsState()
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -193,7 +196,13 @@ fun HomeScreen(
                     ) {
                         //section: Tukarkan Plastikmu
                         //title section: Tukarkan Plastikmu
-                        TukarkanPlastikComponent(modifier = modifier, navigateToQrCode, navigateToDropPointMap)
+                        TukarkanPlastikComponent(
+                            role = role,
+                            modifier = modifier,
+                            navigateToQrCode = navigateToQrCode,
+                            navigateToDropPointMap = navigateToDropPointMap,
+                            navigateToQRCodeScanner = navigateToQRCodeScanner
+                        )
 
                         Spacer(
                             modifier = Modifier
@@ -279,6 +288,7 @@ fun HomePreview() {
         navigateToQrCode = {},
         tutorialScreen = {},
         onMissionClick = {},
-        navigateToDropPointMap = {}
+        navigateToDropPointMap = {},
+        navigateToQRCodeScanner = {}
     )
 }

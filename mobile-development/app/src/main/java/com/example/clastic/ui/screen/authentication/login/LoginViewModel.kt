@@ -21,7 +21,6 @@ class LoginViewModel(private val repository: Repository): ViewModel() {
     val isEnabled: StateFlow<Boolean> = _isEnabled.asStateFlow()
 
     suspend fun login(context: Context): IntentSender?{
-        _isEnabled.value = false
         return repository.login(context, Identity.getSignInClient(context))
     }
 
