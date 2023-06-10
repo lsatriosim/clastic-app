@@ -7,7 +7,6 @@ import com.example.clastic.data.Repository
 import com.example.clastic.data.entity.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(private val repository: Repository): ViewModel() {
@@ -15,14 +14,20 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     val user: StateFlow<User?> = _user
 
     private val _role = MutableStateFlow("")
-    val role = _role.asStateFlow()
+    val role : StateFlow<String> get() = _role
 
     init {
         viewModelScope.launch {
             fetchUser { user, _ ->
                 _user.value = user
             }
+            _role.value = getRoleByUserId()
         }
+
+    }
+
+    private suspend fun getRoleByUserId(): String {
+        return repository.getRoleByUserId()
     }
 
     private fun fetchUser(callback: (User?, Exception?) -> Unit) {

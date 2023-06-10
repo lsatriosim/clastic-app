@@ -97,6 +97,10 @@ class Repository(private val dao:Dao) {
         return dao.getSumOfWeightByUid()
     }
 
+    suspend fun getRoleByUserId(): String {
+        return dao.getUserRoleById()
+    }
+
 
         companion object {
         @Volatile

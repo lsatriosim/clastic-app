@@ -67,7 +67,6 @@ fun HomeScreen(
     )
     val listState = rememberLazyListState()
     val user by viewModel.user.collectAsState()
-
     val role by viewModel.role.collectAsState()
 
     Scaffold(
@@ -201,7 +200,7 @@ fun HomeScreen(
                             modifier = modifier,
                             navigateToQrCode = navigateToQrCode,
                             navigateToDropPointMap = navigateToDropPointMap,
-                            navigateToQRCodeScanner = navigateToQRCodeScanner
+                            navigateToQRCodeScanner = navigateToQRCodeScanner,
                         )
 
                         Spacer(

@@ -474,7 +474,7 @@ class Dao {
         return user?.userId ?: throw IllegalStateException("User is not logged in.")
     }
 
-    private suspend fun getUserRoleById(): String {
+    suspend fun getUserRoleById(): String {
         val userId = getLoggedInUserId()
         return try {
             var role = ""

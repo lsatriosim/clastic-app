@@ -126,6 +126,8 @@ fun ProfileScreen(
                     }
                     onLogout()
                 },
+                modifier = Modifier
+                    .padding(top = 10.dp)
             )
         }
     }

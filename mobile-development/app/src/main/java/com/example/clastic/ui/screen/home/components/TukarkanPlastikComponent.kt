@@ -64,59 +64,7 @@ fun TukarkanPlastikComponent(
             modifier = Modifier
                 .height(100.dp)
         ) {
-            if (role == "user") {
-                //Drop Off Point
-                Box(
-                    contentAlignment = Alignment.CenterStart,
-                    modifier = Modifier
-                        .border(
-                            2.dp, color = Color("#0198B3".toColorInt()),
-                            RoundedCornerShape(8.dp)
-                        )
-                        .padding(8.dp)
-                        .background(color = Color.White)
-                        .clickable { navigateToDropPointMap() }
-                        .fillMaxHeight()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.spacedBy(2.dp),
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
-                            ) {
-                                Text(
-                                    text = "Drop Off Point",
-                                    style = MaterialTheme.typography.subtitle1.copy(
-                                        color = Color("#0198B3".toColorInt()),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_location_white),
-                                    contentDescription = null,
-                                    tint = Color.Red
-                                )
-                            }
-                            Text(
-                                text = "Pilih Drop Off Point terdekat\ndan tukarkan plastikmu!",
-                                style = MaterialTheme.typography.caption.copy(color = Color.Black)
-                            )
-                            Spacer(modifier = modifier.height(1.dp))
-                        }
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_forward_white),
-                            contentDescription = null,
-                            tint = Color("#0198B3".toColorInt())
-                        )
-                    }
-                }
-            } else {
+            if (role == "owner") {
                 //Scan QR Code
                 Box(
                     contentAlignment = Alignment.CenterStart,
@@ -168,7 +116,61 @@ fun TukarkanPlastikComponent(
                         )
                     }
                 }
+            } else {
+                //Drop Off Point
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier
+                        .border(
+                            2.dp, color = Color("#0198B3".toColorInt()),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .padding(8.dp)
+                        .background(color = Color.White)
+                        .clickable { navigateToDropPointMap() }
+                        .fillMaxHeight()
+                ) {
+                    //Drop Off
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Text(
+                                    text = "Drop Off Point",
+                                    style = MaterialTheme.typography.subtitle1.copy(
+                                        color = Color("#0198B3".toColorInt()),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_location_white),
+                                    contentDescription = null,
+                                    tint = Color.Red
+                                )
+                            }
+                            Text(
+                                text = "Pilih Drop Off Point terdekat\ndan tukarkan plastikmu!",
+                                style = MaterialTheme.typography.caption.copy(color = Color.Black)
+                            )
+                            Spacer(modifier = modifier.height(1.dp))
+                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_forward_white),
+                            contentDescription = null,
+                            tint = Color("#0198B3".toColorInt())
+                        )
+                    }
+                }
             }
+
             //My Barcode
             Box(
                 contentAlignment = Alignment.CenterStart,
