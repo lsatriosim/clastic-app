@@ -75,7 +75,6 @@ fun ProfileScreen(
                 .padding(paddingValues)
                 .fillMaxWidth()
                 .background(Color.White)
-                .padding(bottom = 100.dp),
         ) {
             // TODO(Change Static Picture)
             ProfileCard(
