@@ -1,22 +1,39 @@
 package com.example.clastic.ui.screen.home
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,15 +44,22 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.clastic.R
-import com.example.clastic.data.entity.*
+import com.example.clastic.data.entity.MissionData
+import com.example.clastic.data.entity.PlasticKnowledge
+import com.example.clastic.data.entity.ProductData
 import com.example.clastic.ui.screen.BottomBar
-import com.example.clastic.ui.screen.Screen
-import com.example.clastic.ui.screen.listArticle.RecycleTag
 import com.example.clastic.ui.screen.mission.MissionCard
-import com.example.clastic.ui.screen.productKnowledge.PointTag
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navController: NavController, navigateToQrCode: ()->Unit, onMissionClick: (String)->Unit, tutorialScreen: ()->Unit) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit,
+    navController: NavController,
+    navigateToQrCode: ()->Unit,
+    navigateToDropPointMap: () -> Unit,
+    onMissionClick: (String)->Unit,
+    tutorialScreen: ()->Unit
+) {
     val listState = rememberLazyListState()
     Scaffold(
         bottomBar = { BottomBar(navController = navController, currentMenu = "Home")}
@@ -163,7 +187,7 @@ fun HomeScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, navCont
                     ) {
                         //section: Tukarkan Plastikmu
                         //title section: Tukarkan Plastikmu
-                        tukarkanPlastikComponent(modifier = modifier, navigateToQrCode)
+                        tukarkanPlastikComponent(modifier = modifier, navigateToQrCode, navigateToDropPointMap)
 
                         Spacer(
                             modifier = Modifier
@@ -273,7 +297,11 @@ fun MisiPlastikComponent(modifier: Modifier = Modifier, onMissionClick: (String)
 }
 
 @Composable
-fun tukarkanPlastikComponent(modifier: Modifier = Modifier, navigateToQrCode: () -> Unit) {
+fun tukarkanPlastikComponent(
+    modifier: Modifier = Modifier,
+    navigateToQrCode: () -> Unit,
+    navigateToDropPointMap: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -307,6 +335,7 @@ fun tukarkanPlastikComponent(modifier: Modifier = Modifier, navigateToQrCode: ()
                     )
                     .padding(8.dp)
                     .background(color = Color.White)
+                    .clickable { navigateToDropPointMap() }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -430,7 +459,14 @@ fun ProductKnowledgeComponentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
-    HomeScreen(onClick = {}, navController = NavController(LocalContext.current), navigateToQrCode = {}, tutorialScreen = {}, onMissionClick = {})
+    HomeScreen(
+        onClick = {},
+        navController = NavController(LocalContext.current),
+        navigateToQrCode = {},
+        tutorialScreen = {},
+        onMissionClick = {},
+        navigateToDropPointMap = {}
+    )
 }
 
 

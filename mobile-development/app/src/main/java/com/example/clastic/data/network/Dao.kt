@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.clastic.R
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.entity.DropPoint
 import com.example.clastic.data.entity.Transaction
 import com.example.clastic.data.entity.User
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
@@ -502,5 +503,24 @@ class Dao {
             e.printStackTrace()
             0f
         }
+    }
+
+    fun getDropPointList(callback: (List<DropPoint>?, Exception?) -> Unit){
+        val dropPointList = mutableListOf<DropPoint>()
+
+        db.collection("dropPoint").get()
+            .addOnSuccessListener { documents ->
+                Log.d("fetchDropPointList", "Document Found")
+                for(document in documents){
+                    dropPointList.add(document.toObject(DropPoint::class.java))
+                }
+                for (dropPoint in dropPointList){
+                    Log.d("fetchDropPointList", dropPoint.toString())
+                }
+                callback(dropPointList, null)
+            }.addOnFailureListener { exception ->
+                Log.d("fetchDropPointList", "Document not found: ${exception.message.toString()}")
+                callback(null, exception)
+            }
     }
 }

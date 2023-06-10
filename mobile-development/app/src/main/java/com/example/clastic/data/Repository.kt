@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.util.Log
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.entity.DropPoint
 import com.example.clastic.data.entity.Transaction
 import com.example.clastic.data.entity.User
 import com.example.clastic.data.network.Dao
@@ -16,6 +17,10 @@ import java.io.File
 class Repository(private val dao:Dao) {
     fun getArticleList(callback: (List<Article>?, Exception?) -> Unit){
         dao.getArticleList(callback)
+    }
+
+    fun getDropPointList(callback: (List<DropPoint>?, Exception?) -> Unit){
+        dao.getDropPointList(callback)
     }
 
     fun uploadPhoto(file: File, callback: (String?, Exception?) -> Unit){
