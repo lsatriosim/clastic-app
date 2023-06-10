@@ -22,11 +22,6 @@ class TransactionHistoryListViewModel(private val repository: Repository): ViewM
     }
 
     private suspend fun fetchTransactionList() {
-        val uid = repository.getLoggedInUser()?.userId
-        _transactionList.value = repository.getTransactionListByUid(uid!!)!!
-    }
-
-    suspend fun getDropPointNameByOwnerId(ownerId: String): String {
-        return repository.getDropPointNameByOwnerId(ownerId)
+        _transactionList.value = repository.getTransactionListByUid()!!
     }
 }

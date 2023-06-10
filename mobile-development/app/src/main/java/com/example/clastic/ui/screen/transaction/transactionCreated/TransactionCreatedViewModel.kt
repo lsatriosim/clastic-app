@@ -30,6 +30,9 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
     val transactionList: StateFlow<Map<String, Map<String, Any>>>
         get() = _transactionList
 
+    private val _location = MutableStateFlow("")
+    val location = _location.asStateFlow()
+
     private suspend fun getNameByUid(uid: String): String {
         return repository.getNameByUid(uid)
     }
@@ -40,15 +43,11 @@ class TransactionCreatedViewModel(private val repository: Repository): ViewModel
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList
+        _location.value = transaction.location
     }
 
     private fun formatNumber(number: Int): String {
         val numberFormat = NumberFormat.getInstance(Locale.getDefault())
         return numberFormat.format(number)
-    }
-
-    suspend fun getDropPointName(): String {
-        val uid = repository.getLoggedInUser()?.userId
-        return repository.getDropPointNameByOwnerId(uid!!)
     }
 }

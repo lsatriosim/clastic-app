@@ -140,6 +140,7 @@ class CreateTransactionViewModel(private val repository: Repository): ViewModel(
             repository.getLoggedInUser()?.let { owner ->
                 val transaction = Transaction(
                     id = "",
+                    location = _dropPointName.value,
                     userId = userId,
                     ownerId = owner.userId,
                     transactionDate = date,

@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class ProfileViewModel(private val repository: Repository): ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
@@ -31,10 +33,15 @@ class ProfileViewModel(private val repository: Repository): ViewModel() {
     }
 
     suspend fun getDataSummary() {
-        _weightTotal.value = repository.getSumOfWeightByUid()
+        _weightTotal.value = limitFloatToTwoDigits(repository.getSumOfWeightByUid())
         _transactionCount.value = repository.getTransactionCountByUserId()
     }
 
+    fun limitFloatToTwoDigits(number: Float): Float {
+        val decimal = BigDecimal(number.toDouble())
+        val scaled = decimal.setScale(2, RoundingMode.HALF_EVEN)
+        return scaled.toFloat()
+    }
 
     suspend fun logout(context: Context) {
         repository.logout(Identity.getSignInClient(context))
