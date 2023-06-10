@@ -60,11 +60,25 @@ fun BottomBar(
                 onClick = {
                     if (it.title != currentMenu) {
                         when (it.title) {
-                            "Home" -> navController.navigate(Screen.Home.route)
-                            "Article" -> navController.navigate(Screen.articleList.route)
-                            "Profile" -> navController.navigate(Screen.profile.route)
-                            "Classify" -> navController.navigate(Screen.classifier.route)
-                            "Mission" -> navController.navigate(Screen.missionList.route)
+                            "Home" -> {
+                                navController.popBackStack()
+                                navController.navigate(Screen.Home.route)}
+                            "Article" -> {
+                                navController.popBackStack()
+                                navController.navigate(Screen.articleList.route)
+                            }
+                            "Profile" -> {
+                                navController.popBackStack()
+                                navController.navigate(Screen.profile.route)
+                            }
+                            "Classify" -> {
+                                navController.popBackStack()
+                                navController.navigate(Screen.classifier.route)
+                            }
+                            "Mission" -> {
+                                navController.popBackStack()
+                                navController.navigate(Screen.missionList.route)
+                            }
                         }
                     }
                 },
