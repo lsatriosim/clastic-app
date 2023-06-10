@@ -43,4 +43,6 @@ sealed class Screen(val route:String) {
     object transactionHistoryDetail: Screen("transactionHistoryDetail/{transactionId}") {
         fun createRoute(transactionId: String) = "transactionHistoryDetail/$transactionId"
     }
+
+    object dropPointMap: Screen("dropPointMap")
 }

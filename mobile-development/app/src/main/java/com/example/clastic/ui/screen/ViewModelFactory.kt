@@ -8,6 +8,7 @@ import com.example.clastic.di.Injection
 import com.example.clastic.ui.screen.authentication.login.LoginViewModel
 import com.example.clastic.ui.screen.authentication.register.RegisterViewModel
 import com.example.clastic.ui.screen.classifier.ClassifierViewModel
+import com.example.clastic.ui.screen.dropPointMap.DropPointMapViewModel
 import com.example.clastic.ui.screen.listArticle.ListArticleViewModel
 import com.example.clastic.ui.screen.profile.ProfileViewModel
 import com.example.clastic.ui.screen.splashScreen.SplashScreenViewModel
@@ -33,6 +34,7 @@ class ViewModelFactory(private val repository: Repository) :
             modelClass.isAssignableFrom(ClassifierViewModel::class.java) -> ClassifierViewModel(repository) as T
             modelClass.isAssignableFrom(TransactionHistoryListViewModel::class.java) -> TransactionHistoryListViewModel(repository) as T
             modelClass.isAssignableFrom(TransactionHistoryDetailViewModel::class.java) -> TransactionHistoryDetailViewModel(repository) as T
+            modelClass.isAssignableFrom(DropPointMapViewModel::class.java) -> DropPointMapViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }

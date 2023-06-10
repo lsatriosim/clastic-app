@@ -62,6 +62,7 @@ import com.example.clastic.ui.screen.authentication.login.LoginScreen
 import com.example.clastic.ui.screen.authentication.register.RegisterScreen
 import com.example.clastic.ui.screen.classifier.CameraView
 import com.example.clastic.ui.screen.classifier.ClassifierViewModel
+import com.example.clastic.ui.screen.dropPointMap.DropPointMapScreen
 import com.example.clastic.ui.screen.home.HomeScreen
 import com.example.clastic.ui.screen.listArticle.ArticleScreen
 import com.example.clastic.ui.screen.listArticle.ListArticleScreen
@@ -180,22 +181,28 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.Home.route) {
-                            HomeScreen(onClick = { plasticTag ->
-                                navHostController.navigate(
-                                    Screen.ProductKnowledge.createRoute(
-                                        plasticTag
+                            HomeScreen(
+                                onClick = { plasticTag ->
+                                    navHostController.navigate(
+                                        Screen.ProductKnowledge.createRoute(
+                                            plasticTag
+                                        )
                                     )
-                                )
-                            }, navController = navHostController,
-                            navigateToQrCode = {
-                                navHostController.navigate(Screen.myQRCode.route)
-                            },
-                            tutorialScreen = {
-                                navHostController.navigate(Screen.tutorial.route)
-                            },
-                            onMissionClick = {missionTitle ->
-                                navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
-                            })
+                                },
+                                navController = navHostController,
+                                navigateToQrCode = {
+                                    navHostController.navigate(Screen.myQRCode.route)
+                                },
+                                tutorialScreen = {
+                                    navHostController.navigate(Screen.tutorial.route)
+                                },
+                                onMissionClick = {missionTitle ->
+                                    navHostController.navigate(Screen.missionDetail.createRoute(missionTitle))
+                                },
+                                navigateToDropPointMap = {
+                                    navHostController.navigate(Screen.dropPointMap.route)
+                                }
+                            )
                         }
                         composable(Screen.tutorial.route){
                             TutorialScreen()
@@ -515,6 +522,14 @@ class MainActivity : ComponentActivity() {
                                 navigateToTransactionHistoryList = {
                                     navHostController.popBackStack()
                                     navHostController.navigate(Screen.transactionHistory.route)
+                                }
+                            )
+                        }
+                        composable(Screen.dropPointMap.route) {
+                            DropPointMapScreen(
+                                navigateToHome = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.Home.route)
                                 }
                             )
                         }
