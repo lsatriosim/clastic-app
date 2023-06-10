@@ -399,6 +399,7 @@ class Dao {
     suspend fun createTransaction(transaction: Transaction): String {
         val newTransaction = hashMapOf(
             "id" to transaction.id,
+            "location" to transaction.location,
             "userId" to transaction.userId,
             "ownerId" to transaction.ownerId,
             "date" to transaction.transactionDate,
@@ -428,27 +429,31 @@ class Dao {
 
         val data = documentSnapshot.data
         val userId = data?.get("userId") as String
+        val location = data.get("location") as String
         val ownerId = data["ownerId"] as String
         val date = data["date"] as String
         val totalPoints = (data["totalPoints"] as Long).toInt()
         val transactionList = data["transactionList"] as Map<String, Map<String, Any>>
-        return Transaction(id, userId, ownerId, date, totalPoints, transactionList)
+        return Transaction(id, location, userId, ownerId, date, totalPoints, transactionList)
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun getTransactionListByUid(userId: String): List<Transaction>? {
+    suspend fun getTransactionListByUid(): List<Transaction>? {
+        val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
         val collectionRef = db.collection("transaction")
 
         return try {
-            val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+            val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
             val transactionList = querySnapshot.documents.map { document ->
                 val id = document.id
+                val location = document.getString("location") ?: ""
                 val ownerId = document.getString("ownerId") ?: ""
                 val date = document.getString("date") ?: ""
                 val totalPoints = document.getLong("totalPoints")?.toInt() ?: 0
                 val transactionList = document.get("transactionList") as Map<String, Map<String, Any>>
 
-                Transaction(id, userId, ownerId, date, totalPoints, transactionList)
+                Transaction(id, location, userId, ownerId, date, totalPoints, transactionList)
             }
             transactionList
         } catch (e: Exception) {
@@ -469,20 +474,38 @@ class Dao {
         return user?.userId ?: throw IllegalStateException("User is not logged in.")
     }
 
+    private suspend fun getUserRoleById(): String {
+        val userId = getLoggedInUserId()
+        return try {
+            var role = ""
+            val snapshot = db.collection("user").whereEqualTo("userId", userId).get().await()
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents[0]
+                role = document.getString("role") ?: ""
+            }
+            role
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
     suspend fun getTransactionCountByUserId(): Int = kotlinx.coroutines.withContext(Dispatchers.Default) {
         val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
         val collectionRef = db.collection("transaction")
-        val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+        val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
         return@withContext querySnapshot.size()
     }
 
     @Suppress("UNCHECKED_CAST")
     suspend fun getSumOfWeightByUid(): Float {
         val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
         val collectionRef = db.collection("transaction")
 
         return try {
-            val querySnapshot = collectionRef.whereEqualTo("userId", userId).get().await()
+            val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
             var sum = 0f
 
             for (document in querySnapshot.documents) {
@@ -504,6 +527,8 @@ class Dao {
             0f
         }
     }
+
+
 
     fun getDropPointList(callback: (List<DropPoint>?, Exception?) -> Unit){
         val dropPointList = mutableListOf<DropPoint>()

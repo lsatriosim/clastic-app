@@ -85,8 +85,8 @@ class Repository(private val dao:Dao) {
         return dao.getTransactionById(id)
     }
 
-    suspend fun getTransactionListByUid(userId: String): List<Transaction>? {
-        return dao.getTransactionListByUid(userId)
+    suspend fun getTransactionListByUid(): List<Transaction>? {
+        return dao.getTransactionListByUid()
     }
 
     suspend fun getTransactionCountByUserId(): Int {

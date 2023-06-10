@@ -42,15 +42,11 @@ class TransactionHistoryDetailViewModel(private val repository: Repository): Vie
         _totalPoints.value = formatNumber(transaction.totalPoints)
         _transactionDate.value = transaction.transactionDate
         _transactionList.value = transaction.transactionList
-        _location.value = getDropPointName(transaction.ownerId)
+        _location.value = transaction.location
     }
 
     private fun formatNumber(number: Int): String {
         val numberFormat = NumberFormat.getInstance(Locale.getDefault())
         return numberFormat.format(number)
-    }
-
-    suspend fun getDropPointName(ownerId: String): String {
-        return repository.getDropPointNameByOwnerId(ownerId)
     }
 }

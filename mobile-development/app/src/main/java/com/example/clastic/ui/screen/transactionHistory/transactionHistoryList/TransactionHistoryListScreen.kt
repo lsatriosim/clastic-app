@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -21,7 +20,6 @@ import com.example.clastic.ui.screen.transactionHistory.components.TransactionCa
 import com.example.clastic.ui.screen.transactionHistory.components.TransactionHistoryTopBar
 import com.example.clastic.ui.theme.ClasticTheme
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun TransactionHistoryListScreen(
@@ -29,7 +27,6 @@ fun TransactionHistoryListScreen(
     navigateToDetail: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val mainScope = MainScope()
     val context = LocalContext.current
     val viewModel: TransactionHistoryListViewModel = viewModel(
         factory = ViewModelFactory.getInstance(
@@ -52,10 +49,6 @@ fun TransactionHistoryListScreen(
                 .padding(horizontal = 12.dp)
         ) {
             for (i in transactionList.indices) {
-                val location = mutableStateOf("")
-                mainScope.launch {
-                    location.value = viewModel.getDropPointNameByOwnerId(transactionList[i].ownerId)
-                }
                 item {
                     TransactionCard(
                         id = transactionList[i].id,
@@ -63,7 +56,7 @@ fun TransactionHistoryListScreen(
                             navigateToDetail(id)
                         },
                         date = transactionList[i].transactionDate,
-                        location = location.value,
+                        location = transactionList[i].location,
                         points = transactionList[i].totalPoints,
                         modifier = Modifier
                             .padding(vertical = 10.dp)

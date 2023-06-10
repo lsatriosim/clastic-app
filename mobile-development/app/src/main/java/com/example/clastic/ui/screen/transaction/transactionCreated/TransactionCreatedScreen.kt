@@ -21,9 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,14 +51,13 @@ fun TransactionCreatedScreen(
             context
         )
     )
-    var location by remember { mutableStateOf("") }
+    val location by viewModel.location.collectAsState()
     val username by viewModel.username.collectAsState()
     val transactionDate by viewModel.transactionDate.collectAsState()
     val totalPoints by viewModel.totalPoints.collectAsState()
     val transactionList by viewModel.transactionList.collectAsState()
 
     LaunchedEffect(Unit) {
-        location = viewModel.getDropPointName()
         viewModel.getTransaction(transactionId)
     }
 
