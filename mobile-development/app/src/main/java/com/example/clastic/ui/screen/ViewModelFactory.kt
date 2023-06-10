@@ -14,6 +14,8 @@ import com.example.clastic.ui.screen.splashScreen.SplashScreenViewModel
 import com.example.clastic.ui.screen.transaction.createTransaction.CreateTransactionViewModel
 import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreenViewModel
 import com.example.clastic.ui.screen.transaction.transactionCreated.TransactionCreatedViewModel
+import com.example.clastic.ui.screen.transactionHistory.transactionHistoryDetail.TransactionHistoryDetailViewModel
+import com.example.clastic.ui.screen.transactionHistory.transactionHistoryList.TransactionHistoryListViewModel
 
 class ViewModelFactory(private val repository: Repository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -29,6 +31,8 @@ class ViewModelFactory(private val repository: Repository) :
             modelClass.isAssignableFrom(CreateTransactionViewModel::class.java) -> CreateTransactionViewModel(repository) as T
             modelClass.isAssignableFrom(TransactionCreatedViewModel::class.java) -> TransactionCreatedViewModel(repository) as T
             modelClass.isAssignableFrom(ClassifierViewModel::class.java) -> ClassifierViewModel(repository) as T
+            modelClass.isAssignableFrom(TransactionHistoryListViewModel::class.java) -> TransactionHistoryListViewModel(repository) as T
+            modelClass.isAssignableFrom(TransactionHistoryDetailViewModel::class.java) -> TransactionHistoryDetailViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }

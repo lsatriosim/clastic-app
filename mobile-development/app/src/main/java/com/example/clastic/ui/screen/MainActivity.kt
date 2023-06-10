@@ -74,6 +74,8 @@ import com.example.clastic.ui.screen.splashScreen.ClasticSplashScreen
 import com.example.clastic.ui.screen.transaction.createTransaction.CreateTransactionScreen
 import com.example.clastic.ui.screen.transaction.qrScanner.QRScannerScreen
 import com.example.clastic.ui.screen.transaction.transactionCreated.TransactionCreatedScreen
+import com.example.clastic.ui.screen.transactionHistory.transactionHistoryDetail.TransactionHistoryDetailScreen
+import com.example.clastic.ui.screen.transactionHistory.transactionHistoryList.TransactionHistoryListScreen
 import com.example.clastic.ui.screen.tutorial.TutorialScreen
 import com.example.clastic.ui.theme.ClasticTheme
 import com.example.clastic.uriToFile
@@ -247,7 +249,10 @@ class MainActivity : ComponentActivity() {
                                     navHostController.popBackStack()
                                     navHostController.navigate(Screen.login.route)
                                 },
-                                navHostController = navHostController
+                                navHostController = navHostController,
+                                navigateToTransactionHistory = {
+                                    navHostController.navigate(Screen.transactionHistory.route)
+                                }
                             )
                         }
                         composable(Screen.myQRCode.route) {
@@ -481,6 +486,37 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                             }
+                        }
+                        composable(
+                            route = Screen.transactionHistory.route,
+                        ) {
+                            TransactionHistoryListScreen(
+                                navigateToProfile = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.profile.route)
+                                },
+                                navigateToDetail = { transactionId ->
+                                    navHostController.navigate(Screen.transactionHistoryDetail.createRoute(
+                                        transactionId
+                                    ))
+                                }
+                            )
+                        }
+                        composable(
+                            route = Screen.transactionHistoryDetail.route,
+                            arguments = listOf(navArgument("transactionId"){
+                                type = NavType.StringType
+                            })
+                        ) { navBackStackEntry ->
+                            val transactionId =
+                                navBackStackEntry.arguments?.getString("transactionId")
+                            TransactionHistoryDetailScreen(
+                                transactionId = transactionId!!,
+                                navigateToTransactionHistoryList = {
+                                    navHostController.popBackStack()
+                                    navHostController.navigate(Screen.transactionHistory.route)
+                                }
+                            )
                         }
                     }
                 }

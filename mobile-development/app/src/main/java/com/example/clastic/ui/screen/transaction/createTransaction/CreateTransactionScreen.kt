@@ -60,7 +60,7 @@ fun CreateTransactionScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getNameByUid(scannedUID!!)
-        viewModel.getDropPointName()
+        viewModel.getDropPointNameByOwnerId()
     }
 
     Column(

@@ -28,9 +28,8 @@ import com.example.clastic.R
 import com.example.clastic.ui.theme.ClasticTheme
 
 @Composable
-fun ProfileMenu(
+fun ProfileMenuPlaceholder(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
     title: String,
     icon: ImageVector
 ) {
@@ -54,7 +53,7 @@ fun ProfileMenu(
                     strokeWidth = borderSize/2
                 )
             }
-            .clickable { onClick() }
+            .clickable {  }
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -85,12 +84,11 @@ fun ProfileMenu(
 
 @Preview(showBackground = true)
 @Composable
-fun ProfileMenuPreview(){
+fun ProfileMenuPlaceholderPreview(){
     ClasticTheme {
-        ProfileMenu(
+        ProfileMenuPlaceholder(
             title = "Histori Transaksi Plastik",
             icon = Icons.Default.List,
-            onClick = {}
         )
     }
 }

@@ -67,4 +67,6 @@
     <string name="time">Waktu</string>
     <string name="transaction_information">Informasi Transaksi</string>
     <string name="back_to_home">Kembali ke home</string>
+    <string name="detail">Detail</string>
+    <string name="transaction_detail">Detail Transaksi</string>
 </resources>
