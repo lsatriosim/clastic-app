@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.clastic.R
 import com.example.clastic.ui.theme.ClasticTheme
-import java.text.NumberFormat
-import java.util.Locale
 
 @Composable
 fun TransactionResultList(
@@ -75,8 +73,7 @@ fun TransactionResultList(
 }
 
 private fun formatNumber(number: Int): String {
-    val numberFormat = NumberFormat.getInstance(Locale.getDefault())
-    val formattedNumber = numberFormat.format(number)
+    val formattedNumber = formatNumber(number)
     return "+ $formattedNumber pts"
 }
 

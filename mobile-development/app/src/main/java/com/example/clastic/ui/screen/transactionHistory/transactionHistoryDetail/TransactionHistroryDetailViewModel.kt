@@ -2,11 +2,10 @@ package com.example.clastic.ui.screen.transactionHistory.transactionHistoryDetai
 
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
+import com.example.clastic.formatNumber
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.text.NumberFormat
-import java.util.Locale
 
 class TransactionHistoryDetailViewModel(private val repository: Repository): ViewModel() {
     private val _username = MutableStateFlow("")
@@ -45,12 +44,7 @@ class TransactionHistoryDetailViewModel(private val repository: Repository): Vie
         _location.value = getDropPointName(transaction.ownerId)
     }
 
-    private fun formatNumber(number: Int): String {
-        val numberFormat = NumberFormat.getInstance(Locale.getDefault())
-        return numberFormat.format(number)
-    }
-
-    suspend fun getDropPointName(ownerId: String): String {
+    private suspend fun getDropPointName(ownerId: String): String {
         return repository.getDropPointNameByOwnerId(ownerId)
     }
 }

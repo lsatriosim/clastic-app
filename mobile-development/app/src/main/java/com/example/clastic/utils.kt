@@ -9,6 +9,7 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Environment
 import java.io.*
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,7 +64,10 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
 
     return myFile
 }
-
+fun formatNumber(number: Int): String {
+    val numberFormat = NumberFormat.getInstance(Locale.getDefault())
+    return numberFormat.format(number)
+}
 fun reduceFileImage(file: File): File {
     val bitmap = BitmapFactory.decodeFile(file.path)
 
