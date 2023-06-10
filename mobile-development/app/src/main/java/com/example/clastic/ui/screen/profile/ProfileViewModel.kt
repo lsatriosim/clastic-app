@@ -37,7 +37,7 @@ class ProfileViewModel(private val repository: Repository): ViewModel() {
         _transactionCount.value = repository.getTransactionCountByUserId()
     }
 
-    fun limitFloatToTwoDigits(number: Float): Float {
+    private fun limitFloatToTwoDigits(number: Float): Float {
         val decimal = BigDecimal(number.toDouble())
         val scaled = decimal.setScale(2, RoundingMode.HALF_EVEN)
         return scaled.toFloat()
