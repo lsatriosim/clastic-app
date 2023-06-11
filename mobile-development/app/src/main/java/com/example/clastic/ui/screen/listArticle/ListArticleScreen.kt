@@ -71,7 +71,7 @@ fun ListArticleScreen(
         bottomBar = { BottomBar(currentMenu = "Article", navController = navController)}
     ) {innerPadding->
         Box(
-            modifier = modifier.padding(innerPadding)
+            modifier = modifier.fillMaxSize().padding(innerPadding).background(color = Color.White)
         ){
             LazyColumn(state = listState){
                 items(articleListState, key = {it.title}){article->
