@@ -79,8 +79,8 @@ fun ProfileScreen(
                     name = user?.username ?: "-",
                     email = user?.email ?: "-",
                     points = if(user?.coin == null) "0" else NumberFormat.getInstance().format(user?.coin).toString(),
-                    profileImage = if(user?.userPhoto == null) painterResource(R.drawable.bottle_blue_c)
-                    else painterResource(R.drawable.bottle_blue_c),
+                    profileImage = if(user?.userPhoto == null) painterResource(R.drawable.profile_picture)
+                    else painterResource(R.drawable.profile_picture),
                     modifier = Modifier
                         .padding(vertical = 20.dp)
                 )
