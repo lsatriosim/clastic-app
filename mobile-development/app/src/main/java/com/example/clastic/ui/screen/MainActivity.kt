@@ -492,7 +492,7 @@ class MainActivity : ComponentActivity() {
                                                     colors = ButtonDefaults.buttonColors(
                                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                                     ),
-                                                    enabled = !isLoadingSubmit
+                                                    enabled = !isLoadingSubmit && !photoUri.value.equals(Uri.EMPTY)
                                                 ) {
                                                     Text(text = "Submit",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                                 }
