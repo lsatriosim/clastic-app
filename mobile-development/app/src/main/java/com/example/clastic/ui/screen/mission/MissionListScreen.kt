@@ -52,7 +52,7 @@ fun MissionListScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, 
     bottomBar = {
         BottomBar(currentMenu = "Mission", navController = navHostController)
     }){innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)){
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding).background(color = Color.White)){
             Box(
                 modifier = modifier
                     .padding(8.dp)

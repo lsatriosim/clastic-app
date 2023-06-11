@@ -50,6 +50,7 @@ fun MissionDetailScreen(mission: Mission, joinCampaign: (String) -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .background(color = Color.White)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
