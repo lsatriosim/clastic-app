@@ -390,123 +390,125 @@ class MainActivity : ComponentActivity() {
                                             navController = navHostController
                                         )
                                     }) { innerPadding ->
-                                    if (showDialog.value) {
-                                        Dialog(onDismissRequest = {
-                                            showDialog.value = false
-                                        }) {
-                                            PopUpCard(closePopUp = { showDialog.value = false })
+                                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding).background(color = Color.White)){
+                                        if (showDialog.value) {
+                                            Dialog(onDismissRequest = {
+                                                showDialog.value = false
+                                            }) {
+                                                PopUpCard(closePopUp = { showDialog.value = false })
+                                            }
                                         }
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(innerPadding)
-                                    ) {
                                         Box(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .padding(16.dp),
-                                            contentAlignment = Alignment.TopEnd
+                                                .padding(innerPadding)
                                         ) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.ic_question_white),
-                                                contentDescription = null,
-                                                tint = Color.Gray,
-                                                modifier = Modifier.clickable {
-                                                    showDialog.value = true
-                                                })
-                                        }
-                                        Column(
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.Center,
-                                        ) {
-                                            if (photoUri.value != Uri.EMPTY) {
-                                                Image(
-                                                    painter = rememberImagePainter(data = photoUri.value),
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(16.dp),
+                                                contentAlignment = Alignment.TopEnd
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.ic_question_white),
                                                     contentDescription = null,
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .height(400.dp)
-                                                        .padding(
-                                                            horizontal = 32.dp,
-                                                            vertical = 12.dp
+                                                    tint = Color.Gray,
+                                                    modifier = Modifier.clickable {
+                                                        showDialog.value = true
+                                                    })
+                                            }
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center,
+                                            ) {
+                                                if (photoUri.value != Uri.EMPTY) {
+                                                    Image(
+                                                        painter = rememberImagePainter(data = photoUri.value),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .height(400.dp)
+                                                            .padding(
+                                                                horizontal = 32.dp,
+                                                                vertical = 12.dp
+                                                            )
+                                                    )
+                                                } else {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.preview_photo),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(32.dp)
+                                                    )
+                                                }
+                                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    Button(
+                                                        onClick = {
+                                                            shouldShowCamera.value = true
+                                                            viewModel.clearPredict()
+                                                            requestCameraPermission()
+                                                        },
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            backgroundColor = Color("#1FA4BB".toColorInt())
                                                         )
-                                                )
-                                            } else {
-                                                Image(
-                                                    painter = painterResource(id = R.drawable.preview_photo),
-                                                    contentDescription = null,
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(32.dp)
-                                                )
-                                            }
-                                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    ) {
+                                                        Text(text = "Take from Camera",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
+                                                    }
+                                                    Button(
+                                                        onClick = {
+                                                            startGallery()
+                                                        },
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            backgroundColor = Color("#1FA4BB".toColorInt())
+                                                        )
+                                                    ) {
+                                                        Text(text = "Take From Gallery",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
+                                                    }
+                                                }
                                                 Button(
                                                     onClick = {
-                                                        shouldShowCamera.value = true
                                                         viewModel.clearPredict()
-                                                        requestCameraPermission()
+                                                        photoUri.value = Uri.EMPTY
                                                     },
                                                     colors = ButtonDefaults.buttonColors(
                                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                                     )
                                                 ) {
-                                                    Text(text = "Take from Camera",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
+                                                    Text(text = "Clear Photo", style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                                 }
                                                 Button(
                                                     onClick = {
-                                                        startGallery()
+                                                        val photoFile = uriToFile(
+                                                            photoUri.value,
+                                                            this@MainActivity
+                                                        )
+                                                        Log.d(
+                                                            "testNetwork",
+                                                            photoFile.name.toString()
+                                                        )
+                                                        viewModel.addPhoto(photoFile)
                                                     },
                                                     colors = ButtonDefaults.buttonColors(
                                                         backgroundColor = Color("#1FA4BB".toColorInt())
-                                                    )
+                                                    ),
+                                                    enabled = !isLoadingSubmit
                                                 ) {
-                                                    Text(text = "Take From Gallery",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
+                                                    Text(text = "Submit",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                                 }
-                                            }
-                                            Button(
-                                                onClick = {
-                                                    viewModel.clearPredict()
-                                                    photoUri.value = Uri.EMPTY
-                                                },
-                                                colors = ButtonDefaults.buttonColors(
-                                                    backgroundColor = Color("#1FA4BB".toColorInt())
-                                                )
-                                            ) {
-                                                Text(text = "Clear Photo", style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
-                                            }
-                                            Button(
-                                                onClick = {
-                                                    val photoFile = uriToFile(
-                                                        photoUri.value,
-                                                        this@MainActivity
+                                                if (plasticTypeResult != "") {
+                                                    Text(
+                                                        text = "Hasil : ",
+                                                        style = MaterialTheme.typography.h5.copy(
+                                                            fontWeight = FontWeight.Bold,
+                                                            color = Color("#1FA4BB".toColorInt())
+                                                        )
                                                     )
-                                                    Log.d(
-                                                        "testNetwork",
-                                                        photoFile.name.toString()
+                                                    Text(
+                                                        text = plasticTypeResult,
+                                                        style = MaterialTheme.typography.subtitle1
                                                     )
-                                                    viewModel.addPhoto(photoFile)
-                                                },
-                                                colors = ButtonDefaults.buttonColors(
-                                                    backgroundColor = Color("#1FA4BB".toColorInt())
-                                                ),
-                                                enabled = !isLoadingSubmit
-                                            ) {
-                                                Text(text = "Submit",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
-                                            }
-                                            if (plasticTypeResult != "") {
-                                                Text(
-                                                    text = "Hasil : ",
-                                                    style = MaterialTheme.typography.h5.copy(
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = Color("#1FA4BB".toColorInt())
-                                                    )
-                                                )
-                                                Text(
-                                                    text = plasticTypeResult,
-                                                    style = MaterialTheme.typography.subtitle1
-                                                )
+                                                }
                                             }
                                         }
                                     }

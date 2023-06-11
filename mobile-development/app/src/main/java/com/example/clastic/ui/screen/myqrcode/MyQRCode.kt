@@ -2,6 +2,7 @@ package com.example.clastic.ui.screen.myqrcode
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -72,7 +73,8 @@ fun generateQRCode(text: String, size: Int){
             {innerPadding->
                 Box(modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding), contentAlignment = Alignment.Center){
+                    .padding(innerPadding)
+                    .background(color = Color.White), contentAlignment = Alignment.Center){
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalAlignment = Alignment.CenterHorizontally){
                         Image(
                             bitmap = imageBitmap,
