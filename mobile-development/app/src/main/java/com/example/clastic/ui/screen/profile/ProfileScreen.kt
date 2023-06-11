@@ -1,10 +1,7 @@
 package com.example.clastic.ui.screen.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FiberSmartRecord
@@ -68,67 +65,69 @@ fun ProfileScreen(
         },
         bottomBar = { BottomBar(currentMenu = "Profile", navController = navHostController)},
     ) { paddingValues ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            // TODO(Illegal Padding?)
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxWidth()
-                .background(Color.White)
-        ) {
-            // TODO(Change Static Picture)
-            ProfileCard(
-                name = user?.username ?: "-",
-                email = user?.email ?: "-",
-                points = if(user?.coin == null) "0" else NumberFormat.getInstance().format(user?.coin).toString(),
-                profileImage = if(user?.userPhoto == null) painterResource(R.drawable.logo_botol_biru)
-                else painterResource(R.drawable.logo_botol_biru),
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues).background(color = Color.White)){
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                // TODO(Illegal Padding?)
                 modifier = Modifier
-                    .padding(vertical = 20.dp)
-            )
-            ProfileSummary(
-                totalTransaction = transactionCount.toString(),
-                totalPlastic = totalWeight.toString(),
-                modifier = Modifier
-                    .padding(bottom = 20.dp)
-            )
-            ProfileMenu(
-                title = stringResource(R.string.transaction_history),
-                icon = Icons.Default.List,
-                onClick = navigateToTransactionHistory
-            )
-            ProfileMenuPlaceholder(
-                title = stringResource(R.string.redeem_history),
-                icon = Icons.Default.FiberSmartRecord,
-            )
-            ProfileMenuPlaceholder(
-                title = stringResource(R.string.share_clastic),
-                icon = Icons.Default.Share,
-            )
-            ProfileMenuPlaceholder(
-                title = stringResource(R.string.settings),
-                icon = Icons.Default.Settings,
-                modifier = Modifier
-                    .drawBehind {
-                        val borderSize = 1.dp.toPx()
-                        drawLine(
-                            color = Color(R.color.cyan_primary),
-                            start = Offset(0f, size.height+2f),
-                            end = Offset(size.width, size.height+2f),
-                            strokeWidth = borderSize/2
-                        )
-                    }
-            )
-            LogoutButton(
-                onClick = {
-                    mainScope.launch {
-                        viewModel.logout(context)
-                    }
-                    onLogout()
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp)
-            )
+                    .padding(paddingValues)
+                    .fillMaxWidth()
+                    .background(Color.White)
+            ) {
+                // TODO(Change Static Picture)
+                ProfileCard(
+                    name = user?.username ?: "-",
+                    email = user?.email ?: "-",
+                    points = if(user?.coin == null) "0" else NumberFormat.getInstance().format(user?.coin).toString(),
+                    profileImage = if(user?.userPhoto == null) painterResource(R.drawable.bottle_blue_c)
+                    else painterResource(R.drawable.bottle_blue_c),
+                    modifier = Modifier
+                        .padding(vertical = 20.dp)
+                )
+                ProfileSummary(
+                    totalTransaction = transactionCount.toString(),
+                    totalPlastic = totalWeight.toString(),
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                )
+                ProfileMenu(
+                    title = stringResource(R.string.transaction_history),
+                    icon = Icons.Default.List,
+                    onClick = navigateToTransactionHistory
+                )
+                ProfileMenuPlaceholder(
+                    title = stringResource(R.string.redeem_history),
+                    icon = Icons.Default.FiberSmartRecord,
+                )
+                ProfileMenuPlaceholder(
+                    title = stringResource(R.string.share_clastic),
+                    icon = Icons.Default.Share,
+                )
+                ProfileMenuPlaceholder(
+                    title = stringResource(R.string.settings),
+                    icon = Icons.Default.Settings,
+                    modifier = Modifier
+                        .drawBehind {
+                            val borderSize = 1.dp.toPx()
+                            drawLine(
+                                color = Color(R.color.cyan_primary),
+                                start = Offset(0f, size.height+2f),
+                                end = Offset(size.width, size.height+2f),
+                                strokeWidth = borderSize/2
+                            )
+                        }
+                )
+                LogoutButton(
+                    onClick = {
+                        mainScope.launch {
+                            viewModel.logout(context)
+                        }
+                        onLogout()
+                    },
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                )
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.clastic.ui.screen.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,14 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FiberSmartRecord
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -109,7 +109,7 @@ fun HomeScreen(
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         Image(
-                            painter = painterResource(id = R.drawable.clastic_logo_text),
+                            painter = painterResource(id = R.drawable.logo_clastic_2),
                             contentDescription = null,
                             modifier = Modifier
                                 .width(196.dp)
@@ -138,7 +138,7 @@ fun HomeScreen(
                             ) {
                                 Icon(
                                     modifier = Modifier,
-                                    painter = painterResource(id = R.drawable.ic_coin),
+                                    imageVector = Icons.Default.FiberSmartRecord,
                                     tint = Color("#0198B3".toColorInt()),
                                     contentDescription = null
                                 )
@@ -165,13 +165,15 @@ fun HomeScreen(
                                     style = MaterialTheme.typography.subtitle1.copy(
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold
-                                    )
+                                    ),
+                                    modifier = Modifier.clickable{ tutorialScreen() }
                                 )
                                 IconButton(onClick = { tutorialScreen() }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_question_white),
                                         contentDescription = null,
-                                        tint = Color.White
+                                        tint = Color.White,
+                                        modifier = Modifier.border(width = 1.dp, color = Color.White, shape = CircleShape)
                                     )
                                 }
                             }

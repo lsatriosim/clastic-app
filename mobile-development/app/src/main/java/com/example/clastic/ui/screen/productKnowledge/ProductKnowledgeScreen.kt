@@ -14,6 +14,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FiberSmartRecord
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
@@ -215,7 +217,7 @@ fun PointTag(modifier: Modifier, point: String) {
         ) {
             Row(modifier = Modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_coin),
+                    imageVector = Icons.Default.FiberSmartRecord,
                     contentDescription = "recycle icon",
                     modifier = Modifier,
                     tint = Color("#02B4CC".toColorInt())

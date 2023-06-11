@@ -452,7 +452,7 @@ class MainActivity : ComponentActivity() {
                                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                                     )
                                                 ) {
-                                                    Text(text = "Take from Camera")
+                                                    Text(text = "Take from Camera",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                                 }
                                                 Button(
                                                     onClick = {
@@ -462,7 +462,7 @@ class MainActivity : ComponentActivity() {
                                                         backgroundColor = Color("#1FA4BB".toColorInt())
                                                     )
                                                 ) {
-                                                    Text(text = "Take From Gallery")
+                                                    Text(text = "Take From Gallery",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                                 }
                                             }
                                             Button(
@@ -474,7 +474,7 @@ class MainActivity : ComponentActivity() {
                                                     backgroundColor = Color("#1FA4BB".toColorInt())
                                                 )
                                             ) {
-                                                Text(text = "Clear Photo")
+                                                Text(text = "Clear Photo", style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                             }
                                             Button(
                                                 onClick = {
@@ -493,13 +493,14 @@ class MainActivity : ComponentActivity() {
                                                 ),
                                                 enabled = !isLoadingSubmit
                                             ) {
-                                                Text(text = "Submit")
+                                                Text(text = "Submit",style = MaterialTheme.typography.subtitle1.copy(color = Color.White))
                                             }
                                             if (plasticTypeResult != "") {
                                                 Text(
                                                     text = "Hasil : ",
                                                     style = MaterialTheme.typography.h5.copy(
-                                                        fontWeight = FontWeight.Bold
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = Color("#1FA4BB".toColorInt())
                                                     )
                                                 )
                                                 Text(

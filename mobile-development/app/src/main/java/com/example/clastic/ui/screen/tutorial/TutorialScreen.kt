@@ -1,6 +1,7 @@
 package com.example.clastic.ui.screen.tutorial
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -138,7 +139,7 @@ fun TutorialScreen(modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
-                ){
+                ) {
                     Row(
                         modifier
                             .fillMaxWidth()
@@ -157,7 +158,7 @@ fun TutorialScreen(modifier: Modifier = Modifier) {
                         verticalAlignment = Alignment.Top
                     ) {
                         CircleNumberTutor("2")
-                        Text(text = "Klik tab \uDBC0\uDF9F Home pada laman utama dan lihat section Tukarkan Plastikmu ♻️")
+                        Text(text = "Klik tab 🏠 Home pada laman utama dan lihat section Tukarkan Plastikmu ♻️")
                     }
                     Row(
                         modifier
@@ -198,35 +199,26 @@ fun TutorialScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun BenefitCard(modifier: Modifier = Modifier, benefit: String, benefitNumber: String) {
-    Card(
-        modifier = Modifier
+
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
             .width(105.dp)
             .height(140.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(color = Color.LightGray)
-            .shadow(elevation = 50.dp),
-        elevation = 50.dp
+            .border(width = 1.dp, colorResource(id = R.color.cyan_textfield), shape = RoundedCornerShape(20.dp))
+            .padding(8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .width(105.dp)
-                .height(140.dp)
-                .padding(8.dp)
-        ) {
-            Column(verticalArrangement = Arrangement.SpaceBetween) {
-                Text(text = benefit, style = MaterialTheme.typography.subtitle1)
-                Text(
-                    text = benefitNumber,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.h5.copy(
-                        color = Color("#0097B2".toColorInt()),
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-        }
+        Text(text = benefit, style = MaterialTheme.typography.subtitle1)
+        Text(
+            text = benefitNumber,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End,
+            style = MaterialTheme.typography.h5.copy(
+                color = Color("#0097B2".toColorInt()),
+                fontWeight = FontWeight.Bold
+            )
+        )
     }
+
 }
 
 @Composable
