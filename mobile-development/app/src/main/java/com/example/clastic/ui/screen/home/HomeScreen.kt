@@ -1,6 +1,8 @@
 package com.example.clastic.ui.screen.home
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -168,14 +170,6 @@ fun HomeScreen(
                                     ),
                                     modifier = Modifier.clickable{ tutorialScreen() }
                                 )
-                                IconButton(onClick = { tutorialScreen() }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_question_white),
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.border(width = 1.dp, color = Color.White, shape = CircleShape)
-                                    )
-                                }
                             }
                         }
                     }
