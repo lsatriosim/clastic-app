@@ -1,7 +1,7 @@
 # What you need
 1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Cloud Storage)
 2. Programming Language: Python
-3. Web Server: Flask API
+3. Framework: Flask API
 4. Server: App Engine
 
 # Cloud Architecture
@@ -42,8 +42,7 @@ pip install -r requirement.txt
 8. Run `main.py` for running the API script with `python main.py`
 9. Test the API endpoint in `Postman` by open the link from Flask with `Postman` and change method to `POST` with `/predict` route. For headers, add `token` key with the value `xxxxx` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
 
-# How to setup with Google Cloud Platform
-## How To Deploy Flask API On Google Cloud Platform (App Engine)
+# How To Deploy Flask API On Google Cloud Platform (App Engine)
 1. Create Flask API
 2. Create app.yaml and upload it on the `cloud-computing` directory on Github 
 ```
