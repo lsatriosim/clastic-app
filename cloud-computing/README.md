@@ -40,7 +40,7 @@ pip install -r requirement.txt
 ```
 7. Make sure all dependencies are successfully installed by `pip list`
 8. Run `main.py` for running the API script with `python main.py`
-9. Test the API endpoint in `Postman` by open the link from Flask with `Postman` and change method to `POST` with `/predict` route. For headers, add `token` key with the value `xxxxx` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
+9. Test the API endpoint in `Postman` by the link `localhost/<port>` and change method to `POST` with `/predict` route. For headers, add `token` key with the value `xxxxx` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
 
 # How To Deploy Flask API On Google Cloud Platform (App Engine)
 1. Create Flask API
@@ -64,7 +64,7 @@ handlers:
 7. Go to `project settings` and click on `service aacount` tab
 8. Choose `Python` for the `Admin SDK configuration snippet` and click on `Generate new private key`
 9. Upload  `serviceAccountKey.json` that had been downloaded before and upload it on the `cloud-computing` directory on Github 
-10. Go to Google Clod Platform console, click cloud shell terminal to clone git
+10. Go to Google Cloud Platform console, click cloud shell terminal to clone git
 11. Clone the git with this command
 ```
 git clone https://github.com/lsatriosim/clastic-app.git
