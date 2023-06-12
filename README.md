@@ -42,7 +42,7 @@ Has several responsibility such as:
 ### Cloud Computing
 1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Cloud Storage)
 2. Programming Language: Python
-3. Web Server: Flask API
+3. Framework: Flask API
 4. Server: App Engine
 
 ## Contributor
