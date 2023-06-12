@@ -17,56 +17,56 @@ object MissionData{
     val dummyMission = listOf(
         Mission(
             "Plastic bags diet!",
-            "Welcome to this mission! In this mission, you have to stop using plastic bags because of its pollution, harmful, high carbon, and other negative impacts! \n" +
-                    "Do these things below : \n" +
-                    "1. Use reusable bags when buying foods, items, etc.\n" +
-                    "2. Recycle your plastic bags collection if any at home.\n" +
+            "Selamat datang di misi ini! Dalam misi ini, kamu harus bisa berhenti untuk menggunakan plastik yang menyebabkan polusi, tingkat karbon yang tinggi, zat racun, dan banyak dampak negatif lainnya!\n" +
+                    "Lakukan hal di bawah ini:\n" +
+                    "1. Pakailah tas yang dapat digunakan kembali untuk berbelanja makanan, barang, dal hal lainnya.\n" +
+                    "2. Daur ulang kantong plastik yang ada di rumahmu.\n" +
                     "\n" +
-                    "Let’s go complete this mission !\n",
+                    "Ayo selesaikan misi ini!\n",
             R.drawable.mission1_cover,
             "HDPEM",
             "200pts",
             listOf(
-                Impact("Baking frozen pizzas", "11",R.drawable.mission1_impact1),
-                Impact("Charging AA batteries", "1.947",R.drawable.mission1_impact2),
-                Impact("Watching hours of TV", "62",R.drawable.mission1_impact3),
-                Impact("Keeping your refrigerator cold for days", "4",R.drawable.mission1_impact4)
+                Impact("Kali memanggang pizza cepat saji", "11",R.drawable.mission1_impact1),
+                Impact("Kali mengisi daya baterai AA", "1.947",R.drawable.mission3_impact2),
+                Impact("Jam menonton TV", "62",R.drawable.mission3_impact3),
+                Impact("Hari menyalakan kulkas", "4",R.drawable.mission3_impact4)
             )),
         Mission(
             "Say no to plastic utensils and yes to reusable ones!",
-            "Welcome to this mission! In this mission, you have to stop using plastic utensils because of its pollution, harmful, high carbon, and other negative impacts! \n" +
-                    "Do these things below : \n" +
-                    "1. Use reusable utensils when buying foods, items, etc.\n" +
-                    "2. Bring your own reusable utensils.\n" +
+            "Selamat datang di misi ini! Dalam misi ini, kamu harus bisa berhenti untuk menggunakan plastik yang menyebabkan polusi, tingkat karbon yang tinggi, zat racun, dan banyak dampak negatif lainnya!\n" +
+                    "Lakukan hal di bawah ini:\n" +
+                    "1. Pakailah alat makan yang dapat digunakan kembali untuk berbelanja makanan, barang, dal hal lainnya.\n" +
+                    "2. Bawalah alat makan yang dapat digunakan kembali di sekolah ataupun tempat kerja.\n" +
                     "\n" +
-                    "Let’s go complete this mission !\n",
+                    "Ayo selesaikan misi ini!\n",
             R.drawable.mission2_cover,
             "PP",
             "200pts",
             listOf(
-                Impact("Baking frozen pizzas", "4", R.drawable.mission2_impact1),
-                Impact("Watching hours of TV", "24",R.drawable.mission2_impact2),
-                Impact("Charging a cellphone times", "861",R.drawable.mission2_impact3),
-                Impact("charging a laptop times", "31",R.drawable.mission2_impact4)
+                Impact("Kali memanggang pizza cepat saji", "4", R.drawable.mission2_impact1),
+                Impact("Jam menonton TV", "24",R.drawable.mission2_impact2),
+                Impact("Kali mengisi daya handphone", "861",R.drawable.mission2_impact3),
+                Impact("Kali mengisi daya laptop", "31",R.drawable.mission2_impact4)
             )),
         Mission(
             "Get your bottle or keep your cup topless!",
-            "Welcome to this mission! In this mission, you have to stop using plastic bags because of its pollution, harmful, high carbon, and other negative impacts! \n" +
-                    "Do these things below : \n" +
-                    "1. Use reusable mugs/cups when buying coffee/tea.\n" +
-                    "2. Bring your own bottle for drinking\n" +
-                    "3. Not buying bottles of water from mart\n" +
+            "Selamat datang di misi ini! Dalam misi ini, kamu harus bisa berhenti untuk menggunakan plastik yang menyebabkan polusi, tingkat karbon yang tinggi, zat racun, dan banyak dampak negatif lainnya!\n" +
+                    "Lakukan hal di bawah ini:\n" +
+                    "1. Gunakan gelas yang dapat digunakan kembali ketika membeli teh/kopi\n" +
+                    "2. Bawalah botol sendiri di sekolah/tempat kerja\n" +
+                    "3. Tidak membeli botol plastik di tempat belanja\n" +
                     "\n" +
                     "\n" +
-                    "Let’s go complete this mission !\n",
+                    "Ayo selesaikan misi ini!\n",
             R.drawable.mission3_cover,
             "PET",
             "300pts",
             listOf(
-                Impact("Frozen pizzas baked", "17", R.drawable.mission3_impact1),
-                Impact("Teacups filled", "2.207",R.drawable.mission3_impact2),
-                Impact("Bathtubs filled", "3",R.drawable.mission3_impact3),
-                Impact("Five minutes showers taked", "11",R.drawable.mission3_impact4)
+                Impact("Kali memanggang pizza cepat saji", "17", R.drawable.mission3_impact1),
+                Impact("Cangkir teh diisi", "2.207",R.drawable.mission1_impact2),
+                Impact("Bathtub diisi", "3",R.drawable.mission1_impact3),
+                Impact("Kali shower selama lima menit", "11",R.drawable.mission1_impact4)
             )),
     )
 }
