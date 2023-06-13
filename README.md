@@ -1,22 +1,32 @@
 # What you need
-1. Cloud Environment: Google Cloud Platform (Cloud Storage, Cloud Run)
+1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Firestore, Cloud Storage)
 2. Programming Language: Python
-3. Web Server: Flask API
-4. Server: Cloud Run
+3. Framework: Flask API
+4. Server: App Engine
 
 # Cloud Architecture
-*gambar cloud architecture kita*
+<img width="863" alt="image" src="https://github.com/lsatriosim/clastic-app/assets/121326117/565bda42-2b9e-4a9f-83f2-868ce87a6604">
+
+# Set-up Google Cloud Platform (GCP) and Firebase Project
+1. Go to Google Cloud Platform console on (https://console.cloud.google.com/)
+2. Create a Project
+3. Go to Firebase Console on https://console.firebase.google.com/u/0/
+4. Create a Firebase Project by use an existing project same as the GCP project
+5. Go to `project settings` and click on `service account` tab
+6. Choose` Python` for the `Admin SDK configuration snippet` and click on `Generate new private key`
+7. Service account file for Firebase will  automatically downloaded to your computer, rename it to `serviceAccountKey.json`
+
 
 # How to setup Locally
 1. Clone the project first to your editor
 ```
-git clone (github links https)
+git clone https://github.com/lsatriosim/clastic-app.git
 ```
 2. Go to directory of `cloud-computing`
 ```
 cd cloud-computing
 ```
-4. create an environment
+3. Create an environment
 - For Windows
 ```
 py -3 -m venv .venv
@@ -25,7 +35,7 @@ py -3 -m venv .venv
 ```
 python3 -m venv .venv
 ```
-5. Activate the environment
+4. Activate the environment
 - For Windows
 ```
 .venv\Scripts\activate
@@ -34,63 +44,44 @@ python3 -m venv .venv
 ```
 source .venv/bin/activate
 ```
-6. Install requirement.txt (all libraries that should be installed)
+5. Install requirement.txt (all libraries that should be installed)
 ```
 pip install -r requirement.txt
 ```
-7. Make sure all dependencies are successfully installed by `pip list`
+6. Make sure all dependencies are successfully installed by `pip list`
+7. Move the `serviceAccountKey.json` file that you already downloaded before when setting up Firebase project to the `cloud-computing` folder
 8. Run `main.py` for running the API script with `python main.py`
-9. Test the API endpoint in `Postman` by open the link from Flask with `Postman` and change method to `POST` with `/predict` route and body with uploaded file of plastic that you want to predict the class
+9. Test the API endpoint in `Postman` by the link `localhost/<port>` and change method to `POST` with `/predict` endpoint. For headers, add `token` key with the value `<your generate token>` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
 
-# How to setup with Google Cloud Platform
-## How To Deploy Flask API On Google Cloud Platform (Cloud Run)
-1. Create Flask API
-2. Create Dockerfile
-```
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.9-slim
+# How To Deploy Flask API On Google Cloud Platform (App Engine)
+1. Create app.yaml and upload it on the `cloud-computing` directory on Github
 
-# Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
+app.yaml:
+```
+runtime: python39
+entrypoint: gunicorn -b :$PORT main:app
 
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
-RUN apt-get update && apt-get install -y python3-opencv
-RUN pip install opencv-python
+instance_class: F4_1G
 
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
-COPY . ./
+service: default
 
-# Install production dependencies.
-RUN pip install -r requirement.txt
-
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
+handlers:
+- url: /.*
+  script: auto
 ```
-3. Go to Google Cloud Platform (https://console.cloud.google.com/)
-4. Create a Project
-5. Click cloud shell terminal to clone git
-6. Clone the git with this command
+2. Go to Google Cloud Platform console on (https://console.cloud.google.com/), click cloud shell terminal to clone git
+3. Clone the git with this command
 ```
-git clone (github links https)
+git clone https://github.com/lsatriosim/clastic-app.git
 ```
-7. Then type `ls` to see that we have sucess clone the github
-8. Change the directory to the github repository that you want to deploy, type `cd (directory that we want to use)`
-9. In terminal, run these
+4. Then type `ls` to see that we have sucess clone the github to see the list of directories
+5. Change the directory to the github repository that you want to deploy, type `cd cloud-computing`
+6. Open `editor` in the terminal, add a new file named `serviceAccountKey.json` to 'cloud-computing' directory
+7. Copy the code in `serviceAccountKey.json` that you already downloaded before when setting up Firebase project to the new file that you created in `editor`
+8. In terminal, run these for deploying app
 ```
-gcloud builds submit --tag gcr.io/<project_id>/index
-gcloud run deploy --image gcr.io/<project_id>/index --platform managed
+gcloud app deploy
 ```
-10. When you are prompted for the service name, press `“Enter”` to accept the default
-name
-11. If you are prompted to enable the Artifact Registry API or to allow creation of
-Artifact Registry repository or other API, respond by pressing `y`
-12. If you are prompted to enable the Artifact Registry API or to allow creation of
-Artifact Registry repository, respond by pressing `y`
-13. After the deployment process is done, there is should be url where you can use it to test on `Postman` like the on the local before with the endpoint `/predict`
+10. If you are given question like `Do you want to continue (Y/n) ?`, type `Y`
+11. You will get a URL for the deployed API after the process finished.
+12. Test the API endpoint in `Postman` by the link `<url for the deployed API>/<port>` and change method to `POST` with `/predict` endpoint. For headers, add `token` key with the value `<your generate token>` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
