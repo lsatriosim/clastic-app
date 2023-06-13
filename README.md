@@ -44,13 +44,13 @@ python3 -m venv .venv
 ```
 source .venv/bin/activate
 ```
-5. Install requirement.txt (all libraries that should be installed)
+5. Install requiremenst.txt (all libraries that should be installed)
 ```
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 6. Make sure all dependencies are successfully installed by `pip list`
 7. Move the `serviceAccountKey.json` file that you already downloaded before when setting up Firebase project to the `cloud-computing` folder
-8. Run `main.py` for running the API script with `python main.py`
+8. Run `main.py` for running the API script with `python3 main.py`
 9. Test the API endpoint in `Postman` by the link `localhost/<port>` and change method to `POST` with `/predict` endpoint. For headers, add `token` key with the value `<your generate token>` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
 
 # How To Deploy Flask API On Google Cloud Platform (App Engine)
