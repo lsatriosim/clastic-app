@@ -1,5 +1,5 @@
 # What you need
-1. Cloud Environment: Google Cloud Platform (App Engine, Firestore)
+1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Firestore, Cloud Storage)
 2. Programming Language: Python
 3. Framework: Flask API
 4. Server: App Engine
@@ -55,6 +55,7 @@ pip install -r requirement.txt
 
 # How To Deploy Flask API On Google Cloud Platform (App Engine)
 1. Create app.yaml and upload it on the `cloud-computing` directory on Github
+
 app.yaml:
 ```
 runtime: python39
