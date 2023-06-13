@@ -21,10 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -151,7 +154,8 @@ fun BannerWithGradient(
         modifier = modifier
             .fillMaxWidth()
             .height(180.dp)
-            .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp)),
+            .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
+            .blur(radius = 1.dp),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -163,6 +167,16 @@ fun BannerWithGradient(
                 .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
                 .shadow(elevation = 2.dp),
             contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.colorMatrix(
+                ColorMatrix().apply{
+                    setToScale(
+                        0.8f,
+                        0.8f,
+                        0.8f,
+                        1f
+                    )
+                }
+            ),
         )
         Box(
             modifier = modifier

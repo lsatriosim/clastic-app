@@ -98,7 +98,8 @@ fun MissionDetailScreen(mission: Mission, joinCampaign: (String) -> Unit) {
                                 style = MaterialTheme.typography.h5.copy(
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold
-                                )
+                                ),
+                                modifier = Modifier
                             )
                             PointTag(modifier = Modifier, point = mission.reward)
                         }
@@ -181,18 +182,25 @@ fun ImpactCard(impact: Impact) {
             .width(165.dp)
             .height(115.dp)
             .clip(RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center
+
     ) {
         Image(
             painter = painterResource(id = impact.image),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+        ) {
             Text(
                 text = impact.value,
                 style = MaterialTheme.typography.h5.copy(color = Color.White, fontWeight = Bold),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             )
             Text(
                 text = impact.key,
