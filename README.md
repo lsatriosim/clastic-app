@@ -83,5 +83,5 @@ git clone https://github.com/lsatriosim/clastic-app.git
 gcloud app deploy
 ```
 10. If you are given question like `Do you want to continue (Y/n) ?`, type `Y`
-11. You will get a URL for the deployed API after the process finished.
+11. You will get a URL for the deployed API after the process finished
 12. Test the API endpoint in `Postman` by the link `<url for the deployed API>/<port>` and change method to `POST` with `/predict` endpoint. For headers, add `token` key with the value `<your generate token>` and for body, add `file` key with the value `link for the image of plastic that you want to predict the class`
