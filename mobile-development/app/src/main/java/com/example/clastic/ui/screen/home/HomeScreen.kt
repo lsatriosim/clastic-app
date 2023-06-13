@@ -111,11 +111,12 @@ fun HomeScreen(
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         Image(
-                            painter = painterResource(id = R.drawable.logo_clastic_2),
+                            painter = painterResource(id = R.drawable.logo_clastic_white),
                             contentDescription = null,
                             modifier = Modifier
-                                .width(196.dp)
-                                .height(40.dp)
+                                .width(147.dp)
+                                .height(30.dp)
+                                .padding(horizontal = 16.dp)
                         )
                         Text(
                             text = ("Hai, " + user?.username),
@@ -255,6 +256,15 @@ fun HomeScreen(
                                     Color("#614E9D".toColorInt()),
                                     Color("#707176".toColorInt()),
                                 )
+                                val listIcon = listOf(
+                                    R.drawable.logo_bottle_pet,
+                                    R.drawable.icon_hdpe,
+                                    R.drawable.icon_pp,
+                                    R.drawable.icon_pvc,
+                                    R.drawable.icon_ldpe,
+                                    R.drawable.icon_ps,
+                                    R.drawable.icon_other,
+                                )
                                 items(
                                     items = ProductData.plasticTypes,
                                     key = { it.tag }) { plasticType ->
@@ -262,7 +272,8 @@ fun HomeScreen(
                                     ProductKnowledgeComponent(
                                         onClick = onClick,
                                         plasticType = plasticType,
-                                        backgroundColor = listColor[colorIndex]
+                                        backgroundColor = listColor[colorIndex],
+                                        iconId = listIcon[colorIndex]
                                     )
                                 }
                             }

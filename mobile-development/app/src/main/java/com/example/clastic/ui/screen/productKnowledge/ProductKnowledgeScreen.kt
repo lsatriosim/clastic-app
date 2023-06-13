@@ -1,9 +1,17 @@
 package com.example.clastic.ui.screen.productKnowledge
 
-import android.util.EventLogTags.Description
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -29,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -119,7 +128,10 @@ fun ProductCard(modifier: Modifier = Modifier, product: Product) {
             .shadow(elevation = 8.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Column(modifier = Modifier) {
+        Column(
+            modifier = Modifier
+                .background(colorResource(id = R.color.cyan_primary))
+        ) {
             Image(
                 painter = painterResource(id = product.productImage),
                 contentDescription = null,
@@ -132,7 +144,10 @@ fun ProductCard(modifier: Modifier = Modifier, product: Product) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
                     text = product.productName,
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.ExtraBold)
+                    style = MaterialTheme.typography.subtitle1.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White
+                    )
                 )
             }
         }
