@@ -23,8 +23,11 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -52,7 +55,10 @@ fun MissionListScreen(modifier: Modifier = Modifier, onClick: (String) -> Unit, 
     bottomBar = {
         BottomBar(currentMenu = "Mission", navController = navHostController)
     }){innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding).background(color = Color.White)){
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .background(color = Color.White)){
             Box(
                 modifier = modifier
                     .padding(8.dp)
@@ -95,19 +101,31 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (Strin
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        colorFilter = ColorFilter.colorMatrix(
+                            ColorMatrix().apply{
+                                setToScale(
+                                    0.8f,
+                                    0.8f,
+                                    0.8f,
+                                    1f
+                                )
+                            }
+                        ),
                     )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .padding(18.dp), contentAlignment = Alignment.BottomStart
+                            .padding(18.dp),
+                        contentAlignment = Alignment.BottomStart
                     ) {
                         Text(
                             text = mission.title,
                             style = MaterialTheme.typography.h5.copy(color = Color.White),
                             textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.ExtraBold
+                            fontWeight = FontWeight.ExtraBold,
+                            modifier = Modifier
                         )
                     }
                     Box(
@@ -118,6 +136,7 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (Strin
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             RecycleTag(modifier = Modifier, tag = mission.tag)
                             PointTag(modifier = Modifier, point = mission.reward)
+                            Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = "20 Days Left",
                                 style = MaterialTheme.typography.subtitle1.copy(
@@ -125,7 +144,7 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (Strin
                                     fontWeight = FontWeight.Bold
                                 ),
                                 textAlign = TextAlign.End,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
                             )
                         }
                     }
@@ -158,7 +177,6 @@ fun MissionCard(modifier: Modifier = Modifier, mission: Mission, onClick: (Strin
                             )
                         }
                     }
-
                 }
             }
         }

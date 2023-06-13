@@ -31,6 +31,7 @@ fun ProductKnowledgeComponent(
     modifier: Modifier = Modifier,
     plasticType: PlasticKnowledge,
     backgroundColor: Color,
+    iconId: Int,
     onClick: (String) -> Unit
 ) {
     Column(
@@ -48,7 +49,7 @@ fun ProductKnowledgeComponent(
         ) {
             Icon(
                 modifier = Modifier.size(55.dp),
-                painter = painterResource(id = R.drawable.logo_bottle_pet),
+                painter = painterResource(id = iconId),
                 contentDescription = "logo recycle",
                 tint = Color.White,
             )
@@ -71,6 +72,7 @@ fun ProductKnowledgeComponentPreview() {
     ProductKnowledgeComponent(
         onClick = {},
         plasticType = PlasticKnowledge("", "", 0, "", emptyList()),
-        backgroundColor = Color.Blue
+        backgroundColor = Color.Blue,
+        iconId = R.drawable.logo_bottle_pet
     )
 }
