@@ -8,7 +8,7 @@
 <img width="863" alt="image" src="https://github.com/lsatriosim/clastic-app/assets/121326117/565bda42-2b9e-4a9f-83f2-868ce87a6604">
 
 # API Documentation
-Deployed API Endpoint URL : <Deployed url>/predict
+Deployed API Endpoint URL : `<Deployed url>`/predict
 
 ### **Method : GET**
 
