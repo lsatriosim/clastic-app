@@ -40,7 +40,7 @@ Has several responsibility such as:
 5. Prototype: [Click Here]([https://bit.ly/final-prototype-c22-cb04](https://www.figma.com/file/HTDOFOF24j8i12a5ZxqPRh/ClasTic?type=design&node-id=0%3A1&t=5tYWysVO0ZP098QM-1))
 
 ### Cloud Computing
-1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Cloud Storage)
+1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Firestore, Cloud Storage)
 2. Programming Language: Python
 3. Framework: Flask API
 4. Server: App Engine
