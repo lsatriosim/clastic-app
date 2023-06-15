@@ -25,7 +25,7 @@ Has several responsibility such as:
 4. API testing production
 5. Searching for database resources
 
-## Tools and Resources for Developing Chatbot
+## Tools and Resources
 
 ### Machine Learning
 1. Code Platform: Jupyter Notebook and Google Collaboration
@@ -45,7 +45,7 @@ Has several responsibility such as:
 3. Framework: Flask API
 4. Server: App Engine
 
-## Contributor
+## Team
 1. M181DSY0201 – [Irene Patricia Wibowo](https://www.linkedin.com/in/irene-patricia-w/) – Universitas Indonesia - Machine Learning
 2. M038DSX1899 – [Darren Kang Wan Chee](https://www.linkedin.com/in/darren-kang-wan-chee-460386211/) – Institut Teknologi Sepuluh Nopember - Machine Learning
 3. C181DSY3429 – [Angelica Patricia Djaya Saputra](https://www.linkedin.com/in/angelica-patricia/) – Universitas Indonesia - Cloud Computing
