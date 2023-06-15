@@ -7,6 +7,28 @@
 # Cloud Architecture
 <img width="863" alt="image" src="https://github.com/lsatriosim/clastic-app/assets/121326117/565bda42-2b9e-4a9f-83f2-868ce87a6604">
 
+# API Documentation
+Deployed API Endpoint URL : <Deployed url>/predict
+
+**Method : GET**
+Authorization (Basic Auth)
+- Username : `<Your Username for Basic Auth>`
+- Password : `<Your Password for Basic Auth>`
+
+Response : OK
+
+**Method : POST**
+Authorization (Basic Auth)
+- Username :`<Your Username for Basic Auth>`
+- Password : `<Your Password for Basic Auth>`
+
+Body
+- url : `<Image URL That You Want to Predict The Plastic Type>`
+
+Response :
+- Prediction : {class of plastic type (HDPE, PET, PP)}
+- Probability : {the probability of the image belong to the prediction}
+
 # Set-up Google Cloud Platform (GCP) and Firebase Project
 1. Go to Google Cloud Platform console on (https://console.cloud.google.com/)
 2. Create a Project
@@ -15,7 +37,6 @@
 5. Go to `project settings` and click on `service account` tab
 6. Choose` Python` for the `Admin SDK configuration snippet` and click on `Generate new private key`
 7. Service account file for Firebase will  automatically downloaded to your computer, rename it to `serviceAccountKey.json`
-
 
 # How to setup Locally
 1. Clone the project first to your editor
