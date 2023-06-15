@@ -39,7 +39,7 @@ Has several responsibility such as:
 4. Design Tools: Figma
 5. Prototype:
 - [User Side](https://www.figma.com/proto/HTDOFOF24j8i12a5ZxqPRh/ClasTic?type=design&node-id=648-867&scaling=scale-down&page-id=648%3A839&starting-point-node-id=648%3A867&show-proto-sidebar=1)
-- [Drop Point Owner Side](https://www.figma.com/proto/HTDOFOF24j8i12a5ZxqPRh/ClasTic?type=design&node-id=657-2006&scaling=min-zoom&page-id=648%3A839&starting-point-node-id=657%3A2006&show-proto-sidebar=1)
+- [Drop Point Owner Side](https://www.figma.com/proto/HTDOFOF24j8i12a5ZxqPRh/ClasTic?type=design&node-id=657-2006&scaling=scale-down&page-id=648%3A839&starting-point-node-id=657%3A2006&show-proto-sidebar=1)
 
 ### Cloud Computing
 1. Cloud Environment: Google Cloud Platform (App Engine, Firebase, Firestore, Cloud Storage)
