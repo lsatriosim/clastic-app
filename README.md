@@ -75,7 +75,7 @@ pip install -r requirements.txt
 6. Make sure all dependencies are successfully installed by `pip list`
 7. Move the `serviceAccountKey.json` file that you already downloaded before when setting up Firebase project to the `cloud-computing` folder
 8. Run `main.py` for running the API script with `python3 main.py`
-9. Test the API endpoint in `Postman` by the link `localhost/<port>` and change method to `POST` with `/predict` endpoint. For authorization, choose `Basic Authentcation` for the type. Input the username and password required. For body, add `file` key with the value `link for the image of plastic that you want to predict the class`. 
+9. Test the API endpoint in `Postman` by the link `localhost:<port>` and change method to `POST` with `/predict` endpoint. For authorization, choose `Basic Authentcation` for the type. Input the username and password required. For body, add `file` key with the value `link for the image of plastic that you want to predict the class`. 
 
 ***Note: Username and password that you input will be automatically create a hash token in the authorization header when you send the request. So, you must modify the `token` variable in `main.py` file. Please change it into the token that automatically generated in the header after you input your own username and password for protecting this API endpoint.***
 
@@ -110,6 +110,6 @@ gcloud app deploy
 ```
 10. If you are given question like `Do you want to continue (Y/n) ?`, type `Y`
 11. You will get a URL for the deployed API after the process finished
-12. Test the API endpoint in `Postman` by the link `<url for the deployed API>/<port>` and change method to `POST` with `/predict` endpoint. For authorization, choose `Basic Authentcation` for the type. Input the username and password required. For body, add `file` key with the value `link for the image of plastic that you want to predict the class`. 
+12. Test the API endpoint in `Postman` by the link `<url for the deployed API>` and change method to `POST` with `/predict` endpoint. For authorization, choose `Basic Authentcation` for the type. Input the username and password required. For body, add `file` key with the value `link for the image of plastic that you want to predict the class`. 
 
 ***Note: Username and password that you input will be automatically create a hash token in the authorization header when you send the request. So, you must modify the `token` variable in `main.py` file. Please change it into the token that automatically generated in the header after you input your own username and password for protecting this API endpoint.***
