@@ -1,8 +1,0 @@
-Flask
-gunicorn
-tensorflow
-numpy
-pillow
-Keras-Applications
-Keras-Preprocessing
-opencv-python
