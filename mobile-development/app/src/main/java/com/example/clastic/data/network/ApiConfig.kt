@@ -17,7 +17,7 @@ class ApiConfig() {
                 .addInterceptor(AuthInterceptor())
                 .build()
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://ml-deploy-bismillah.et.r.appspot.com")
+                .baseUrl("https://clastic-project.et.r.appspot.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

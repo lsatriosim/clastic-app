@@ -13,7 +13,7 @@ class AuthInterceptor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
         val authorized = original.newBuilder()
-            .addHeader("token", "ilovetifa")
+            .addHeader("Authorization", "Basic Y2xhc3RpY19kZXY6Q2xhc3RpY0RldkJhbmdraXQ=")
             .build()
 
         return chain.proceed(authorized)
