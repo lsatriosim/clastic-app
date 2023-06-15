@@ -8,9 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,7 +21,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,15 +31,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.clastic.R
 import com.example.clastic.ui.screen.ViewModelFactory
 import com.example.clastic.data.entity.Article
+import com.example.clastic.ui.screen.BottomBar
 
 @Composable
 fun ListArticleScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    navController: NavController
 ) {
     val viewModel: ListArticleViewModel = viewModel(
         factory = ViewModelFactory.getInstance(
@@ -49,12 +52,31 @@ fun ListArticleScreen(
     val articleListState by viewModel.articleList.collectAsState()
     val listState = rememberLazyListState()
 
-    Box(
-        modifier = modifier
-    ){
-        LazyColumn(state = listState){
-            items(articleListState, key = {it.title}){article->
-                ListArticle(article = article, onClick = onClick)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Article",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .padding(start = 15.dp),
+                    )
+                },
+                backgroundColor = colorResource(R.color.cyan_primary),
+            )
+        },
+        bottomBar = { BottomBar(currentMenu = "Article", navController = navController)}
+    ) {innerPadding->
+        Box(
+            modifier = modifier.fillMaxSize().padding(innerPadding).background(color = Color.White)
+        ){
+            LazyColumn(state = listState){
+                items(articleListState, key = {it.title}){article->
+                    ListArticle(article = article, onClick = onClick)
+                }
             }
         }
     }
@@ -64,9 +86,9 @@ fun ListArticleScreen(
 fun ListArticle(
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .padding(8.dp)
         .height(175.dp)
-        .clip(RoundedCornerShape(10.dp)),
+        .clip(RoundedCornerShape(10.dp))
+        .padding(8.dp),
     article: Article,
     onClick: (String) -> Unit
 ) {

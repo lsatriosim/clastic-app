@@ -1,8 +1,12 @@
 package com.example.clastic.data.entity
 
 data class DropPoint(
-    val lat: Any,
-    val long: Any,
+    val id: String,
+    val lat: Double,
+    val long: Double,
     val name: String,
-    val owner: User
-)
+    val location: String,
+    val ownerId: String
+){
+    constructor(): this("",0.0,0.0,"","","")
+}
