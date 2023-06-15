@@ -524,7 +524,9 @@ class MainActivity : ComponentActivity() {
                                                     )
                                                     Text(
                                                         text = plasticTypeResult,
-                                                        style = MaterialTheme.typography.subtitle1
+                                                        style = MaterialTheme.typography.subtitle1.copy(
+                                                            color = Color.Black
+                                                        )
                                                     )
                                                 }
                                             }
