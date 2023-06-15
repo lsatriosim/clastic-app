@@ -46,8 +46,8 @@ app = Flask(__name__)
 @app.route("/predict", methods=["GET", "POST"])
 def index():
     # Check if the 'token' header is present and has the correct value
-    expected_token = "ilovetifa"
-    token = request.headers.get("token")
+    expected_token = "<Your Basic Auth Token>"
+    token = request.headers.get("Authorization")
     if token != expected_token:
         return jsonify({"error": "Invalid token"}), 401
 
