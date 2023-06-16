@@ -1,9 +1,17 @@
 package com.example.clastic.ui.screen.productKnowledge
 
-import android.util.EventLogTags.Description
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,16 +22,22 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FiberSmartRecord
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -114,7 +128,10 @@ fun ProductCard(modifier: Modifier = Modifier, product: Product) {
             .shadow(elevation = 8.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Column(modifier = Modifier) {
+        Column(
+            modifier = Modifier
+                .background(colorResource(id = R.color.cyan_primary))
+        ) {
             Image(
                 painter = painterResource(id = product.productImage),
                 contentDescription = null,
@@ -127,7 +144,10 @@ fun ProductCard(modifier: Modifier = Modifier, product: Product) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
                     text = product.productName,
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.ExtraBold)
+                    style = MaterialTheme.typography.subtitle1.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White
+                    )
                 )
             }
         }
@@ -149,7 +169,8 @@ fun BannerWithGradient(
         modifier = modifier
             .fillMaxWidth()
             .height(180.dp)
-            .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp)),
+            .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
+            .blur(radius = 1.dp),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -161,6 +182,16 @@ fun BannerWithGradient(
                 .clip(RoundedCornerShape(bottomEnd = 10.dp, bottomStart = 10.dp))
                 .shadow(elevation = 2.dp),
             contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.colorMatrix(
+                ColorMatrix().apply{
+                    setToScale(
+                        0.8f,
+                        0.8f,
+                        0.8f,
+                        1f
+                    )
+                }
+            ),
         )
         Box(
             modifier = modifier
@@ -215,7 +246,7 @@ fun PointTag(modifier: Modifier, point: String) {
         ) {
             Row(modifier = Modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_coin),
+                    imageVector = Icons.Default.FiberSmartRecord,
                     contentDescription = "recycle icon",
                     modifier = Modifier,
                     tint = Color("#02B4CC".toColorInt())

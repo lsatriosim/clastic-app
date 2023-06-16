@@ -3,9 +3,12 @@ package com.example.clastic.data.network
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.net.Uri
 import android.util.Log
 import com.example.clastic.R
 import com.example.clastic.data.entity.Article
+import com.example.clastic.data.entity.DropPoint
+import com.example.clastic.data.entity.Transaction
 import com.example.clastic.data.entity.User
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
 import com.example.clastic.ui.screen.authentication.components.UserData
@@ -18,7 +21,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -34,6 +41,18 @@ class Dao {
             Log.d("firebase: add", "item has been store succesfully with document id: ${it.id}")
         }.addOnFailureListener {
             Log.d("firebase: add", it.message.toString())
+        }
+    }
+
+    fun addPhoto(photoFile: File, callback:(String?, Exception?)->Unit){
+        val file = Uri.fromFile(photoFile)
+        val imageRef = storageRef.child("images/classifier/${photoFile.name}")
+        imageRef.putFile(file).addOnSuccessListener {
+            Log.d("testUpload", "File Upload Succesfully: ${it.toString()}")
+            callback("Berhasil", null)
+        }.addOnFailureListener{exception ->
+            Log.d("testUpload", "File Can't Upload")
+            callback(null, exception)
         }
     }
 
@@ -71,18 +90,18 @@ class Dao {
         return listDocument
     }
 
-    fun getPhotoUrl(imageName: String, callback: (String) -> Unit) {
-        val imageRef = storageRef.child(imageName)
+    fun getPhotoUrl(file: File, callback: (String?, Exception?) -> Unit) {
+        val imageRef = storageRef.child("images/classifier/${file.name}")
 
         imageRef.downloadUrl
             .addOnSuccessListener { uri ->
                 val downloadUrl = uri.toString()
                 Log.d("getPhotoUrl", "Image URL Accepted: $downloadUrl")
-                callback(downloadUrl)
+                callback(downloadUrl, null)
             }
             .addOnFailureListener { exception ->
                 Log.d("getPhotoUrl", "Failed to get image URL: ${exception.message.toString()}")
-                callback("")
+                callback(null, exception)
             }
     }
 
@@ -304,5 +323,229 @@ class Dao {
             e.printStackTrace()
             if (e is CancellationException) throw e
         }
+    }
+
+    suspend fun isUserExist(uid: String): Boolean {
+        return try {
+            val querySnapshot = db.collection("user").whereEqualTo("userId", uid).get().await()
+            !querySnapshot.isEmpty
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun getNameByUid(uid: String): String {
+        return try {
+            val snapshot = db.collection("user")
+                .whereEqualTo("userId", uid)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents.first()
+                document.getString("username") ?: throw Exception("User not found")
+            } else {
+                throw Exception("User not found")
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getDropPointNameByOwnerId(uid: String): String {
+        return try {
+            val snapshot = db.collection("dropPoint")
+                .whereEqualTo("ownerId", uid)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents.first()
+                document.getString("name") ?: throw Exception("Location not found")
+            } else {
+                throw Exception("Drop point not found")
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+    private suspend fun addPointsToUser(userId: String, additionalPoints: Int) {
+        try {
+            val snapshot = db.collection("user")
+                .whereEqualTo("userId", userId)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents[0]
+                val currentPoints = document.getLong("coin") ?: 0L
+                val newPoints = currentPoints + additionalPoints
+
+                document.reference.update("coin", newPoints)
+                    .addOnSuccessListener {
+                        Log.d("testFirebase", "Points added successfully.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("testFirebase", "Error adding points: $e")
+                    }
+            } else {
+                Log.w("testFirebase", "User not found.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun createTransaction(transaction: Transaction): String {
+        val newTransaction = hashMapOf(
+            "id" to transaction.id,
+            "location" to transaction.location,
+            "userId" to transaction.userId,
+            "ownerId" to transaction.ownerId,
+            "date" to transaction.transactionDate,
+            "totalPoints" to transaction.totalPoints,
+            "transactionList" to transaction.transactionList
+        )
+        val deferred = CompletableDeferred<String>()
+        val collectionRef = db.collection("transaction")
+        val newDocumentRef = collectionRef.document()
+        val documentId = newDocumentRef.id
+        newTransaction["id"] = documentId
+        newDocumentRef.set(newTransaction)
+            .addOnSuccessListener {
+                deferred.complete(documentId)
+            }
+            .addOnFailureListener { e ->
+                deferred.completeExceptionally(e)
+            }
+        addPointsToUser(transaction.userId, transaction.totalPoints)
+        return deferred.await()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getTransactionById(id: String): Transaction {
+        val documentRef = db.collection("transaction").document(id)
+        val documentSnapshot = documentRef.get().await()
+
+        val data = documentSnapshot.data
+        val userId = data?.get("userId") as String
+        val location = data.get("location") as String
+        val ownerId = data["ownerId"] as String
+        val date = data["date"] as String
+        val totalPoints = (data["totalPoints"] as Long).toInt()
+        val transactionList = data["transactionList"] as Map<String, Map<String, Any>>
+        return Transaction(id, location, userId, ownerId, date, totalPoints, transactionList)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getTransactionListByUid(): List<Transaction>? {
+        val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
+        val collectionRef = db.collection("transaction")
+
+        return try {
+            val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
+            val transactionList = querySnapshot.documents.map { document ->
+                val id = document.id
+                val location = document.getString("location") ?: ""
+                val ownerId = document.getString("ownerId") ?: ""
+                val date = document.getString("date") ?: ""
+                val totalPoints = document.getLong("totalPoints")?.toInt() ?: 0
+                val transactionList = document.get("transactionList") as Map<String, Map<String, Any>>
+
+                Transaction(id, location, userId, ownerId, date, totalPoints, transactionList)
+            }
+            transactionList
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getLoggedInUserId(): String {
+        val user = auth.currentUser?.run {
+            UserData(
+                userId = uid,
+                username = displayName,
+                userImage = photoUrl?.toString(),
+                token = getIdToken(false).toString()
+            )
+        }
+        return user?.userId ?: throw IllegalStateException("User is not logged in.")
+    }
+
+    suspend fun getUserRoleById(): String {
+        val userId = getLoggedInUserId()
+        return try {
+            var role = ""
+            val snapshot = db.collection("user").whereEqualTo("userId", userId).get().await()
+            if (!snapshot.isEmpty) {
+                val document = snapshot.documents[0]
+                role = document.getString("role") ?: ""
+            }
+            role
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
+    suspend fun getTransactionCountByUserId(): Int = kotlinx.coroutines.withContext(Dispatchers.Default) {
+        val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
+        val collectionRef = db.collection("transaction")
+        val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
+        return@withContext querySnapshot.size()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    suspend fun getSumOfWeightByUid(): Float {
+        val userId = getLoggedInUserId()
+        val userRole = if (getUserRoleById() == "user") "userId" else "ownerId"
+        val collectionRef = db.collection("transaction")
+
+        return try {
+            val querySnapshot = collectionRef.whereEqualTo(userRole, userId).get().await()
+            var sum = 0f
+
+            for (document in querySnapshot.documents) {
+                val transactionList = document.get("transactionList") as? Map<String, Map<String, Any>>
+                Log.d("LOGGINGRESULT Transaction List:", "$transactionList")
+                if (transactionList != null) {
+                    for (transaction in transactionList.values) {
+                        Log.d("LOGGINGRESULT Transaction:", "$transaction")
+                        val weight = (transaction["weight"] as Double).toFloat()
+                        Log.d("LOGGINGRESULT Weight:", "$weight")
+                        sum += weight
+                    }
+                }
+            }
+
+            sum
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0f
+        }
+    }
+
+
+
+    fun getDropPointList(callback: (List<DropPoint>?, Exception?) -> Unit){
+        val dropPointList = mutableListOf<DropPoint>()
+
+        db.collection("dropPoint").get()
+            .addOnSuccessListener { documents ->
+                Log.d("fetchDropPointList", "Document Found")
+                for(document in documents){
+                    dropPointList.add(document.toObject(DropPoint::class.java))
+                }
+                for (dropPoint in dropPointList){
+                    Log.d("fetchDropPointList", dropPoint.toString())
+                }
+                callback(dropPointList, null)
+            }.addOnFailureListener { exception ->
+                Log.d("fetchDropPointList", "Document not found: ${exception.message.toString()}")
+                callback(null, exception)
+            }
     }
 }

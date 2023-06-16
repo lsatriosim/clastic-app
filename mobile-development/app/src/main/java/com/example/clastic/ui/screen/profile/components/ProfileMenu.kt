@@ -29,8 +29,9 @@ import com.example.clastic.ui.theme.ClasticTheme
 
 @Composable
 fun ProfileMenu(
-    title: String,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    title: String,
     icon: ImageVector
 ) {
     val cyanPrimary = colorResource(R.color.cyan_primary)
@@ -53,7 +54,7 @@ fun ProfileMenu(
                     strokeWidth = borderSize/2
                 )
             }
-            .clickable {  }
+            .clickable { onClick() }
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -88,7 +89,8 @@ fun ProfileMenuPreview(){
     ClasticTheme {
         ProfileMenu(
             title = "Histori Transaksi Plastik",
-            icon = Icons.Default.List
+            icon = Icons.Default.List,
+            onClick = {}
         )
     }
 }

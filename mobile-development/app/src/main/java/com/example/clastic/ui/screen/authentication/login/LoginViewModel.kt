@@ -6,6 +6,7 @@ import android.content.IntentSender
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
+import com.example.clastic.ui.screen.authentication.components.AuthenticationState
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,6 @@ class LoginViewModel(private val repository: Repository): ViewModel() {
     val isEnabled: StateFlow<Boolean> = _isEnabled.asStateFlow()
 
     suspend fun login(context: Context): IntentSender?{
-        _isEnabled.value = false
         return repository.login(context, Identity.getSignInClient(context))
     }
 
@@ -30,7 +30,6 @@ class LoginViewModel(private val repository: Repository): ViewModel() {
     }
 
     suspend fun loginWithIntent(intent: Intent, context: Context) {
-        _isEnabled.value = false
         onLoginResult(repository.loginWithIntent(intent, Identity.getSignInClient(context)))
     }
 

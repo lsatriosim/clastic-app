@@ -6,7 +6,7 @@ import android.content.IntentSender
 import androidx.lifecycle.ViewModel
 import com.example.clastic.data.Repository
 import com.example.clastic.ui.screen.authentication.components.AuthenticationResult
-import com.example.clastic.ui.screen.authentication.login.AuthenticationState
+import com.example.clastic.ui.screen.authentication.components.AuthenticationState
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
