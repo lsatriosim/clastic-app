@@ -35,4 +35,4 @@ model.save('best_model.h5')
 ```
 
 For the complete code please check our notebook
-(link)
+https://github.com/lsatriosim/clastic-app/blob/main/machine-learning/CLASTIC_CLASSIFIER_MACHINE_LEARNING_MODEL.ipynb
